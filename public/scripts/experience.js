@@ -149,7 +149,7 @@
       cursor.style.transform = `translate3d(${e.clientX - 19}px,${e.clientY - 19}px,0)`;
     }, { passive: true });
     document.addEventListener('pointerover', (e) => {
-      cursor.classList.toggle('is-hover', !!e.target.closest('a, button, input, textarea, select, .card, .chip, .energy-card'));
+      cursor.classList.toggle('is-hover', !!e.target.closest('a, button, input, textarea, select, .card, .chip, .pricing-tier'));
     });
   }
 

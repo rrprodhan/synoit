@@ -14,7 +14,6 @@ interface Props {
   features: Array<string | Feature>;
   ctaText?: string;
   href?: string;
-  active?: boolean;
 }
 
 const {
@@ -26,412 +25,408 @@ const {
   description,
   features,
   ctaText = 'Start Free',
-  href = 'mailto:support@synoit.com',
-  active = false
+  href = 'mailto:support@synoit.com'
 } = Astro.props;
 
 const normalizedFeatures = features.map((feature) =>
   typeof feature === 'string' ? { text: feature, info: false } : feature
 );
-const filterId = `energy-displace-${accent}`;
-const glowId = `energy-glow-${accent}`;
-const plasmaId = `energy-plasma-${accent}`;
+const pathId = `pricing-orbit-${accent}`;
+const smokeId = `pricing-smoke-${accent}`;
+const plasmaId = `pricing-plasma-${accent}`;
+const smokeMaskId = `pricing-smoke-mask-${accent}`;
 ---
 
-<article
-  class:list={['energy-card', `energy-card--${accent}`, active && 'is-active']}
-  data-pricing-card
-  data-reveal
-  tabindex="0"
->
-  <div class="energy-ambient" aria-hidden="true"></div>
-
-  <svg class="energy-frame" viewBox="0 0 360 700" preserveAspectRatio="none" aria-hidden="true">
+<article class:list={['pricing-tier', `pricing-tier--${accent}`]} data-pricing-card data-reveal tabindex="0">
+  <span class="pricing-tier__glow" aria-hidden="true"></span>
+  <svg class="pricing-tier__storm" viewBox="0 0 390 530" preserveAspectRatio="none" aria-hidden="true">
     <defs>
-      <filter id={filterId} x="-42%" y="-28%" width="184%" height="156%" color-interpolation-filters="sRGB">
-        <feTurbulence type="fractalNoise" baseFrequency="0.018 0.115" numOctaves="3" seed="11" result="noise">
-          <animate attributeName="baseFrequency" dur="3.2s" values="0.018 0.115;0.032 0.15;0.014 0.09;0.025 0.132;0.018 0.115" repeatCount="indefinite" />
+      <filter id={smokeId} x="-55%" y="-42%" width="210%" height="184%" color-interpolation-filters="sRGB">
+        <feTurbulence type="fractalNoise" baseFrequency="0.012 0.052" numOctaves="4" seed="13" result="noise">
+          <animate attributeName="baseFrequency" dur="5.8s" values="0.012 0.052;0.022 0.088;0.01 0.064;0.012 0.052" repeatCount="indefinite" />
         </feTurbulence>
-        <feDisplacementMap in="SourceGraphic" in2="noise" scale="17" xChannelSelector="R" yChannelSelector="B" />
+        <feDisplacementMap in="SourceGraphic" in2="noise" scale="30" xChannelSelector="R" yChannelSelector="B" result="distorted" />
+        <feGaussianBlur in="distorted" stdDeviation="7" />
       </filter>
-      <filter id={glowId} x="-70%" y="-48%" width="240%" height="196%" color-interpolation-filters="sRGB">
-        <feGaussianBlur stdDeviation="8" result="blur" />
-        <feMerge>
-          <feMergeNode in="blur" />
-          <feMergeNode in="SourceGraphic" />
-        </feMerge>
-      </filter>
-      <filter id={plasmaId} x="-65%" y="-42%" width="230%" height="184%" color-interpolation-filters="sRGB">
-        <feTurbulence type="turbulence" baseFrequency="0.035 0.18" numOctaves="2" seed="19" result="plasmaNoise">
-          <animate attributeName="baseFrequency" dur="1.85s" values="0.035 0.18;0.058 0.24;0.025 0.14;0.035 0.18" repeatCount="indefinite" />
+      <filter id={plasmaId} x="-55%" y="-42%" width="210%" height="184%" color-interpolation-filters="sRGB">
+        <feTurbulence type="turbulence" baseFrequency="0.026 0.105" numOctaves="3" seed="29" result="plasma">
+          <animate attributeName="baseFrequency" dur="1.9s" values="0.026 0.105;0.052 0.18;0.018 0.09;0.026 0.105" repeatCount="indefinite" />
         </feTurbulence>
-        <feDisplacementMap in="SourceGraphic" in2="plasmaNoise" scale="9" xChannelSelector="R" yChannelSelector="G" result="jagged" />
-        <feGaussianBlur in="jagged" stdDeviation="1.1" result="softJagged" />
-        <feMerge>
-          <feMergeNode in="softJagged" />
-          <feMergeNode in="jagged" />
-        </feMerge>
+        <feDisplacementMap in="SourceGraphic" in2="plasma" scale="18" xChannelSelector="R" yChannelSelector="G" />
       </filter>
-      <path id={`energy-route-${accent}`} d="M44 18H316Q342 18 342 44V656Q342 682 316 682H44Q18 682 18 656V44Q18 18 44 18Z" />
+      <mask id={smokeMaskId}>
+        <rect x="-80" y="-80" width="550" height="690" fill="white" />
+        <rect x="26" y="26" width="338" height="478" rx="24" fill="black" />
+      </mask>
+      <path id={pathId} d="M52 24H338Q366 24 366 52V478Q366 506 338 506H52Q24 506 24 478V52Q24 24 52 24Z" />
     </defs>
-
-    <use class="energy-outer-flame" href={`#energy-route-${accent}`} filter={`url(#${glowId})`} />
-    <use class="energy-halo-line" href={`#energy-route-${accent}`} />
-    <use class="energy-fire-shadow" href={`#energy-route-${accent}`} filter={`url(#${filterId})`} />
-    <use class="energy-fire-base" href={`#energy-route-${accent}`} filter={`url(#${filterId})`} />
-    <use class="energy-fire-crackle" href={`#energy-route-${accent}`} filter={`url(#${plasmaId})`} />
-    <use class="energy-fire-hot energy-fire-hot--a" href={`#energy-route-${accent}`} filter={`url(#${glowId})`} />
-    <use class="energy-fire-hot energy-fire-hot--b" href={`#energy-route-${accent}`} filter={`url(#${filterId})`} />
-    <use class="energy-fire-hot energy-fire-hot--c" href={`#energy-route-${accent}`} filter={`url(#${plasmaId})`} />
-    <use class="energy-fire-filament energy-fire-filament--a" href={`#energy-route-${accent}`} filter={`url(#${filterId})`} />
-    <use class="energy-fire-filament energy-fire-filament--b" href={`#energy-route-${accent}`} filter={`url(#${filterId})`} />
-
-    {[0, 1, 2, 3, 4, 5].map((spark) => (
-      <circle class={`energy-spark energy-spark--${spark}`} r={spark % 3 === 0 ? 2.5 : 1.6}>
-        <animateMotion
-          dur={`${3.1 + spark * 0.43}s`}
-          begin={`${spark * -0.71}s`}
-          repeatCount="indefinite"
-          rotate="auto"
-        >
-          <mpath href={`#energy-route-${accent}`} />
+    <g mask={`url(#${smokeMaskId})`}>
+      <use class="storm-smoke storm-smoke--outer" href={`#${pathId}`} filter={`url(#${smokeId})`} />
+      <use class="storm-smoke storm-smoke--inner" href={`#${pathId}`} filter={`url(#${smokeId})`} />
+      <use class="storm-line storm-line--base" href={`#${pathId}`} filter={`url(#${plasmaId})`} />
+      <use class="storm-line storm-line--wide-a" href={`#${pathId}`} filter={`url(#${plasmaId})`} />
+      <use class="storm-line storm-line--wide-b" href={`#${pathId}`} filter={`url(#${plasmaId})`} />
+      <use class="storm-line storm-line--hot-a" href={`#${pathId}`} />
+      <use class="storm-line storm-line--hot-b" href={`#${pathId}`} filter={`url(#${plasmaId})`} />
+      <use class="storm-line storm-line--sparkle" href={`#${pathId}`} filter={`url(#${plasmaId})`} />
+      <use class="storm-meteor-trail storm-meteor-trail--a" href={`#${pathId}`} filter={`url(#${plasmaId})`} />
+      <use class="storm-meteor-trail storm-meteor-trail--b" href={`#${pathId}`} filter={`url(#${plasmaId})`} />
+      <g class="storm-meteor storm-meteor--a">
+        <animateMotion dur="11.2s" repeatCount="indefinite" rotate="auto">
+          <mpath href={`#${pathId}`} />
         </animateMotion>
-      </circle>
-    ))}
+        <ellipse class="storm-meteor__core" cx="0" cy="0" rx="22" ry="6.6" />
+        <circle class="storm-meteor__head" cx="8" cy="0" r="4.3" />
+      </g>
+      <g class="storm-meteor storm-meteor--b">
+        <animateMotion dur="11.2s" begin="-5.6s" repeatCount="indefinite" rotate="auto">
+          <mpath href={`#${pathId}`} />
+        </animateMotion>
+        <ellipse class="storm-meteor__core" cx="0" cy="0" rx="18" ry="5.7" />
+        <circle class="storm-meteor__head" cx="7" cy="0" r="3.8" />
+      </g>
+    </g>
   </svg>
 
-  <div class="energy-card__surface">
-    <h3>{name}</h3>
-    <div class="energy-price" aria-label={`${price}${cents}${suffix}`}>
-      <span>{price}</span>
-      {cents && <small>{cents}</small>}
-      {suffix && <em>{suffix}</em>}
-    </div>
-    <p class="energy-description">{description}</p>
-    <div class="energy-divider" aria-hidden="true"></div>
-    <ul>
-      {normalizedFeatures.map((feature) => (
-        <li>
-          <span class="energy-check" aria-hidden="true"></span>
-          <span>{feature.text}</span>
-          {feature.info && (
-            <span class="energy-info" title="Final allowance is confirmed during discovery" aria-label="Final allowance is confirmed during discovery">i</span>
-          )}
-        </li>
-      ))}
-    </ul>
-    <a class="energy-action" href={href}>{ctaText}</a>
+  <h3>{name}</h3>
+
+  <div class="pricing-tier__price" aria-label={`${price}${cents}${suffix}`}>
+    <span>{price}</span>
+    {cents && <small>{cents}</small>}
+    {suffix && <em>{suffix}</em>}
   </div>
+
+  <p class="pricing-tier__description">{description}</p>
+  <span class="pricing-tier__divider" aria-hidden="true"></span>
+
+  <ul>
+    {normalizedFeatures.map((feature) => (
+      <li>
+        <span class="pricing-tier__check" aria-hidden="true"></span>
+        <span>{feature.text}</span>
+        {feature.info && (
+          <span class="pricing-tier__info" title="Final allowance is confirmed during discovery" aria-label="Final allowance is confirmed during discovery">i</span>
+        )}
+      </li>
+    ))}
+  </ul>
+
+  <a class="pricing-tier__action" href={href}>{ctaText}</a>
 </article>
 
 <style>
-  .energy-card {
-    --energy: #28f2bf;
-    --energy-hot: #dffff7;
-    --energy-core: #ffffff;
-    --energy-deep: #087e67;
-    --energy-rgb: 40, 242, 191;
-    --energy-deep-rgb: 8, 126, 103;
-    --surface-a: #0b1412;
-    --surface-b: #080b0b;
+  .pricing-tier {
+    --tier-rgb: 255, 255, 255;
+    --tier-hot: #ffffff;
+    --tier-core: #ffffff;
+    --tier-deep: #ffffff;
+    --tier-surface: #0d0f11;
+    --tier-border: rgba(255, 255, 255, .055);
     position: relative;
     isolation: isolate;
-    width: 100%;
-    max-width: 340px;
-    min-width: 0;
-    height: clamp(600px, 76vh, 680px);
-    margin-inline: auto;
+    display: flex;
+    flex-direction: column;
+    flex: 0 0 auto;
+    width: clamp(288px, 26vw, 390px);
+    height: 530px;
+    padding: 28px 28px 24px;
+    border: 1px solid var(--tier-border);
     border-radius: 24px;
-    outline: none;
-    opacity: .52;
-    transform: scale(.982);
-    filter: saturate(.72) brightness(.68);
-    transition: opacity .36s ease, transform .36s ease, filter .36s ease;
-  }
-
-  .energy-card--common {
-    --energy: #29f3bd;
-    --energy-hot: #dffff6;
-    --energy-core: #ffffff;
-    --energy-deep: #087c65;
-    --energy-rgb: 41, 243, 189;
-    --energy-deep-rgb: 8, 124, 101;
-    --surface-a: #0d1d19;
-    --surface-b: #080b0a;
-  }
-
-  .energy-card--rare {
-    --energy: #35c9ff;
-    --energy-hot: #ebedff;
-    --energy-core: #ffffff;
-    --energy-deep: #5554ff;
-    --energy-rgb: 62, 133, 255;
-    --energy-deep-rgb: 36, 80, 190;
-    --surface-a: #101936;
-    --surface-b: #080c13;
-  }
-
-  .energy-card--epic {
-    --energy: #ff54dc;
-    --energy-hot: #fff0ff;
-    --energy-core: #ffffff;
-    --energy-deep: #8f31ff;
-    --energy-rgb: 217, 66, 255;
-    --energy-deep-rgb: 143, 49, 255;
-    --surface-a: #241634;
-    --surface-b: #0c0910;
-  }
-
-  .energy-card--legendary {
-    --energy: #ff8b2d;
-    --energy-hot: #ffe28a;
-    --energy-core: #fff8e7;
-    --energy-deep: #d43417;
-    --energy-rgb: 255, 120, 34;
-    --energy-deep-rgb: 196, 48, 16;
-    --surface-a: #23110c;
-    --surface-b: #0b0909;
-  }
-
-  .energy-ambient {
-    position: absolute;
-    inset: -52px;
-    z-index: -3;
-    border-radius: 44px;
-    background:
-      radial-gradient(ellipse at 50% 2%, rgba(var(--energy-rgb), .72), transparent 45%),
-      radial-gradient(ellipse at 98% 58%, rgba(var(--energy-rgb), .46), transparent 50%),
-      radial-gradient(ellipse at 10% 70%, rgba(var(--energy-deep-rgb), .38), transparent 48%),
-      radial-gradient(ellipse at 50% 110%, rgba(var(--energy-rgb), .28), transparent 54%);
-    filter: blur(34px);
-    opacity: 0;
-    transform: scale(.96);
-    transition: opacity .36s ease;
-    animation: energyAmbient 4.6s ease-in-out infinite alternate;
-    pointer-events: none;
-  }
-
-  .energy-frame {
-    position: absolute;
-    inset: -22px;
-    z-index: 3;
-    width: calc(100% + 44px);
-    height: calc(100% + 44px);
     overflow: visible;
-    opacity: 0;
-    transition: opacity .28s ease;
-    pointer-events: none;
+    color: #fff;
+    background:
+      linear-gradient(180deg, rgba(18, 20, 23, .98), rgba(9, 10, 12, .98)),
+      var(--tier-surface);
+    box-shadow: 4px 6px 25px rgba(0, 0, 0, .56);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    cursor: pointer;
+    scroll-snap-align: center;
+    outline: none;
+    transition:
+      transform .2s ease,
+      border-color .2s ease,
+      background .2s ease,
+      box-shadow .2s ease,
+      opacity .2s ease;
   }
 
-  .energy-frame use,
-  .energy-frame circle {
+  .pricing-tier--common {
+    --tier-rgb: 42, 243, 190;
+    --tier-hot: #e8fff8;
+    --tier-core: #ffffff;
+    --tier-deep: #19a87d;
+  }
+
+  .pricing-tier--rare {
+    --tier-rgb: 75, 148, 255;
+    --tier-hot: #eef6ff;
+    --tier-core: #ffffff;
+    --tier-deep: #315dff;
+  }
+
+  .pricing-tier--epic {
+    --tier-rgb: 218, 76, 255;
+    --tier-hot: #fff0ff;
+    --tier-core: #ffffff;
+    --tier-deep: #9b36ff;
+  }
+
+  .pricing-tier--legendary {
+    --tier-rgb: 255, 134, 42;
+    --tier-hot: #ffd36f;
+    --tier-core: #fff8df;
+    --tier-deep: #c83212;
+    --tier-border: rgba(255, 255, 255, .1);
+    --tier-surface: #20120d;
+  }
+
+  .pricing-tier__glow,
+  .pricing-tier__storm {
+    position: absolute;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity .26s ease, transform .26s ease;
+  }
+
+  .pricing-tier__glow {
+    inset: -68px;
+    z-index: -1;
+    border-radius: 42px;
+    background:
+      radial-gradient(circle at 18% 0%, rgba(var(--tier-rgb), .72), transparent 34%),
+      radial-gradient(circle at 88% 44%, rgba(var(--tier-rgb), .36), transparent 48%),
+      radial-gradient(circle at 92% 105%, rgba(var(--tier-rgb), .46), transparent 42%);
+    filter: blur(40px);
+    transform: scale(.96);
+    animation: tierGlowBreath 4.8s ease-in-out infinite alternate;
+  }
+
+  .pricing-tier__storm {
+    inset: -26px;
+    z-index: 4;
+    width: calc(100% + 52px);
+    height: calc(100% + 52px);
+    overflow: visible;
+  }
+
+  .pricing-tier__storm use,
+  .pricing-tier__storm path,
+  .pricing-tier__storm ellipse,
+  .pricing-tier__storm circle {
     vector-effect: non-scaling-stroke;
   }
 
-  .energy-outer-flame {
+  .storm-smoke {
     fill: none;
-    stroke: var(--energy-deep);
-    stroke-width: 23;
-    opacity: .22;
+    stroke: rgb(var(--tier-rgb));
     stroke-linecap: round;
-    animation: energyOuter 3.9s ease-in-out infinite alternate;
   }
 
-  .energy-halo-line {
-    fill: none;
-    stroke: var(--energy);
-    stroke-width: 18;
-    opacity: .32;
-    filter: blur(12px);
+  .storm-smoke--outer {
+    stroke-width: 34;
+    opacity: .14;
+    stroke-dasharray: 420 310 230 250 640 420;
+    animation: stormSmokeDrift 18.4s linear infinite, stormSmokePulse 10.4s ease-in-out infinite alternate;
   }
 
-  .energy-fire-shadow {
-    fill: none;
-    stroke: var(--energy-deep);
-    stroke-width: 8;
-    opacity: .72;
-    stroke-linecap: round;
-    stroke-dasharray: 96 22 260 48 34 18;
-    animation: energyCrawlReverse 6.6s linear infinite, energyBase 2.8s ease-in-out infinite alternate;
+  .storm-smoke--inner {
+    stroke-width: 16;
+    opacity: .12;
+    stroke-dasharray: 170 250 480 330 240 310;
+    animation: stormSmokeDriftReverse 16.8s linear infinite, stormSmokePulse 9.6s ease-in-out -.8s infinite alternate;
   }
 
-  .energy-fire-base {
+  .storm-line {
     fill: none;
-    stroke: var(--energy);
-    stroke-width: 5.2;
-    opacity: .95;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    animation: energyBase 2.45s ease-in-out infinite alternate;
-  }
-
-  .energy-fire-crackle {
-    fill: none;
-    stroke: var(--energy-hot);
-    stroke-width: 2.9;
-    opacity: .88;
-    stroke-linecap: round;
-    stroke-dasharray: 2 7 5 11 1 13 38 9;
-    animation: energyCrawl 1.6s linear infinite, energySparkPulse .54s steps(2, end) infinite;
-  }
-
-  .energy-fire-hot {
-    fill: none;
-    stroke: var(--energy-core);
     stroke-linecap: round;
     stroke-linejoin: round;
   }
 
-  .energy-fire-hot--a {
-    stroke-width: 4.6;
-    stroke-dasharray: 92 28 12 58 185 36 20 110;
-    animation: energyCrawl 3.15s linear infinite, energyPulse 1.05s steps(3, end) infinite;
-  }
-
-  .energy-fire-hot--b {
-    stroke-width: 2.8;
-    stroke-dasharray: 11 16 76 20 6 15 118 29 8 38;
-    animation: energyCrawlReverse 4.75s linear infinite, energyPulse 1.45s steps(4, end) -.6s infinite;
-  }
-
-  .energy-fire-hot--c {
-    stroke: var(--energy-hot);
+  .storm-line--base {
+    stroke: rgb(var(--tier-rgb));
     stroke-width: 6.2;
-    opacity: .64;
-    stroke-dasharray: 34 180 62 290 12 150;
-    animation: energyCrawl 5.85s linear infinite, energySparkPulse .82s steps(2, end) -.2s infinite;
+    opacity: .9;
+    filter:
+      drop-shadow(0 0 8px rgb(var(--tier-rgb)))
+      drop-shadow(0 0 28px rgba(var(--tier-rgb), .78))
+      drop-shadow(0 0 68px rgba(var(--tier-rgb), .46));
+    animation: stormBasePulse 4.1s ease-in-out infinite alternate;
   }
 
-  .energy-fire-filament {
+  .storm-line--wide-a,
+  .storm-line--wide-b {
+    stroke: rgb(var(--tier-rgb));
+    opacity: .55;
+    filter:
+      drop-shadow(0 0 10px rgb(var(--tier-rgb)))
+      drop-shadow(0 0 34px rgba(var(--tier-rgb), .55));
+  }
+
+  .storm-line--wide-a {
+    stroke-width: 7.4;
+    stroke-dasharray: 520 420 310 360 780 540;
+    animation: stormDash 12.4s linear infinite, stormSmokePulse 7.2s ease-in-out infinite alternate;
+  }
+
+  .storm-line--wide-b {
+    stroke: var(--tier-hot);
+    stroke-width: 5;
+    stroke-dasharray: 260 360 640 520 180 430;
+    opacity: .34;
+    animation: stormDashReverse 13.6s linear infinite, stormCrackle 2.4s steps(3, end) -.35s infinite;
+  }
+
+  .storm-line--hot-a {
+    stroke: var(--tier-core);
+    stroke-width: 4.6;
+    stroke-dasharray: 520 160 310 170 760 220;
+    filter:
+      drop-shadow(0 0 5px var(--tier-hot))
+      drop-shadow(0 0 18px rgb(var(--tier-rgb)));
+    animation: stormDash 6.3s linear infinite, stormCrackle 1.64s steps(3, end) infinite;
+  }
+
+  .storm-line--hot-b {
+    stroke: var(--tier-hot);
+    stroke-width: 3;
+    stroke-dasharray: 70 110 260 130 62 150 430 180;
+    opacity: .92;
+    animation: stormDashReverse 8.8s linear infinite, stormCrackle 1.24s steps(2, end) -.2s infinite;
+  }
+
+  .storm-line--sparkle {
+    stroke: var(--tier-core);
+    stroke-width: 1.6;
+    stroke-dasharray: 24 70 14 120 36 95 210 130;
+    opacity: .78;
+    filter: drop-shadow(0 0 7px var(--tier-hot));
+    animation: stormDash 3.7s linear infinite, stormCrackle .8s steps(2, end) infinite;
+  }
+
+  .storm-meteor-trail {
     fill: none;
     stroke-linecap: round;
+    stroke-linejoin: round;
+    opacity: .95;
+    filter:
+      drop-shadow(0 0 7px var(--tier-core))
+      drop-shadow(0 0 18px var(--tier-hot))
+      drop-shadow(0 0 44px rgb(var(--tier-rgb)));
+  }
+
+  .storm-meteor-trail--a {
+    stroke: var(--tier-core);
+    stroke-width: 5.2;
+    stroke-dasharray: 34 1194;
+    animation: stormTrailA 11.2s linear infinite, stormCrackle 1.44s steps(2, end) infinite;
+  }
+
+  .storm-meteor-trail--b {
+    stroke: var(--tier-hot);
+    stroke-width: 4.8;
+    stroke-dasharray: 28 1200;
+    opacity: .68;
+    animation: stormTrailB 11.2s linear infinite, stormCrackle 1.68s steps(2, end) -.18s infinite;
+  }
+
+  .storm-meteor {
+    opacity: .98;
+    filter:
+      drop-shadow(0 0 5px var(--tier-core))
+      drop-shadow(0 0 13px var(--tier-hot))
+      drop-shadow(0 0 34px rgb(var(--tier-rgb)));
+  }
+
+  .storm-meteor--b {
     opacity: .9;
   }
 
-  .energy-fire-filament--a {
-    stroke: var(--energy-hot);
-    stroke-width: 1.25;
-    stroke-dasharray: 3 8 2 17 48 16;
-    animation: energyCrawl 2.05s linear infinite;
+  .storm-meteor__core {
+    fill: var(--tier-hot);
+    opacity: .95;
   }
 
-  .energy-fire-filament--b {
-    stroke: var(--energy-deep);
-    stroke-width: 2.4;
-    stroke-dasharray: 86 18 18 9 148 24;
-    animation: energyCrawlReverse 4.05s linear infinite;
-  }
-
-  .energy-spark {
-    fill: var(--energy-core);
-    opacity: 0;
-    filter:
-      drop-shadow(0 0 5px var(--energy-hot))
-      drop-shadow(0 0 14px var(--energy));
-    animation: sparkBlink 1.25s steps(2, end) infinite;
-  }
-
-  .energy-spark--1, .energy-spark--4 { animation-delay: -.45s; }
-  .energy-spark--2, .energy-spark--5 { animation-delay: -.9s; }
-
-  .energy-card__surface {
-    position: relative;
-    z-index: 2;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    padding: clamp(24px, 2.05vw, 28px);
-    border: 2px solid color-mix(in srgb, var(--energy) 48%, #f3bf6b 52%);
-    border-radius: 24px;
-    overflow: hidden;
-    background:
-      radial-gradient(circle at 78% 4%, rgba(255,255,255,.07), transparent 24%),
-      radial-gradient(circle at 28% 5%, rgba(var(--energy-rgb), .14), transparent 34%),
-      radial-gradient(circle at 102% 100%, rgba(var(--energy-rgb), .11), transparent 45%),
-      linear-gradient(148deg, var(--surface-a), var(--surface-b) 58%, #070707);
-    box-shadow:
-      inset 0 1px 0 rgba(255,255,255,.055),
-      inset 0 -90px 130px rgba(var(--energy-rgb), .045),
-      0 26px 82px rgba(0,0,0,.62);
-  }
-
-  .energy-card__surface::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    opacity: .13;
-    background-image: radial-gradient(circle, rgba(255,255,255,.2) .7px, transparent .8px);
-    background-size: 9px 9px;
-    mask-image: radial-gradient(circle at 72% 13%, #000, transparent 43%);
-    pointer-events: none;
+  .storm-meteor__head {
+    fill: var(--tier-core);
   }
 
   h3,
-  .energy-price,
-  .energy-description,
-  .energy-divider,
+  .pricing-tier__price,
+  .pricing-tier__description,
+  .pricing-tier__divider,
   ul,
-  .energy-action {
+  .pricing-tier__action {
     position: relative;
-    z-index: 1;
+    z-index: 2;
   }
 
   h3 {
-    margin: 0 0 clamp(42px, 6.1vh, 58px);
+    margin: 0;
     color: #fff;
-    font-size: clamp(14px, 1.08vw, 16px);
-    line-height: 1;
-    font-weight: 560;
+    font-size: 20px;
+    line-height: 1.18;
+    font-weight: 650;
+    letter-spacing: 0;
   }
 
-  .energy-price {
+  .pricing-tier__price {
     display: flex;
     align-items: baseline;
-    gap: 2px;
-    margin-bottom: clamp(24px, 3.25vh, 32px);
+    margin-top: 10px;
+    line-height: 1.1;
     white-space: nowrap;
   }
 
-  .energy-price span {
+  .pricing-tier__price span {
     color: #fff;
-    font-size: clamp(48px, 4.05vw, 58px);
-    line-height: .82;
-    font-weight: 680;
+    font-size: clamp(42px, 4.45vw, 64px);
+    line-height: .95;
+    font-weight: 650;
+    letter-spacing: -2px;
   }
 
-  .energy-price small {
-    color: rgba(255,255,255,.78);
-    font-size: clamp(14px, 1vw, 16px);
-    font-weight: 540;
+  .pricing-tier__price small,
+  .pricing-tier__price em {
+    color: #c9cbcf;
+    font-weight: 520;
+    letter-spacing: 0;
   }
 
-  .energy-price em {
-    margin-left: 2px;
-    color: rgba(242,242,246,.72);
-    font-size: clamp(13px, .95vw, 15px);
+  .pricing-tier__price small {
+    font-size: clamp(16px, 1.45vw, 20px);
+  }
+
+  .pricing-tier__price em {
+    margin-left: 4px;
+    font-size: clamp(16px, 1.45vw, 20px);
     font-style: normal;
-    font-weight: 500;
   }
 
-  .energy-description {
-    max-width: 28ch;
-    min-height: 60px;
-    margin: 0;
-    color: rgba(246,246,249,.91);
-    font-size: clamp(13px, .92vw, 14px);
-    line-height: 1.48;
+  .pricing-tier__description {
+    min-height: 70px;
+    margin: 4px 0 0;
+    padding-right: 12px;
+    color: rgba(255, 255, 255, .9);
+    font-size: clamp(16px, 1.25vw, 18px);
+    line-height: 1.22;
+    font-weight: 520;
+    letter-spacing: 0;
   }
 
-  .energy-divider {
+  .pricing-tier__divider {
+    display: block;
+    width: 100%;
     height: 1px;
-    margin: clamp(22px, 3vh, 30px) 0;
-    background: rgba(255,255,255,.12);
+    margin-top: 18px;
+    background: rgba(255, 255, 255, .1);
   }
 
   ul {
-    display: grid;
-    gap: clamp(11px, 1.45vh, 14px);
-    margin: 0 0 26px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin: 24px 0 24px;
     padding: 0;
     list-style: none;
   }
@@ -439,166 +434,193 @@ const plasmaId = `energy-plasma-${accent}`;
   li {
     display: flex;
     align-items: center;
+    gap: 8px;
     min-width: 0;
-    gap: 11px;
-    color: rgba(244,244,247,.92);
-    font-size: clamp(13px, .9vw, 14px);
-    line-height: 1.25;
-    font-weight: 480;
+    color: rgba(255, 255, 255, .9);
+    font-size: clamp(16px, 1.22vw, 18px);
+    line-height: 1;
+    font-weight: 520;
+    letter-spacing: 0;
   }
 
-  .energy-check {
+  .pricing-tier__check {
     position: relative;
-    width: 15px;
-    height: 15px;
-    flex: 0 0 15px;
+    width: 16px;
+    height: 16px;
+    flex: 0 0 16px;
+    opacity: .75;
   }
 
-  .energy-check::before {
-    content: '';
+  .pricing-tier__check::before {
+    content: "";
     position: absolute;
-    left: 3px;
-    top: 0;
+    left: 4px;
+    top: 1px;
     width: 6px;
     height: 11px;
-    border: solid #fff;
+    border: solid currentColor;
     border-width: 0 2px 2px 0;
     transform: rotate(45deg);
   }
 
-  .energy-info {
+  .pricing-tier__info {
     display: inline-grid;
     place-items: center;
-    width: 16px;
-    height: 16px;
-    flex: 0 0 16px;
+    width: 17px;
+    height: 17px;
+    flex: 0 0 17px;
     border-radius: 50%;
-    color: rgba(255,255,255,.68);
-    background: rgba(255,255,255,.11);
+    color: rgba(255,255,255,.65);
+    background: rgba(255,255,255,.12);
     font-size: 11px;
     font-weight: 700;
     cursor: help;
   }
 
-  .energy-action {
-    min-height: 52px;
+  .pricing-tier__action {
+    min-height: 56px;
     margin-top: auto;
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    width: 100%;
+    border: 1px solid rgba(255,255,255,.2);
     border-radius: 999px;
-    color: #090909;
-    background: #fff;
-    font-size: clamp(15px, .98vw, 16px);
+    color: #fff;
+    background: transparent;
+    font-size: clamp(16px, 1.22vw, 18px);
+    line-height: 1;
     font-weight: 680;
-    box-shadow: 0 2px 0 rgba(0,0,0,.2);
-    transition: transform .24s ease, box-shadow .24s ease, background .24s ease;
+    text-transform: capitalize;
+    transition: background .3s ease, border-color .3s ease, color .3s ease, transform .3s ease;
   }
 
-  .energy-action:hover,
-  .energy-action:focus-visible {
-    transform: scale(1.015);
+  .pricing-tier--legendary .pricing-tier__action,
+  .pricing-tier:hover .pricing-tier__action,
+  .pricing-tier:focus-visible .pricing-tier__action,
+  .pricing-tier.is-active .pricing-tier__action {
+    border-color: #fff;
+    color: #0b0d10;
     background: #fff;
-    box-shadow: 0 8px 28px rgba(255,255,255,.2);
   }
 
-  .energy-card:hover,
-  .energy-card:focus-visible,
-  .energy-card.is-active {
+  .pricing-tier:hover,
+  .pricing-tier:focus-visible,
+  .pricing-tier.is-active {
+    transform: translateY(-3px);
+    border-color: rgba(255, 255, 255, .16);
+    box-shadow:
+      4px 6px 25px rgba(0, 0, 0, .56),
+      0 0 50px rgba(var(--tier-rgb), .16);
+  }
+
+  .pricing-tier:hover .pricing-tier__glow,
+  .pricing-tier:focus-visible .pricing-tier__glow,
+  .pricing-tier.is-active .pricing-tier__glow {
     opacity: 1;
     transform: scale(1);
-    filter: saturate(1.14) brightness(1);
   }
 
-  .energy-card:hover .energy-ambient,
-  .energy-card:focus-visible .energy-ambient,
-  .energy-card.is-active .energy-ambient,
-  .energy-card:hover .energy-frame,
-  .energy-card:focus-visible .energy-frame,
-  .energy-card.is-active .energy-frame {
+  .pricing-tier:hover .pricing-tier__storm,
+  .pricing-tier:focus-visible .pricing-tier__storm,
+  .pricing-tier.is-active .pricing-tier__storm {
     opacity: 1;
   }
 
-  @keyframes energyAmbient {
-    0% { transform: scale(.95) translate3d(-1%, 0, 0); filter: blur(38px); }
-    55% { transform: scale(1.03) translate3d(1%, -1%, 0); filter: blur(28px); }
-    100% { transform: scale(.98) translate3d(0, 1%, 0); filter: blur(42px); }
+  .pricing-tier__action:hover,
+  .pricing-tier__action:focus-visible {
+    transform: scale(1.01);
+    border-color: rgba(255,255,255,.5);
+    background: rgba(255,255,255,.95);
+    color: #0b0d10;
   }
 
-  @keyframes energyOuter {
-    0%, 100% { opacity: .14; stroke-width: 19; }
-    36% { opacity: .32; stroke-width: 27; }
-    68% { opacity: .22; stroke-width: 22; }
+  @keyframes tierGlowBreath {
+    0% { transform: scale(.96) translate3d(-1%, 0, 0); filter: blur(38px); }
+    48% { transform: scale(1.03) translate3d(1%, -1%, 0); filter: blur(28px); }
+    100% { transform: scale(.99) translate3d(0, 1%, 0); filter: blur(44px); }
   }
 
-  @keyframes energyBase {
-    0%, 100% { opacity: .62; }
-    38% { opacity: 1; }
-    72% { opacity: .78; }
+  @keyframes stormBasePulse {
+    0%, 100% { opacity: .6; stroke-width: 5; }
+    46% { opacity: 1; stroke-width: 8; }
+    72% { opacity: .82; stroke-width: 6.2; }
   }
 
-  @keyframes energyCrawl { to { stroke-dashoffset: -720; } }
-  @keyframes energyCrawlReverse { to { stroke-dashoffset: 840; } }
-
-  @keyframes energyPulse {
-    0%, 100% { opacity: .48; }
-    18% { opacity: 1; }
-    46% { opacity: .68; }
-    72% { opacity: .92; }
+  @keyframes stormDash {
+    to { stroke-dashoffset: -1960; }
   }
 
-  @keyframes energySparkPulse {
-    0%, 100% { opacity: .28; }
-    18% { opacity: 1; }
-    24% { opacity: .45; }
-    42% { opacity: .9; }
-    58% { opacity: .18; }
-    76% { opacity: .72; }
+  @keyframes stormDashReverse {
+    to { stroke-dashoffset: 2080; }
   }
 
-  @keyframes sparkBlink {
-    0%, 22%, 100% { opacity: 0; }
-    28%, 39% { opacity: 1; }
-    44%, 78% { opacity: .2; }
+  @keyframes stormSmokeDrift {
+    to { stroke-dashoffset: -1520; }
   }
 
-  @media (max-height: 820px) and (min-width: 981px) {
-    .energy-card { height: 600px; }
-    .energy-card__surface { padding: 24px; }
-    h3 { margin-bottom: 42px; }
-    .energy-price { margin-bottom: 24px; }
-    .energy-description { min-height: 58px; }
-    .energy-divider { margin: 22px 0; }
-    ul { gap: 11px; margin-bottom: 22px; }
+  @keyframes stormSmokeDriftReverse {
+    to { stroke-dashoffset: 1640; }
   }
 
-  @media (max-width: 980px) {
-    .energy-card { height: 560px; }
+  @keyframes stormTrailA {
+    from { stroke-dashoffset: 18; }
+    to { stroke-dashoffset: -1210; }
   }
 
-  @media (max-width: 640px) {
-    .energy-card {
-      width: min(100%, 340px);
-      height: 600px;
-      min-height: 560px;
-      margin-inline: auto;
-      opacity: 1;
-      transform: none;
-      filter: saturate(1) brightness(1);
+  @keyframes stormTrailB {
+    from { stroke-dashoffset: -596; }
+    to { stroke-dashoffset: -1824; }
+  }
+
+  @keyframes stormSmokePulse {
+    0%, 100% { opacity: .08; }
+    52% { opacity: .22; }
+  }
+
+  @keyframes stormCrackle {
+    0%, 100% { opacity: .46; }
+    20% { opacity: 1; }
+    38% { opacity: .62; }
+    64% { opacity: .95; }
+  }
+
+  @media (max-width: 720px) {
+    .pricing-tier {
+      width: min(288px, calc(100vw - 48px));
+      height: 530px;
+      padding: 28px 28px 24px;
     }
-    .energy-frame { inset: -12px; width: calc(100% + 24px); height: calc(100% + 24px); }
-    .energy-ambient { inset: -22px; filter: blur(20px); }
+
+    .pricing-tier__price span {
+      font-size: 38px;
+      letter-spacing: -1.2px;
+    }
+
+    .pricing-tier__price small,
+    .pricing-tier__price em {
+      font-size: 14px;
+    }
+
+    .pricing-tier__action {
+      min-height: 40px;
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .energy-ambient,
-    .energy-frame use,
-    .energy-spark {
+    .pricing-tier__glow,
+    .storm-smoke,
+    .storm-line {
       animation: none !important;
     }
-    .energy-fire-hot--a { stroke-dasharray: 420 70; }
-    .energy-fire-hot--b,
-    .energy-fire-filament { opacity: .45; }
-    .energy-spark { display: none; }
+
+    .pricing-tier__storm animate,
+    .pricing-tier__storm animateMotion {
+      display: none;
+    }
+
+    .storm-meteor {
+      opacity: 0;
+    }
   }
 </style>
