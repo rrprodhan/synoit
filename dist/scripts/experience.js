@@ -497,13 +497,13 @@
   });
 
   gsap.set(['.hero .kicker', '.hero-title', '.hero-sub', '.hero-actions'], { y: 42, opacity: 0 });
-  gsap.set('#heroChip', { scale: 0, opacity: 0, rotationY: -80 });
+  gsap.set('#heroChip', { scale: 0, opacity: 0, rotationX: 0, rotationY: 0, rotationZ: 0 });
   const tl = gsap.timeline({ delay: .08 });
   tl.to('.hero .kicker', { y: 0, opacity: 1, duration: .72, ease: 'power3.out' })
     .to('.hero-title', { y: 0, opacity: 1, duration: .95, ease: 'power4.out' }, '-=.42')
     .to('.hero-sub', { y: 0, opacity: 1, duration: .82, ease: 'power3.out' }, '-=.58')
     .to('.hero-actions', { y: 0, opacity: 1, duration: .82, ease: 'power3.out' }, '-=.62')
-    .to('#heroChip', { scale: 1, opacity: 1, rotationY: 0, duration: .9, ease: 'back.out(1.6)' }, '-=.54')
+    .to('#heroChip', { scale: 1, opacity: 1, rotationX: 0, rotationY: 0, rotationZ: 0, duration: .9, ease: 'back.out(1.6)' }, '-=.54')
     .to(heroPaths, { strokeDashoffset: 0, duration: 1.35, ease: 'power2.inOut', stagger: { each: .07, from: 'random' } }, '-=.58');
 
   const revealEls = gsap.utils.toArray('[data-reveal]').filter((el) => !el.closest('.hero'));
