@@ -532,7 +532,7 @@
     });
   });
 
-  gsap.to('#heroChip', { y: -12, duration: 2.4, yoyo: true, repeat: -1, ease: 'sine.inOut', delay: 1.2 });
+  gsap.set('#heroChip', { y: 0 });
   gsap.to('#heroChip', {
     rotationY: 360,
     ease: 'none',
