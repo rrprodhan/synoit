@@ -1,0 +1,11 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import HeroNet from '@/components/HeroNet.astro';
+import { services } from '@/data/services';
+---
+<BaseLayout title="Contact SynoIT | Start Your Digital Project" description="Contact SynoIT for web development, UI/UX design, mobile apps, AI automation, SEO, branding, and dedicated team projects.">
+  <main>
+    <section class="hero"><div class="hero-content"><p class="kicker" data-reveal>Connect with our architects</p><h1 class="hero-title" data-reveal>Let’s build <span class="accent">something great.</span></h1><p class="hero-sub" data-reveal>From visionary blueprints to digital execution, we bridge the gap between technical complexity and business growth.</p></div><HeroNet /></section>
+    <section class="section alt"><div class="container split"><div class="card" data-reveal style="min-height:auto"><h2 style="font-size:28px;margin-bottom:16px">Initiate project</h2><form class="form" action="mailto:support@synoit.com" method="post" enctype="text/plain"><div class="field"><label for="name">Name</label><input id="name" name="Name" autocomplete="name" required placeholder="John Doe" /></div><div class="field"><label for="email">Email</label><input id="email" name="Email" type="email" autocomplete="email" required placeholder="john@example.com" /></div><div class="field"><label for="service">Service interest</label><select id="service" name="Service">{services.map((service) => <option>{service.shortTitle}</option>)}</select></div><div class="field"><label for="message">Message</label><textarea id="message" name="Message" rows="4" required placeholder="Tell us about your digital vision..."></textarea></div><button class="btn-primary" type="submit">Send message</button></form></div><aside data-reveal><div class="card" style="min-height:auto;margin-bottom:16px"><p class="kicker">Direct lines</p><h3>Email us</h3><p><a href="mailto:support@synoit.com">support@synoit.com</a></p><h3 style="margin-top:18px">Call us</h3><p><a href="tel:+6582034346">+65 8203 4346</a></p></div><div class="card" style="min-height:auto"><p class="kicker">Global presence</p><h3>Singapore HQ</h3><p>30 Roberts Lane, #02-01<br/>Singapore 218309</p><h3 style="margin-top:18px">Bangladesh Hub</h3><p>Motijheel Commercial Area<br/>Dhaka-1000</p></div></aside></div></section>
+  </main>
+</BaseLayout>

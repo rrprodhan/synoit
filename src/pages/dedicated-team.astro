@@ -1,0 +1,24 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import HeroNet from '@/components/HeroNet.astro';
+import CTA from '@/components/CTA.astro';
+const steps = [
+  ['Discovery', 'We analyze your project requirements, tech stack, and team structure needs.'],
+  ['Recruitment', 'We source and vet talent matching your exact technical and cultural requirements.'],
+  ['Onboarding', 'Your dedicated team is onboarded to your processes, tools, and workflows.'],
+  ['Delivery', 'Continuous delivery with transparent reporting, standups, and sprint management.']
+];
+const benefits = [
+  ['Full Control', 'Direct access to your team members. You set priorities while we handle execution and management.'],
+  ['Cost Effective', 'Save 40-60% on hiring costs compared to building an in-house team. No recruitment overhead.'],
+  ['Scale Instantly', 'Ramp up or down based on project needs with flexible team compositions.']
+];
+---
+<BaseLayout title="Dedicated Team | SynoIT Digital Architecture" description="Scale development capacity with a hand-picked, fully managed SynoIT dedicated team for design, engineering, QA, and product delivery.">
+  <main>
+    <section class="hero"><div class="hero-content"><p class="kicker" data-reveal>Dedicated team</p><h1 class="hero-title" data-reveal>Your team, <span class="accent">our management.</span></h1><p class="hero-sub" data-reveal>Scale your development capacity with a hand-picked, fully managed team. We hire, train, and manage top-tier talent exclusively for your project.</p></div><HeroNet /></section>
+    <section class="section alt"><div class="container steps-body"><div data-reveal><p class="kicker">How it works</p><h2 style="font-size:var(--fs-h2);line-height:1.08;margin-bottom:16px">From requirements to an operational team.</h2><div class="step-list">{steps.map(([title, text], index) => <div class="step"><div class="step-num">{String(index + 1).padStart(2, '0')}</div><h3>{title}</h3><p>{text}</p></div>)}</div></div><div class="device" data-reveal><div class="orbit"></div><div class="screen"><div class="screen-card"><div class="screen-line short"></div><p style="color:var(--muted-2);font-size:14px;line-height:1.35">Product · Design · Engineering · QA</p></div><div class="screen-card"><div class="screen-line"></div><div class="screen-line short"></div></div><div class="screen-card"><div class="screen-line short"></div><div class="screen-line"></div></div></div></div></div></section>
+    <section class="section"><div class="container grid">{benefits.map(([title, text], index) => <div class="card" data-reveal><div class="icon-tile">{String(index + 1).padStart(2, '0')}</div><h3>{title}</h3><p>{text}</p></div>)}</div></section>
+    <CTA />
+  </main>
+</BaseLayout>

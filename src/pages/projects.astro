@@ -1,0 +1,17 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import HeroNet from '@/components/HeroNet.astro';
+import CTA from '@/components/CTA.astro';
+const projects = [
+  ['Luminous Engineering', 'Corporate website for a leading engineering firm in Singapore, featuring modern design, responsive layout, and optimized performance.', 'Web design · Development · SEO'],
+  ['NextGen Commerce', 'High-performance ecommerce platform with real-time inventory management, integrated payments, and AI-powered product recommendations.', 'Commerce · Integrations · AI'],
+  ['HealthTrack Pro', 'Cross-platform health and wellness mobile application with real-time tracking, doctor consultations, and personalized insights.', 'Mobile app · Backend · UX']
+];
+---
+<BaseLayout title="Projects | SynoIT Digital Architecture" description="Explore SynoIT projects across web development, design, mobile apps, ecommerce, AI, and digital growth.">
+  <main>
+    <section class="hero"><div class="hero-content"><p class="kicker" data-reveal>Featured projects</p><h1 class="hero-title" data-reveal>Projects we’ve <span class="accent">delivered.</span></h1><p class="hero-sub" data-reveal>Explore a selection of SynoIT work across web development, design, and digital strategy.</p></div><HeroNet /></section>
+    <section class="section alt"><div class="container grid">{projects.map(([name, text, tag], index) => <article class="card" data-reveal><div class="icon-tile">{String(index + 1).padStart(2, '0')}</div><small>{tag}</small><h3>{name}</h3><p>{text}</p></article>)}</div></section>
+    <CTA />
+  </main>
+</BaseLayout>

@@ -1,0 +1,15 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import HeroNet from '@/components/HeroNet.astro';
+const posts = [
+  ['Why Your Business Needs a Modern Web Presence in 2026', 'Discover how a modern web platform can transform your customer acquisition and retention strategy.', 'Web strategy'],
+  ['The Psychology Behind High-Converting Landing Pages', 'Learn the design principles and psychological triggers that turn visitors into customers.', 'Conversion design'],
+  ['SEO in 2026: The Complete Guide to Ranking #1', 'Everything you need to know about modern SEO strategies, from technical audits to content optimization.', 'SEO']
+];
+---
+<BaseLayout title="Blog | SynoIT Insights and Perspectives" description="Read SynoIT insights on design, development, technology, SEO, product strategy, and digital growth.">
+  <main>
+    <section class="hero"><div class="hero-content"><p class="kicker" data-reveal>Insights</p><h1 class="hero-title" data-reveal>Insights & <span class="accent">perspectives.</span></h1><p class="hero-sub" data-reveal>Stay ahead with expert takes on design, development, technology, and digital strategy.</p></div><HeroNet /></section>
+    <section class="section alt"><div class="container grid">{posts.map(([title, text, tag], index) => <article class="card" data-reveal><div class="icon-tile">{String(index + 1).padStart(2, '0')}</div><small>{tag}</small><h3>{title}</h3><p>{text}</p><a class="btn-ghost" style="margin-top:20px" href="/contact/">Discuss this topic</a></article>)}</div></section>
+  </main>
+</BaseLayout>

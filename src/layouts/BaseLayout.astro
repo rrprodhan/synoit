@@ -1,0 +1,71 @@
+---
+import '../styles/global.css';
+import Nav from '@/components/Nav.astro';
+import Footer from '@/components/Footer.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  canonical?: string;
+  image?: string;
+  schema?: Record<string, unknown>;
+}
+
+const {
+  title,
+  description,
+  canonical = Astro.url.pathname,
+  image = '/og.svg',
+  schema
+} = Astro.props;
+
+const site = 'https://synoit.com';
+const canonicalUrl = new URL(canonical, site).toString();
+const imageUrl = new URL(image, site).toString();
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <link rel="canonical" href={canonicalUrl} />
+    <meta name="theme-color" content="#110F14" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="SynoIT" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={imageUrl} />
+    <meta property="og:locale" content="en_US" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={imageUrl} />
+    <link rel="icon" href="/favicon.svg" />
+    {schema && <script type="application/ld+json" set:html={JSON.stringify(schema)} />}
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/lenis@1.3.11/dist/lenis.min.js" defer></script>
+    <script src="/scripts/experience.js" defer></script>
+  </head>
+  <body>
+    <canvas id="gl" aria-hidden="true"></canvas>
+    <div class="vignette" aria-hidden="true"></div>
+    <canvas id="grain" aria-hidden="true"></canvas>
+    <div class="scroll-progress" aria-hidden="true"></div>
+    <div class="cursor" aria-hidden="true">
+      <svg viewBox="0 0 40 40" fill="none">
+        <circle cx="20" cy="20" r="13" stroke="rgba(180,166,255,.55)" stroke-width="1.6"></circle>
+        <circle cx="20" cy="20" r="5.5" fill="#CFC4FF"></circle>
+        <circle cx="20" cy="20" r="2.6" fill="#FFFFFF"></circle>
+      </svg>
+    </div>
+    <Nav />
+    <slot />
+    <Footer />
+  </body>
+</html>

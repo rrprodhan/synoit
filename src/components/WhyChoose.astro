@@ -1,0 +1,85 @@
+---
+const reasons = [
+  {
+    id: 'depth',
+    title: 'Team with industry depth',
+    text: '120+ experts and 500+ projects provide insights into solutions that fit the market.'
+  },
+  {
+    id: 'strategy',
+    title: 'Strategy before design',
+    text: 'Clear strategies and thoughtful planning ensure every design decision supports your business goals.'
+  },
+  {
+    id: 'custom',
+    title: 'Custom-only approach',
+    text: 'Tailored solutions built around your unique needs, challenges, goals, and customer expectations.'
+  },
+  {
+    id: 'complex',
+    title: 'Expertise for complex needs',
+    text: 'Deep technical expertise helps turn complex challenges into practical, scalable, and effective solutions.'
+  },
+  {
+    id: 'collab',
+    title: 'Clear, collaborative process',
+    text: 'Open communication and close collaboration keep every project aligned, transparent, and moving forward.'
+  },
+  {
+    id: 'value',
+    title: 'Flexible value for any budget',
+    text: 'Flexible solutions and smart investments deliver meaningful business value without unnecessary costs.'
+  }
+];
+---
+<section class="why-choose section blue" id="why-synoit">
+  <div class="why-shell">
+    <h2 class="why-title" data-reveal>6 reasons why clients choose SynoIT</h2>
+    <div class="why-board" data-reveal>
+      <div class="why-column why-left">
+        {reasons.slice(0, 3).map((reason, index) => (
+          <article class="why-card" data-reason-card={reason.id}>
+            <div class="why-icon">{String(index + 1).padStart(2, '0')}</div>
+            <div>
+              <h3>{reason.title}</h3>
+              <p>{reason.text}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+
+      <div class="why-network" aria-hidden="true">
+        <svg class="why-lines" viewBox="0 0 520 760" preserveAspectRatio="none">
+          <path data-reason-link="depth" data-draw d="M0 120H150Q178 120 178 148V252Q178 280 206 280H260"></path>
+          <path data-reason-link="strategy" data-draw d="M0 350H138Q166 350 166 378V392Q166 420 194 420H260"></path>
+          <path data-reason-link="custom" data-draw d="M0 588H150Q178 588 178 560V504Q178 476 206 476H260"></path>
+          <path data-reason-link="complex" data-draw d="M520 120H370Q342 120 342 148V252Q342 280 314 280H260"></path>
+          <path data-reason-link="collab" data-draw d="M520 350H382Q354 350 354 378V392Q354 420 326 420H260"></path>
+          <path data-reason-link="value" data-draw d="M520 588H370Q342 588 342 560V504Q342 476 314 476H260"></path>
+          <path data-reason-link="spine" data-draw d="M260 36V724"></path>
+
+          <path data-reason-link="depth" data-pulse d="M0 120H150Q178 120 178 148V252Q178 280 206 280H260"></path>
+          <path data-reason-link="strategy" data-pulse d="M0 350H138Q166 350 166 378V392Q166 420 194 420H260"></path>
+          <path data-reason-link="custom" data-pulse d="M0 588H150Q178 588 178 560V504Q178 476 206 476H260"></path>
+          <path data-reason-link="complex" data-pulse d="M520 120H370Q342 120 342 148V252Q342 280 314 280H260"></path>
+          <path data-reason-link="collab" data-pulse d="M520 350H382Q354 350 354 378V392Q354 420 326 420H260"></path>
+          <path data-reason-link="value" data-pulse d="M520 588H370Q342 588 342 560V504Q342 476 314 476H260"></path>
+          <path data-reason-link="spine" data-pulse d="M260 36V724"></path>
+        </svg>
+        <div class="why-core"><span>S</span></div>
+      </div>
+
+      <div class="why-column why-right">
+        {reasons.slice(3).map((reason, index) => (
+          <article class="why-card" data-reason-card={reason.id}>
+            <div class="why-icon">{String(index + 4).padStart(2, '0')}</div>
+            <div>
+              <h3>{reason.title}</h3>
+              <p>{reason.text}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>

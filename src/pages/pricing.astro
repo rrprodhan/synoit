@@ -1,0 +1,63 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import HeroNet from '@/components/HeroNet.astro';
+import CTA from '@/components/CTA.astro';
+import PricingCard from '@/components/PricingCard.astro';
+const plans = [
+  {
+    name: 'Common',
+    accent: 'common',
+    price: '$0',
+    cents: '',
+    suffix: '/consultation',
+    description: 'For individuals and teams exploring the right SynoIT solution.',
+    features: ['Discovery call', 'Service fit assessment', 'High-level roadmap', { text: 'Timeline and budget range', info: true }, 'AI opportunity review']
+  },
+  {
+    name: 'Rare',
+    accent: 'rare',
+    price: '$1.9k',
+    cents: '+',
+    suffix: '/project',
+    description: 'For focused websites, landing pages, audits, and brand refreshes.',
+    features: ['Strategy and scope sprint', 'Responsive UI design', 'SEO-ready build', { text: 'Analytics setup', info: true }, 'Launch support']
+  },
+  {
+    name: 'Epic',
+    accent: 'epic',
+    price: '$9.9k',
+    cents: '+',
+    suffix: '/project',
+    description: 'For product builds, SaaS MVPs, mobile apps, and integrations.',
+    features: ['Product architecture', 'Custom web or app build', 'API and CRM integrations', { text: 'QA and performance testing', info: true }, 'Post-launch iteration']
+  },
+  {
+    name: 'Legendary',
+    accent: 'legendary',
+    price: '$39.9k',
+    cents: '+',
+    suffix: '/engagement',
+    description: 'For dedicated teams, AI systems, cloud platforms, and growth programs.',
+    features: ['Dedicated delivery team', 'Cloud and DevOps systems', 'AI automation workflows', { text: 'SEO and growth operations', info: true }, 'Continuous optimization']
+  }
+];
+---
+<BaseLayout title="Pricing | SynoIT Project Estimator" description="Estimate SynoIT project timelines for websites, apps, AI systems, SEO, branding, and dedicated teams.">
+  <main>
+    <section class="hero"><div class="hero-content"><p class="kicker" data-reveal>Pricing</p><h1 class="hero-title" data-reveal>Transparent <span class="accent">pricing.</span></h1><p class="hero-sub" data-reveal>Use this starting point to frame your project timeline. For exact pricing, SynoIT prepares a detailed proposal after scope discovery.</p></div><HeroNet /></section>
+    <section class="section pricing-section alt">
+      <div class="pricing-container">
+        <div class="section-head">
+          <p class="kicker" data-reveal>Engagement tiers</p>
+          <h2 data-reveal>Choose the delivery level that fits your next move.</h2>
+          <p data-reveal>Each card is a starting point. We finalize pricing after discovery so the team, scope, and timeline match your business goals.</p>
+        </div>
+        <div class="pricing-showcase" aria-label="SynoIT pricing tiers">
+          {plans.map((plan) => <PricingCard {...plan} />)}
+        </div>
+      </div>
+    </section>
+    <section class="section"><div class="container split"><div data-reveal><p class="kicker">Estimator</p><h2 style="font-size:var(--fs-h2);line-height:1.08;margin-bottom:14px">Answer four planning signals.</h2><p style="color:var(--muted-2);line-height:1.5">Project type, features, complexity, and urgency determine the final estimate. SynoIT uses those inputs to recommend the right team shape and delivery model.</p></div><div class="card" data-reveal style="min-height:auto"><form class="form" action="mailto:support@synoit.com" method="post" enctype="text/plain"><div class="field"><label for="type">Project type</label><select id="type" name="Project type"><option>Website or web app</option><option>Mobile app</option><option>AI automation</option><option>Branding or design</option><option>SEO or growth</option></select></div><div class="field"><label for="features">Features needed</label><textarea id="features" name="Features" rows="3" placeholder="Payments, CRM, CMS, AI, analytics..."></textarea></div><div class="field"><label for="timeline">Preferred timeline</label><select id="timeline" name="Timeline"><option>Flexible</option><option>Launch in 2-4 weeks</option><option>Launch in 1-3 months</option><option>Ongoing team</option></select></div><button class="btn-primary" type="submit">Request estimate</button></form></div></div></section>
+    <CTA />
+  </main>
+</BaseLayout>

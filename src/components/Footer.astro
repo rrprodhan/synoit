@@ -1,0 +1,28 @@
+---
+import { categories, services } from '@/data/services';
+const year = new Date().getFullYear();
+const byCategory = categories.map((category) => ({
+  category,
+  items: services.filter((service) => service.category === category).slice(0, 8)
+}));
+---
+<button data-to-top class="to-top btn-primary" aria-label="Scroll to top">↑</button>
+<footer class="footer">
+  <div class="footer-grid">
+    <div>
+      <a href="/" class="nav-logo"><span class="mark" aria-hidden="true"></span><span>SynoIT</span></a>
+      <p style="margin-top:18px">Architecting resilient digital futures through sophisticated design, engineering, AI, and growth systems.</p>
+      <p style="margin-top:16px"><a href="mailto:support@synoit.com">support@synoit.com</a><a href="tel:+6582034346">+65 8203 4346</a></p>
+    </div>
+    {byCategory.map((group) => (
+      <div>
+        <h4>{group.category}</h4>
+        {group.items.map((item) => <a href={`/services/${item.slug}/`}>{item.shortTitle}</a>)}
+      </div>
+    ))}
+  </div>
+  <div class="footer-bottom">
+    <span>© {year} SynoIT Digital Architecture. All rights reserved.</span>
+    <span>Singapore HQ · Bangladesh Hub · Global delivery</span>
+  </div>
+</footer>

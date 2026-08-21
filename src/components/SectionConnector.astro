@@ -1,0 +1,12 @@
+---
+interface Props {
+  variant?: 'center' | 'split' | 'turn';
+}
+const { variant = 'center' } = Astro.props;
+---
+<div class:list={['section-connector', `section-connector--${variant}`]} aria-hidden="true">
+  <svg viewBox="0 0 520 260" preserveAspectRatio="none">
+    <path data-draw d="M260 0V260"></path>
+    <path data-pulse d="M260 0V260"></path>
+  </svg>
+</div>

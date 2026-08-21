@@ -1,0 +1,46 @@
+---
+import { categories, services } from '@/data/services';
+const byCategory = categories.map((category) => ({
+  category,
+  items: services.filter((service) => service.category === category)
+}));
+---
+<nav class="nav" aria-label="Primary navigation">
+  <a href="/" class="nav-logo" aria-label="SynoIT home"><span class="mark" aria-hidden="true"></span><span>SynoIT</span></a>
+  <div class="nav-right">
+    <a class="nav-link" href="/">Home</a>
+    <div class="services-wrap">
+      <button class="nav-link" aria-haspopup="true">Services</button>
+      <div class="mega">
+        {byCategory.map((group) => (
+          <div>
+            <h4>{group.category}</h4>
+            {group.items.map((item) => <a href={`/services/${item.slug}/`}>{item.shortTitle}</a>)}
+          </div>
+        ))}
+      </div>
+    </div>
+    <a class="nav-link" href="/projects/">Projects</a>
+    <a class="nav-link" href="/dedicated-team/">Dedicated Team</a>
+    <a class="nav-link" href="/blog/">Blog</a>
+    <a class="nav-link" href="/pricing/">Pricing</a>
+    <a class="nav-link" href="/contact/">Contact</a>
+    <a class="nav-cta" href="mailto:support@synoit.com">Get a quote</a>
+    <button class="nav-menu-btn" data-mobile-toggle aria-label="Open navigation menu" aria-expanded="false">☰</button>
+  </div>
+</nav>
+<div class="mobile-panel" aria-label="Mobile navigation">
+  <a href="/">Home</a>
+  {byCategory.map((group) => (
+    <>
+      <strong>{group.category}</strong>
+      {group.items.map((item) => <a href={`/services/${item.slug}/`}>{item.shortTitle}</a>)}
+    </>
+  ))}
+  <strong>Company</strong>
+  <a href="/projects/">Projects</a>
+  <a href="/dedicated-team/">Dedicated Team</a>
+  <a href="/blog/">Blog</a>
+  <a href="/pricing/">Pricing</a>
+  <a href="/contact/">Contact</a>
+</div>
