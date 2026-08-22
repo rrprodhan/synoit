@@ -619,6 +619,21 @@ section { position:relative; z-index:2; }
   width:8px; height:8px; border-radius:50%;
   background:linear-gradient(135deg, var(--violet), var(--pink));
 }
+.pricing-storm-grid {
+  width:min(100%, 1480px);
+  margin:0 auto;
+  display:grid;
+  grid-template-columns:repeat(4, minmax(0, 1fr));
+  gap:clamp(16px, 1.8vw, 26px);
+  align-items:stretch;
+  overflow:visible;
+}
+.pricing-storm-grid .pricing-tier {
+  width:100%;
+  min-width:0;
+  max-width:390px;
+  justify-self:center;
+}
 .contact-section { overflow:visible; }
 .contact-grid {
   max-width:var(--container); margin:0 auto;
@@ -1015,6 +1030,7 @@ body { top:0 !important; }
   .i-row { grid-template-columns:230px 1fr minmax(240px, 50%); }
   .i-tile { width:230px; }
   .inside-list::before { left:115px; }
+  .pricing-storm-grid { grid-template-columns:repeat(2, minmax(0, 390px)); justify-content:center; }
 }
 /* mobile */
 @media (max-width: 900px) {
@@ -1060,6 +1076,7 @@ body { top:0 !important; }
   .features { padding:8vh 18px; }
   .service-grid,
   .service-grid.compact { grid-template-columns:1fr; }
+  .pricing-storm-grid { grid-template-columns:1fr; justify-items:center; }
   .service-card { min-height:auto; }
   .contact-grid,
   .field-row { grid-template-columns:1fr; }

@@ -2,12 +2,13 @@
 import HomeLayout from '@/layouts/HomeLayout.astro';
 import HomeConnector from '@/components/HomeConnector.astro';
 import HeroNet from '@/components/HeroNet.astro';
+import PricingCard from '@/components/PricingCard.astro';
 
 const plans = [
-  { name: 'Common', price: '$0', unit: '/consultation', description: 'For individuals and teams exploring the right SynoIT solution.', features: ['Discovery call', 'Service fit assessment', 'High-level roadmap', 'Timeline and budget range', 'AI opportunity review'] },
-  { name: 'Rare', price: '$1.9k+', unit: '/project', description: 'For focused websites, landing pages, audits, and brand refreshes.', features: ['Strategy and scope sprint', 'Responsive UI design', 'SEO-ready build', 'Analytics setup', 'Launch support'] },
-  { name: 'Epic', price: '$9.9k+', unit: '/project', description: 'For product builds, SaaS MVPs, mobile apps, and integrations.', features: ['Product architecture', 'Custom web or app build', 'API and CRM integrations', 'QA and performance testing', 'Post-launch iteration'] },
-  { name: 'Legendary', price: '$39.9k+', unit: '/engagement', description: 'For dedicated teams, AI systems, cloud platforms, and growth programs.', features: ['Dedicated delivery team', 'Cloud and DevOps systems', 'AI automation workflows', 'SEO and growth operations', 'Continuous optimization'] }
+  { name: 'Common', accent: 'common', price: '$0', cents: '', unit: '/consultation', description: 'For individuals and teams exploring the right SynoIT solution.', features: ['Discovery call', 'Service fit assessment', 'High-level roadmap', 'Timeline and budget range', 'AI opportunity review'] },
+  { name: 'Rare', accent: 'rare', price: '$1.9k', cents: '+', unit: '/project', description: 'For focused websites, landing pages, audits, and brand refreshes.', features: ['Strategy and scope sprint', 'Responsive UI design', 'SEO-ready build', 'Analytics setup', 'Launch support'] },
+  { name: 'Epic', accent: 'epic', price: '$9.9k', cents: '+', unit: '/project', description: 'For product builds, SaaS MVPs, mobile apps, and integrations.', features: ['Product architecture', 'Custom web or app build', 'API and CRM integrations', 'QA and performance testing', 'Post-launch iteration'] },
+  { name: 'Legendary', accent: 'legendary', price: '$39.9k', cents: '+', unit: '/engagement', description: 'For dedicated teams, AI systems, cloud platforms, and growth programs.', features: ['Dedicated delivery team', 'Cloud and DevOps systems', 'AI automation workflows', 'SEO and growth operations', 'Continuous optimization'] }
 ];
 
 const projectTypes = [
@@ -56,7 +57,21 @@ const process = [
     <section class="pricing" id="pricing">
       <p class="section-kicker">ENGAGEMENT TIERS</p>
       <h2>Choose the delivery level<br />that fits your next move</h2>
-      <div class="service-grid compact">{plans.map((plan, index) => <article class="price-card mini-price"><span class="review-stars">{String(index + 1).padStart(2, '0')}</span><h3>{plan.name}</h3><div class="price-amount price-copy">{plan.price}<span>{plan.unit}</span></div><p>{plan.description}</p><ul>{plan.features.map((feature) => <li>{feature}</li>)}</ul></article>)}</div>
+      <div class="pricing-storm-grid">
+        {plans.map((plan) => (
+          <PricingCard
+            name={plan.name}
+            accent={plan.accent}
+            price={plan.price}
+            cents={plan.cents}
+            suffix={plan.unit}
+            description={plan.description}
+            features={plan.features}
+            ctaText="Request proposal"
+            active={plan.accent === 'legendary'}
+          />
+        ))}
+      </div>
     </section>
 
     <HomeConnector />

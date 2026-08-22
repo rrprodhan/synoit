@@ -14,6 +14,7 @@ interface Props {
   features: Array<string | Feature>;
   ctaText?: string;
   href?: string;
+  active?: boolean;
 }
 
 const {
@@ -25,7 +26,8 @@ const {
   description,
   features,
   ctaText = 'Start Free',
-  href = 'mailto:support@synoit.com'
+  href = 'mailto:support@synoit.com',
+  active = false
 } = Astro.props;
 
 const normalizedFeatures = features.map((feature) =>
@@ -37,7 +39,7 @@ const plasmaId = `pricing-plasma-${accent}`;
 const smokeMaskId = `pricing-smoke-mask-${accent}`;
 ---
 
-<article class:list={['pricing-tier', `pricing-tier--${accent}`]} data-pricing-card data-reveal tabindex="0">
+<article class:list={['pricing-tier', `pricing-tier--${accent}`, { 'is-active': active }]} data-pricing-card data-reveal tabindex="0">
   <span class="pricing-tier__glow" aria-hidden="true"></span>
   <svg class="pricing-tier__storm" viewBox="0 0 390 530" preserveAspectRatio="none" aria-hidden="true">
     <defs>
