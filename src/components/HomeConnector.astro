@@ -1,0 +1,10 @@
+---
+const { flip = false } = Astro.props;
+const path = flip ? 'M50 0V56Q50 64 58 64H70Q78 64 78 72V128Q78 136 70 136H58Q50 136 50 144V200' : 'M50 0V56Q50 64 42 64H30Q22 64 22 72V128Q22 136 30 136H42Q50 136 50 144V200';
+---
+<div class="connector" aria-hidden="true">
+  <svg viewBox="0 0 100 200" preserveAspectRatio="none" fill="none">
+    <path data-draw d={path}/>
+    <path data-pulse d={path}/>
+  </svg>
+</div>

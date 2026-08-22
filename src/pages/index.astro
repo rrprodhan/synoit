@@ -1,174 +1,127 @@
 ---
-import BaseLayout from '@/layouts/BaseLayout.astro';
-import HeroNet from '@/components/HeroNet.astro';
-import CTA from '@/components/CTA.astro';
-import WhyChoose from '@/components/WhyChoose.astro';
-import SectionConnector from '@/components/SectionConnector.astro';
-import { categories, featuredServices, services } from '@/data/services';
+import HomeLayout from '@/layouts/HomeLayout.astro';
+import HomeConnector from '@/components/HomeConnector.astro';
+import { categories, services } from '@/data/services';
+
+const process = [
+  ['Discovery', 'We define business goals, user needs, constraints, and measurable success criteria.'],
+  ['Strategy & Scope', 'We shape the roadmap, architecture, content, and delivery priorities before execution.'],
+  ['Execution', 'Our specialists design, build, test, and iterate through focused, transparent sprints.'],
+  ['Launch & Growth', 'We launch carefully, monitor performance, optimize, and support continuous improvement.']
+];
+
+const homeServices = ['web-design', 'web-development', 'mobile-app-development', 'ai-automation', 'seo', 'branding']
+  .map((slug) => services.find((service) => service.slug === slug))
+  .filter((service) => service !== undefined);
+
+const signatures = [
+  {
+    badge: '★ STRATEGY BEFORE EXECUTION',
+    title: 'Design that makes complex products feel clear.',
+    description: 'We turn product strategy, customer insight, and brand direction into interfaces that communicate value immediately and guide users toward action.',
+    points: ['Research and UX architecture before polished screens', 'Reusable UI systems built for consistent growth', 'Conversion, accessibility, and interaction considered together']
+  },
+  {
+    title: 'Engineering built for real-world scale.',
+    description: 'From websites and MVPs to mobile apps, cloud platforms, and internal systems, SynoIT builds maintainable products around performance, security, and long-term ownership.',
+    points: ['Architecture selected around your actual constraints', 'Structured delivery with visible QA and progress', 'Clean integrations, observability, and launch support']
+  },
+  {
+    title: 'AI that works inside real operations.',
+    description: 'We design practical automation, agents, chatbots, and AI-enabled SaaS workflows that connect safely to the tools and data your teams already use.',
+    points: ['Use-case validation before implementation', 'Human oversight and practical guardrails', 'Measured around time saved, quality, and adoption']
+  }
+];
+
+const reasons = [
+  ['120+', 'Specialists and trusted collaborators'],
+  ['500+', 'Projects delivered'],
+  ['98%', 'Client satisfaction'],
+  ['24/7', 'Support coverage'],
+  ['10+', 'Years of delivery experience'],
+  ['4', 'Delivery hubs and partner regions']
+];
+
+const pricingPlans = [
+  { name: 'Common', price: '$0', unit: '/consultation', description: 'For individuals and teams exploring the right SynoIT solution.' },
+  { name: 'Rare', price: '$1.9k+', unit: '/project', description: 'For focused websites, landing pages, audits, and brand refreshes.' },
+  { name: 'Epic', price: '$9.9k+', unit: '/project', description: 'For product builds, SaaS MVPs, mobile apps, and integrations.' },
+  { name: 'Legendary', price: '$39.9k+', unit: '/engagement', description: 'For dedicated teams, AI systems, cloud platforms, and growth programs.' }
+];
+
+const faqs = [
+  ['What does SynoIT do?', 'SynoIT is a digital product studio for strategy, web and product design, software development, AI automation, SEO, digital marketing, and dedicated delivery teams.'],
+  ['Can SynoIT take a project from idea to launch?', 'Yes. We can lead discovery, define the roadmap, design the experience, build and test the product, support launch, and continue with optimization and growth.'],
+  ['Can your specialists work with our existing team?', 'Yes. SynoIT can own an outcome end to end or integrate with your internal product, design, engineering, and marketing teams for focused support.'],
+  ['What types of companies do you work with?', 'We work with startups, SMEs, growing digital businesses, and enterprise teams that need reliable delivery across design, engineering, AI, and growth.'],
+  ['How do projects stay transparent?', 'Work is organized into defined stages and sprints with agreed priorities, regular demos, visible QA, and clear communication around risks and decisions.'],
+  ['Do you support products after launch?', 'Yes. We provide maintenance, monitoring, performance improvements, feature development, SEO, automation, and ongoing growth support.'],
+  ['How do we start?', 'Share what you are building or improving. We will review the goal, recommend the most useful next step, and outline the right scope and team.']
+];
 
 const schema = {
   '@context': 'https://schema.org',
   '@graph': [
-    {
-      '@type': 'Organization',
-      '@id': 'https://synoit.com/#org',
-      name: 'SynoIT',
-      url: 'https://synoit.com/',
-      logo: 'https://synoit.com/favicon.svg',
-      email: 'support@synoit.com',
-      telephone: '+65 8203 4346',
-      address: { '@type': 'PostalAddress', streetAddress: '30 Roberts Lane, #02-01', addressLocality: 'Singapore', postalCode: '218309' },
-      description: 'SynoIT is a digital product studio for design, software development, AI automation, SEO, and dedicated teams.'
-    },
-    {
-      '@type': 'WebSite',
-      '@id': 'https://synoit.com/#website',
-      url: 'https://synoit.com/',
-      name: 'SynoIT',
-      publisher: { '@id': 'https://synoit.com/#org' },
-      inLanguage: 'en'
-    },
-    {
-      '@type': 'ItemList',
-      name: 'SynoIT services',
-      itemListElement: services.map((service, index) => ({
-        '@type': 'ListItem',
-        position: index + 1,
-        url: `https://synoit.com/services/${service.slug}/`,
-        name: service.shortTitle
-      }))
-    }
+    { '@type': 'Organization', '@id': 'https://synoit.com/#org', name: 'SynoIT', url: 'https://synoit.com/', logo: 'https://synoit.com/favicon.svg', email: 'support@synoit.com', telephone: '+65 8203 4346', address: { '@type': 'PostalAddress', streetAddress: '30 Roberts Lane, #02-01', addressLocality: 'Singapore', postalCode: '218309' }, description: 'SynoIT is a digital product studio for design, software development, AI automation, SEO, and dedicated teams.' },
+    { '@type': 'WebSite', '@id': 'https://synoit.com/#website', url: 'https://synoit.com/', name: 'SynoIT', publisher: { '@id': 'https://synoit.com/#org' }, inLanguage: 'en' },
+    { '@type': 'ItemList', name: 'SynoIT services', itemListElement: services.map((service, index) => ({ '@type': 'ListItem', position: index + 1, url: `https://synoit.com/services/${service.slug}/`, name: service.shortTitle })) },
+    { '@type': 'FAQPage', mainEntity: faqs.map(([name, text]) => ({ '@type': 'Question', name, acceptedAnswer: { '@type': 'Answer', text } })) }
   ]
 };
 ---
-<BaseLayout title="SynoIT | Digital Product Studio for Design, Development, AI and SEO" description="SynoIT partners with startups and enterprises to design, build, automate, optimize, and scale high-performing digital products." schema={schema}>
-  <main>
-    <section class="hero">
+
+<HomeLayout title="SynoIT | Digital Product Studio for Design, Development, AI and SEO" description="SynoIT partners with startups and enterprises to design, build, automate, optimize, and scale high-performing digital products." schema={schema}>
+  <main id="main">
+    <section class="hero" id="hero">
       <div class="hero-content">
-        <p class="kicker" data-reveal>SynoIT Digital Product Studio</p>
-        <h1 class="hero-title" data-reveal>We design, build & scale <span class="accent">digital products.</span></h1>
-        <p class="hero-sub" data-reveal>SynoIT partners with startups and enterprises to create high-performing websites, apps, AI workflows, and growth systems. From strategy to launch, we combine design precision with engineering quality.</p>
-        <div class="hero-actions" data-reveal>
-          <a class="btn-primary" href="mailto:support@synoit.com">Get a free quote</a>
-          <a class="btn-ghost" href="https://wa.me/6582034346" target="_blank" rel="noopener">Talk to our team</a>
-          <a class="btn-ghost" href="/projects/">View our work</a>
-        </div>
+        <div class="hero-phone" id="heroPhone" aria-hidden="true"><div class="hero-device"><div class="hero-device-screen"></div></div></div>
+        <h1 class="hero-title"><span class="line" data-split>We design, build &amp; scale</span>{' '}<span class="line accent" data-split>digital products.</span></h1>
+        <p class="hero-sub reveal-line"><span>SynoIT partners with startups and enterprises to create high-performing websites, apps, AI workflows, and growth systems — from strategy to launch.</span></p>
+        <div class="hero-badges reveal-line"><span class="badges-wrap"><a href="mailto:support@synoit.com" class="store-btn"><span class="service-icon">↗</span><span><small>START A CONVERSATION</small><b>Get a free quote</b></span></a><a href="https://wa.me/6582034346" target="_blank" rel="noopener" class="store-btn"><span class="service-icon">✦</span><span><small>TALK THROUGH YOUR IDEA</small><b>Chat with our team</b></span></a></span></div>
       </div>
-      <HeroNet />
+      <div class="hero-visual" id="heroVisual"><div class="edge-glow left"></div><div class="edge-glow right"></div><svg class="net hero-net" viewBox="0 0 1200 340" fill="none" preserveAspectRatio="none"><defs><filter id="homeGlow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="3.2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><g class="traces"><path data-hero-draw d="M590,146 H320 Q312,146 312,138 V96 Q312,88 304,88 H32 Q24,88 24,96 V300"/><path data-hero-draw d="M590,170 H80"/><path data-hero-draw d="M590,194 H430 Q422,194 422,202 V252 Q422,260 414,260 H60 Q52,260 52,268 V340"/><path data-hero-draw class="faint" d="M590,158 H300"/><path data-hero-draw class="faint" d="M590,182 H340"/></g><g class="traces" transform="translate(1200 0) scale(-1 1)"><path data-hero-draw d="M590,146 H320 Q312,146 312,138 V96 Q312,88 304,88 H32 Q24,88 24,96 V300"/><path data-hero-draw d="M590,170 H80"/><path data-hero-draw d="M590,194 H430 Q422,194 422,202 V252 Q422,260 414,260 H60 Q52,260 52,268 V340"/><path data-hero-draw class="faint" d="M590,158 H300"/><path data-hero-draw class="faint" d="M590,182 H340"/></g><path data-hero-draw class="spine" d="M600,216 V340"/><g class="pulses" filter="url(#homeGlow)"><path data-pulse d="M590,146 H320 Q312,146 312,138 V96 Q312,88 304,88 H32 Q24,88 24,96 V300"/><path data-pulse d="M590,170 H80"/><path data-pulse transform="translate(1200 0) scale(-1 1)" d="M590,170 H80"/><path data-pulse transform="translate(1200 0) scale(-1 1)" d="M590,194 H430 Q422,194 422,202 V252 Q422,260 414,260 H60 Q52,260 52,268 V340"/><path data-pulse d="M600,216 V340"/></g></svg><div class="chip3d hero-chip" id="heroChip"><div class="chip-face front app-chip"><span class="visual-mark">S</span></div><div class="chip-face back app-chip"><span class="visual-mark">S</span></div></div></div>
     </section>
 
-    <section class="statement">
-      <p data-reveal><span class="dim">Strategy-led design.</span> Reliable engineering. AI systems that work inside real operations. Growth foundations built for search, speed, and conversion.</p>
-    </section>
-    <SectionConnector variant="split" />
+    <HomeConnector />
 
-    <section class="section alt" id="services">
-      <div class="container">
-        <div class="section-head" data-reveal>
-          <p class="kicker">Core services</p>
-          <h2>Everything needed to move from idea to execution.</h2>
-          <p>Focused service lines across design, development, AI, and digital growth.</p>
-        </div>
-        <div class="grid">
-          {featuredServices.map((service, index) => (
-            <a class="card" href={`/services/${service.slug}/`} data-reveal>
-              <div class="icon-tile">{String(index + 1).padStart(2, '0')}</div>
-              <small>{service.category}</small>
-              <h3>{service.shortTitle}</h3>
-              <p>{service.description}</p>
-            </a>
-          ))}
-        </div>
-      </div>
-    </section>
-    <SectionConnector variant="center" />
+    <section class="statement" id="statement"><div class="statement-pin" id="statementPin"><svg class="net statement-net" viewBox="0 0 100 100" preserveAspectRatio="none" fill="none"><path class="spine" data-sdraw d="M50,0 V16"/><path data-sdraw d="M50,16 H84 Q90,16 90,22 V78 Q90,84 84,84 H16 Q10,84 10,78 V22 Q10,16 16,16 H50"/><path class="spine" data-sdraw d="M50,84 V100"/><path class="s-pulse" d="M50,16 H84 Q90,16 90,22 V78 Q90,84 84,84 H16 Q10,84 10,78 V22 Q10,16 16,16 H50"/><path class="s-pulse" d="M50,16 H84 Q90,16 90,22 V78 Q90,84 84,84 H16 Q10,84 10,78 V22 Q10,16 16,16 H50"/></svg><p class="statement-text" id="statementText">Strategy-led design. Reliable engineering. AI systems that work inside real operations. Growth foundations built for search, speed, and conversion.</p></div></section>
 
-    <section class="section">
-      <div class="container steps-body">
-        <div data-reveal>
-          <p class="kicker">How we work</p>
-          <h2 style="font-size:var(--fs-h2);line-height:1.08;margin-bottom:16px">A transparent process that keeps delivery fast, focused, and measurable.</h2>
-          <div class="step-list">
-            {[
-              ['Discovery', 'We define goals, user needs, constraints, and success metrics.'],
-              ['Strategy & Scope', 'We shape roadmap, architecture, content, and delivery priorities.'],
-              ['Execution', 'Design, build, test, and iterate through structured sprints.'],
-              ['Launch & Growth', 'We launch, monitor, optimize, and support continuous improvement.']
-            ].map(([title, text], index) => (
-              <div class="step" style={`--step-index:${index}`}>
-                <div class="step-num">{String(index + 1).padStart(2, '0')}</div>
-                <h3>{title}</h3>
-                <p>{text}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-        <div class="device" data-reveal>
-          <div class="orbit"></div>
-          <div class="screen">
-            <div class="screen-card"><div class="screen-line short"></div><div class="screen-line"></div><div class="screen-line"></div></div>
-            <div class="screen-card"><div class="screen-line"></div><div class="screen-line short"></div><div class="screen-line"></div></div>
-            <div class="screen-card"><div class="screen-line short"></div><div class="screen-line"></div></div>
-          </div>
-        </div>
-      </div>
-    </section>
-    <SectionConnector variant="turn" />
+    <HomeConnector flip />
 
-    <section class="section pink">
-      <div class="container">
-        <div class="section-head" data-reveal>
-          <p class="kicker">Service universe</p>
-          <h2>Specialists across the full digital product lifecycle.</h2>
-        </div>
-        <div class="marquee" aria-label="SynoIT services">
-          <div class="marquee-track">
-            {[...services, ...services].map((service) => <a class="chip" href={`/services/${service.slug}/`}>{service.shortTitle}</a>)}
-          </div>
-        </div>
-      </div>
-    </section>
-    <SectionConnector variant="center" />
+    <section class="steps" id="steps"><div class="steps-pin" id="stepsPin"><div class="steps-head"><p class="section-kicker">HOW WE WORK</p><h2>From business goal to measurable<br />digital outcome in four steps</h2></div><div class="steps-body"><div class="steps-text"><div class="steps-rail"><div class="steps-rail-fill" id="stepsRailFill"></div><div class="steps-rail-dot" id="stepsRailDot"></div></div><div class="steps-counter"><span id="stepsCounterNum">01</span><span class="steps-counter-total"> / 04</span></div><div class="steps-dots" id="stepsDots" role="tablist" aria-label="Delivery steps">{process.map((_, index) => <button data-step={index} class:list={{ 'is-active': index === 0 }} aria-label={`Step ${index + 1}`} aria-selected={index === 0 ? 'true' : 'false'}>{String(index + 1).padStart(2, '0')}</button>)}</div>{process.map(([title, text], index) => <div class:list={['step-item', { 'is-active': index === 0 }]} data-step={index}><div class="step-num">{String(index + 1).padStart(2, '0')}</div><h3>{title}</h3><p>{text}</p><div class="step-line"><div class="step-line-fill"></div></div></div>)}</div><div class="steps-phone"><div class="phone-glow"></div><div class="phone-frame">{process.map(([title], index) => <div class:list={['step-video', { 'is-active': index === 0 }]} aria-label={`SynoIT delivery step ${index + 1}`}><strong>SYNOIT DELIVERY</strong><b>{title}</b><span></span><span></span><span></span></div>)}</div></div></div></div></section>
 
-    <section class="section blue">
-      <div class="container">
-        {categories.map((category) => (
-          <div class="feature-row" data-reveal>
-            <div class="feature-copy">
-              <p class="kicker">{category}</p>
-              <h3>{category === 'AI Services' ? 'Operational AI with secure, practical guardrails.' : category === 'Design' ? 'Interfaces and brands that feel clear from the first moment.' : category === 'Development' ? 'Product engineering built for scale, stability, and speed.' : 'Growth systems that turn visibility into qualified demand.'}</h3>
-              <p>{services.find((service) => service.category === category)?.proof}</p>
-              <ul>
-                {services.filter((service) => service.category === category).slice(0, 5).map((service) => <li>{service.shortTitle}</li>)}
-              </ul>
-            </div>
-            <div class="visual-panel"><div class="mock-stack"><span></span><span></span><span></span></div></div>
-          </div>
-        ))}
-      </div>
-    </section>
-    <SectionConnector variant="split" />
+    <HomeConnector flip />
 
-    <section class="section">
-      <div class="container grid">
-        {[
-          ['500+', 'Projects delivered'],
-          ['98%', 'Client satisfaction'],
-          ['24/7', 'Support coverage'],
-          ['10+', 'Years experience'],
-          ['22', 'Specialized service lines'],
-          ['4', 'Delivery hubs and partner regions']
-        ].map(([stat, label]) => (
-          <div class="card" data-reveal style="min-height:128px;text-align:center">
-            <h3 class="accent" style="font-size:clamp(34px,4vw,42px)">{stat}</h3>
-            <p>{label}</p>
-          </div>
-        ))}
-      </div>
-    </section>
-    <SectionConnector variant="turn" />
-    <WhyChoose />
-    <SectionConnector variant="center" />
-    <CTA />
+    <section class="signature" id="signature"><p class="section-kicker">CORE CAPABILITIES</p><h2 class="sig-title">What makes <span class="dim">SynoIT different</span></h2>{signatures.map((item, index) => <><div class:list={['sig-row', { 'sig-rev': index === 1 }]}><div class="sig-copy">{item.badge && <span class="sig-badge">{item.badge}</span>}<h3>{item.title.split(' ').slice(0, 3).join(' ')}<br /><span class="lav">{item.title.split(' ').slice(3).join(' ')}</span></h3><p>{item.description}</p><ul>{item.points.map((point) => <li>{point}</li>)}</ul></div><div class="sig-phone" aria-hidden="true"><div class="sig-device"><div class="device-screen"></div></div></div></div>{index < signatures.length - 1 && <div class="sig-connector" aria-hidden="true"><svg viewBox="0 0 100 100" preserveAspectRatio="none" fill="none"><path data-draw d={index === 0 ? 'M74,0 V26 Q74,40 62,40 H38 Q26,40 26,54 V100' : 'M26,0 V26 Q26,40 38,40 H62 Q74,40 74,54 V100'}/><path data-pulse d={index === 0 ? 'M74,0 V26 Q74,40 62,40 H38 Q26,40 26,54 V100' : 'M26,0 V26 Q26,40 38,40 H62 Q74,40 74,54 V100'}/></svg></div>}</>)}</section>
+
+    <HomeConnector flip />
+
+    <section class="features" id="features"><div class="edge-glow left"></div><div class="edge-glow right"></div><h2 class="features-title">Everything you need <span class="dim">to move from idea</span><br /><span class="dim">to execution</span></h2><div class="features-wrap"><div class="f-col f-left">{homeServices.slice(0, 3).map((service, index) => <a class="f-card" href={`/services/${service.slug}/`}><span class="service-icon">{String(index + 1).padStart(2, '0')}</span><div><h3>{service.shortTitle}</h3><p>{service.description}</p></div></a>)}</div><div class="f-center"><svg class="net f-net" viewBox="0 0 100 100" preserveAspectRatio="none" fill="none"><path data-draw class="spine" d="M50,0 V36"/><path data-draw class="spine" d="M50,64 V100"/><path data-draw d="M0,17 H28 Q32,17 32,21 V44 Q32,48 36,48 H43"/><path data-draw d="M0,50 H43"/><path data-draw d="M0,83 H28 Q32,83 32,79 V56 Q32,52 36,52 H43"/><path data-draw d="M100,17 H72 Q68,17 68,21 V44 Q68,48 64,48 H57"/><path data-draw d="M100,50 H57"/><path data-draw d="M100,83 H72 Q68,83 68,79 V56 Q68,52 64,52 H57"/><path data-pulse d="M0,17 H28 Q32,17 32,21 V44 Q32,48 36,48 H43"/><path data-pulse d="M100,50 H57"/><path data-pulse d="M0,83 H28 Q32,83 32,79 V56 Q32,52 36,52 H43"/><path data-pulse d="M50,64 V100"/></svg><div class="app-chip f-chip"><span class="visual-mark">S</span></div></div><div class="f-col f-right">{homeServices.slice(3, 6).map((service, index) => <a class="f-card" href={`/services/${service.slug}/`}><span class="service-icon">{String(index + 4).padStart(2, '0')}</span><div><h3>{service.shortTitle}</h3><p>{service.description}</p></div></a>)}</div></div></section>
+
+    <section class="languages" aria-label="SynoIT service universe"><p class="section-kicker">22 SPECIALIZED SERVICES · ONE DELIVERY PARTNER</p><div class="marquee"><div class="service-marquee-track">{services.map((service) => <a class="lang-chip" href={`/services/${service.slug}/`}>{service.shortTitle}</a>)}{services.map((service) => <a class="lang-chip" href={`/services/${service.slug}/`} aria-hidden="true" tabindex="-1">{service.shortTitle}</a>)}</div></div></section>
+
+    <HomeConnector />
+
+    <section class="exploded" id="inside"><div class="exploded-head"><p class="section-kicker">UNDER THE HOOD</p><h2 class="exploded-title">Specialists across <span class="dim">the full product lifecycle</span></h2></div><div class="inside-list">{categories.map((category, index) => { const group = services.filter((service) => service.category === category); return <div class="i-row"><div class:list={['i-tile', { 'chip-tile': index === 0 }]}>{index === 0 ? <div class="app-chip x-chip"><span class="visual-mark">S</span></div> : <span class="inside-icon">{String(index + 1).padStart(2, '0')}</span>}<span>{category}</span></div><svg class="i-trace net" viewBox="0 0 100 60" preserveAspectRatio="none" fill="none"><path class="i-line" d={index === 1 ? 'M0,30 H34 L46,40 H62 L72,30 H100' : 'M0,30 H34 L46,20 H62 L72,30 H100'}/><path class="i-pulse" d={index === 1 ? 'M0,30 H34 L46,40 H62 L72,30 H100' : 'M0,30 H34 L46,20 H62 L72,30 H100'}/><path class="i-pad ring" d="M3,30 h.01"/><path class="i-pad" d="M3,30 h.01"/><path class="i-pad ring" d="M97,30 h.01"/><path class="i-pad" d="M97,30 h.01"/></svg><div class="i-info"><h4>{category === 'AI Services' ? 'Operational AI with secure, practical guardrails' : category === 'Design' ? 'Interfaces and brands clear from the first moment' : category === 'Development' ? 'Product engineering for scale, stability, and speed' : 'Growth systems that turn visibility into qualified demand'}</h4><p>{group.slice(0, 5).map((service) => service.shortTitle).join(' · ')}</p></div></div>})}</div></section>
+
+    <HomeConnector />
+
+    <section class="imagine" id="imagine"><div class="imagine-grid"><div class="imagine-copy"><h2 class="imagine-title">Imagine one team <span class="accent">moving the whole product forward</span></h2><ul class="imagine-points"><li><span class="point-icon">01</span><span>Strategy and execution stay connected.</span></li><li><span class="point-icon">02</span><span>Design, engineering, AI, and growth share one roadmap.</span></li><li><span class="point-icon">03</span><span>Every sprint produces visible, measurable progress.</span></li></ul><div class="imagine-stat"><span class="stat-num">500+</span><p>projects delivered across products, platforms, brands, and growth systems.</p></div><div class="badges-wrap imagine-badges"><a href="/projects/" class="store-btn"><span class="service-icon">↗</span><span><small>EXPLORE THE WORK</small><b>View our projects</b></span></a><a href="/dedicated-team/" class="store-btn"><span class="service-icon">✦</span><span><small>EXTEND YOUR TEAM</small><b>Dedicated specialists</b></span></a></div></div><div class="imagine-phones" aria-hidden="true"><div class="imagine-device"><div class="device-screen"></div></div></div></div></section>
+
+    <HomeConnector />
+
+    <section class="reviews"><h2 class="reviews-title">Delivery depth <span class="dim">you can build on</span></h2><div class="reviews-grid">{reasons.map(([number, label]) => <article class="review-card"><span class="review-stars">{number}</span><blockquote>{label}</blockquote><figcaption>SynoIT delivery network</figcaption></article>)}</div></section>
+
+    <HomeConnector />
+
+    <section class="pricing" id="pricing"><p class="section-kicker">ENGAGEMENT TIERS</p><h2>Choose the delivery level<br />that fits your next move</h2><div class="price-card"><div class="price-plans" role="group" aria-label="SynoIT pricing tiers">{pricingPlans.map((plan, index) => <button class:list={['plan', { 'is-active': index === pricingPlans.length - 1 }]} data-price={plan.price} data-unit={plan.unit} data-save={plan.description} aria-pressed={index === pricingPlans.length - 1 ? 'true' : 'false'}>{plan.name}</button>)}</div><div class="price-amount price-copy">$39.9k+<span>/engagement</span></div><p class="price-save" id="priceSave"><b>For dedicated teams, AI systems, cloud platforms, and growth programs.</b></p><p class="price-note">Starting points only · Final scope follows discovery</p><a class="btn-primary" href="mailto:support@synoit.com">Request a detailed proposal</a></div></section>
+
+    <HomeConnector flip />
+
+    <section class="faq" id="faq"><p class="section-kicker">FAQ</p><h2 class="faq-title">Questions, <span class="dim">answered</span></h2><div class="faq-list">{faqs.map(([question, answer], index) => <details class="faq-item" open={index === 0}><summary>{question}</summary><div class="faq-body"><p>{answer}</p></div></details>)}</div></section>
+
+    <HomeConnector />
+
+    <section class="cta" id="cta"><h2 class="cta-title"><span class="line" data-split>You do not need more disconnected vendors.</span>{' '}<span class="line accent" data-split>You need one team that can move the product.</span></h2><div class="hero-badges"><span class="badges-wrap"><a href="mailto:support@synoit.com" class="store-btn"><span class="service-icon">↗</span><span><small>START A PROJECT</small><b>Get a free quote</b></span></a><a href="https://wa.me/6582034346" target="_blank" rel="noopener" class="store-btn"><span class="service-icon">✦</span><span><small>TALK THROUGH YOUR IDEA</small><b>Chat with our team</b></span></a></span></div><div class="qr-box"><div class="qr-pair"><div class="qr-tile"><strong>24/7</strong><span>Support coverage</span></div><div class="qr-tile"><strong>98%</strong><span>Client satisfaction</span></div></div><span>Singapore HQ · Bangladesh Hub · Global delivery</span></div></section>
   </main>
-</BaseLayout>
+</HomeLayout>
