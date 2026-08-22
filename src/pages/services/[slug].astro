@@ -1,14 +1,19 @@
 ---
-import BaseLayout from '@/layouts/BaseLayout.astro';
+import HomeLayout from '@/layouts/HomeLayout.astro';
+import HomeConnector from '@/components/HomeConnector.astro';
 import HeroNet from '@/components/HeroNet.astro';
-import CTA from '@/components/CTA.astro';
-import { getService, services } from '@/data/services';
+import { services } from '@/data/services';
 
 export function getStaticPaths() {
   return services.map((service) => ({ params: { slug: service.slug }, props: { service } }));
 }
 
 const { service } = Astro.props;
+const related = services.filter((item) => item.category === service.category && item.slug !== service.slug).slice(0, 4);
+const process = service.process;
+const outcomes = service.outcomes.length ? service.outcomes : service.deliverables.slice(0, 4);
+const relatedLabel = service.category === 'AI Services' ? 'RELATED AI SERVICES' : `RELATED ${service.category.toUpperCase()} SERVICES`;
+
 const schema = {
   '@context': 'https://schema.org',
   '@type': 'Service',
@@ -19,106 +24,155 @@ const schema = {
   serviceType: service.category,
   url: `https://synoit.com/services/${service.slug}/`
 };
-const related = services.filter((item) => item.category === service.category && item.slug !== service.slug).slice(0, 3);
 ---
-<BaseLayout title={`${service.shortTitle} | SynoIT`} description={service.description} canonical={`/services/${service.slug}/`} schema={schema}>
-  <main>
-    <section class="hero">
+
+<HomeLayout title={`${service.shortTitle} | SynoIT`} description={service.description} canonical={`/services/${service.slug}/`} schema={schema}>
+  <main id="main" class="service-page">
+    <section class="hero service-hero" id="hero">
       <div class="hero-content">
-        <p class="kicker" data-reveal>{service.category}</p>
-        <h1 class="hero-title" data-reveal>{service.title}</h1>
-        <p class="hero-sub" data-reveal>{service.description}</p>
-        <div class="hero-actions" data-reveal>
-          <a class="btn-primary" href="mailto:support@synoit.com">Start this project</a>
-          <a class="btn-ghost" href="/pricing/">Estimate timeline</a>
+        <p class="section-kicker service-kicker">{service.category}</p>
+        <div class="hero-phone" id="heroPhone" aria-hidden="true">
+          <div class="hero-device"><div class="hero-device-screen"></div></div>
+        </div>
+        <h1 class="hero-title"><span class="line" data-split>{service.title}</span></h1>
+        <p class="hero-sub reveal-line"><span>{service.description}</span></p>
+        <div class="hero-badges reveal-line">
+          <span class="badges-wrap">
+            <a href="mailto:support@synoit.com" class="store-btn"><span class="service-icon">↗</span><span><small>START THIS SERVICE</small><b>Get a free quote</b></span></a>
+            <a href="/pricing/" class="store-btn"><span class="service-icon">✦</span><span><small>PLAN THE SCOPE</small><b>View engagement tiers</b></span></a>
+          </span>
         </div>
       </div>
       <HeroNet />
     </section>
 
-    <section class="statement">
-      <p data-reveal><span class="dim">{service.proof}</span></p>
-    </section>
+    <HomeConnector />
 
-    <section class="section alt">
-      <div class="container">
-        <div class="section-head" data-reveal>
-          <p class="kicker">What we deliver</p>
-          <h2>Built around outcomes, not loose activity.</h2>
-        </div>
-        <div class="grid">
-          {service.deliverables.map((item, index) => (
-            <div class="card" data-reveal>
-              <div class="icon-tile">{String(index + 1).padStart(2, '0')}</div>
-              <h3>{item}</h3>
-              <p>{service.outcomes[index % service.outcomes.length]} with practical execution, clear documentation, and measurable delivery checkpoints.</p>
-            </div>
-          ))}
-        </div>
+    <section class="statement service-statement" id="statement">
+      <div class="statement-pin" id="statementPin">
+        <svg class="net statement-net" viewBox="0 0 100 100" preserveAspectRatio="none" fill="none">
+          <path class="spine" data-sdraw d="M50,0 V16" />
+          <path data-sdraw d="M50,16 H84 Q90,16 90,22 V78 Q90,84 84,84 H16 Q10,84 10,78 V22 Q10,16 16,16 H50" />
+          <path class="spine" data-sdraw d="M50,84 V100" />
+          <path class="s-pulse" d="M50,16 H84 Q90,16 90,22 V78 Q90,84 84,84 H16 Q10,84 10,78 V22 Q10,16 16,16 H50" />
+          <path class="s-pulse" d="M50,16 H84 Q90,16 90,22 V78 Q90,84 84,84 H16 Q10,84 10,78 V22 Q10,16 16,16 H50" />
+        </svg>
+        <p class="statement-text" id="statementText">{service.proof}</p>
       </div>
     </section>
 
-    <section class="section">
-      <div class="container steps-body">
-        <div data-reveal>
-          <p class="kicker">{service.processTitle}</p>
-          <h2 style="font-size:var(--fs-h2);line-height:1.08;margin-bottom:16px">A focused path from clarity to launch.</h2>
-          <div class="step-list">
-            {service.process.map((step, index) => (
-              <div class="step">
+    <HomeConnector flip />
+
+    <section class="features service-deliverables" id="features">
+      <div class="edge-glow left"></div>
+      <div class="edge-glow right"></div>
+      <h2 class="features-title">What we deliver for <span class="dim">{service.shortTitle}</span></h2>
+      <div class="service-grid">
+        {service.deliverables.map((item, index) => (
+          <article class="f-card service-card">
+            <span class="service-icon">{String(index + 1).padStart(2, '0')}</span>
+            <div>
+              <h3>{item}</h3>
+              <p>{outcomes[index % outcomes.length]} with practical execution, clear documentation, and measurable delivery checkpoints.</p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <HomeConnector />
+
+    <section class="steps service-steps" id="steps">
+      <div class="steps-pin" id="stepsPin">
+        <div class="steps-head">
+          <p class="section-kicker">{service.processTitle}</p>
+          <h2>A focused path from clarity<br />to launch-ready execution</h2>
+        </div>
+        <div class="steps-body">
+          <div class="steps-text">
+            <div class="steps-rail"><div class="steps-rail-fill" id="stepsRailFill"></div><div class="steps-rail-dot" id="stepsRailDot"></div></div>
+            <div class="steps-counter"><span id="stepsCounterNum">01</span><span class="steps-counter-total"> / 04</span></div>
+            <div class="steps-dots" id="stepsDots" role="tablist" aria-label={`${service.shortTitle} process steps`}>
+              {process.map((_, index) => <button data-step={index} class:list={{ 'is-active': index === 0 }} aria-label={`Step ${index + 1}`} aria-selected={index === 0 ? 'true' : 'false'}>{String(index + 1).padStart(2, '0')}</button>)}
+            </div>
+            {process.map((step, index) => (
+              <div class:list={['step-item', { 'is-active': index === 0 }]} data-step={index}>
                 <div class="step-num">{String(index + 1).padStart(2, '0')}</div>
                 <h3>{step.title}</h3>
                 <p>{step.text}</p>
+                <div class="step-line"><div class="step-line-fill"></div></div>
               </div>
             ))}
           </div>
-        </div>
-        <div class="device" data-reveal>
-          <div class="orbit"></div>
-          <div class="screen">
-            {service.outcomes.slice(0, 3).map((outcome) => (
-              <div class="screen-card"><div class="screen-line short"></div><p style="color:var(--muted-2);line-height:1.35;font-size:14px">{outcome}</p></div>
-            ))}
+          <div class="steps-phone">
+            <div class="phone-glow"></div>
+            <div class="phone-frame">
+              {process.map((step, index) => (
+                <div class:list={['step-video', { 'is-active': index === 0 }]} aria-label={`${service.shortTitle} step ${index + 1}`}>
+                  <strong>SYNOIT SERVICE</strong>
+                  <b>{step.title}</b>
+                  <span></span><span></span><span></span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="section pink">
-      <div class="container">
-        <div class="section-head" data-reveal>
-          <p class="kicker">Questions, answered</p>
-          <h2>What teams usually ask before starting.</h2>
-        </div>
-        <div class="faq-list" data-reveal>
-          {service.faqs.map((faq, index) => (
-            <div class:list={['faq-item', index === 0 && 'is-open']}>
-              <button aria-expanded={index === 0 ? 'true' : 'false'}>{faq.q}<span>+</span></button>
-              <p>{faq.a}</p>
-            </div>
-          ))}
+    <HomeConnector flip />
+
+    <section class="signature service-outcomes" id="inside">
+      <p class="section-kicker">OUTCOMES</p>
+      <h2 class="sig-title">{service.shortTitle} that <span class="dim">moves the business</span></h2>
+      <div class="service-grid compact">
+        {outcomes.map((outcome, index) => (
+          <article class="review-card">
+            <span class="review-stars">{String(index + 1).padStart(2, '0')}</span>
+            <blockquote>{outcome}</blockquote>
+            <figcaption>{service.shortTitle}</figcaption>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <HomeConnector />
+
+    <section class="languages" aria-label={`${service.shortTitle} related services`}>
+      <p class="section-kicker">{relatedLabel}</p>
+      <div class="marquee">
+        <div class="service-marquee-track">
+          {related.map((item) => <a class="lang-chip" href={`/services/${item.slug}/`}>{item.shortTitle}</a>)}
+          {related.map((item) => <a class="lang-chip" href={`/services/${item.slug}/`} aria-hidden="true" tabindex="-1">{item.shortTitle}</a>)}
         </div>
       </div>
     </section>
 
-    <section class="section blue">
-      <div class="container">
-        <div class="section-head" data-reveal>
-          <p class="kicker">Related services</p>
-          <h2>Explore adjacent SynoIT capabilities.</h2>
-        </div>
-        <div class="grid">
-          {related.map((item, index) => (
-            <a class="card" href={`/services/${item.slug}/`} data-reveal>
-              <div class="icon-tile">{String(index + 1).padStart(2, '0')}</div>
-              <small>{item.category}</small>
-              <h3>{item.shortTitle}</h3>
-              <p>{item.description}</p>
-            </a>
-          ))}
-        </div>
+    <HomeConnector />
+
+    <section class="faq" id="faq">
+      <p class="section-kicker">FAQ</p>
+      <h2 class="faq-title">Questions, <span class="dim">answered</span></h2>
+      <div class="faq-list">
+        {service.faqs.map((faq, index) => (
+          <details class="faq-item" open={index === 0}>
+            <summary>{faq.q}</summary>
+            <div class="faq-body"><p>{faq.a}</p></div>
+          </details>
+        ))}
       </div>
     </section>
-    <CTA />
+
+    <HomeConnector />
+
+    <section class="cta" id="cta">
+      <h2 class="cta-title"><span class="line" data-split>Ready to move on {service.shortTitle}?</span>{' '}<span class="line accent" data-split>SynoIT can take it from strategy to launch.</span></h2>
+      <div class="hero-badges">
+        <span class="badges-wrap">
+          <a href="mailto:support@synoit.com" class="store-btn"><span class="service-icon">↗</span><span><small>START A PROJECT</small><b>Get a free quote</b></span></a>
+          <a href="https://wa.me/6582034346" target="_blank" rel="noopener" class="store-btn"><span class="service-icon">✦</span><span><small>TALK THROUGH YOUR IDEA</small><b>Chat with our team</b></span></a>
+        </span>
+      </div>
+    </section>
   </main>
-</BaseLayout>
+</HomeLayout>

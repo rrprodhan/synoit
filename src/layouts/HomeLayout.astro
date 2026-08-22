@@ -1,5 +1,6 @@
 ---
 import '../styles/home.css';
+import { categories, services } from '@/data/services';
 
 interface Props {
   title: string;
@@ -21,6 +22,10 @@ const site = 'https://synoit.com';
 const canonicalUrl = new URL(canonical, site).toString();
 const imageUrl = new URL(image, site).toString();
 const year = new Date().getFullYear();
+const byCategory = categories.map((category) => ({
+  category,
+  items: services.filter((service) => service.category === category)
+}));
 ---
 <!doctype html>
 <html lang="en">
@@ -127,17 +132,42 @@ const year = new Date().getFullYear();
     <nav class="nav" id="nav" aria-label="Primary navigation">
       <a href="/" class="nav-logo" aria-label="SynoIT home"><span class="brand-mark">S</span><span>SynoIT</span></a>
       <div class="nav-right">
-        <a href="#steps" class="nav-link">How we work</a>
-        <a href="#signature" class="nav-link">Services</a>
-        <a href="#inside" class="nav-link">Inside</a>
-        <a href="#pricing" class="nav-link">Engagement</a>
-        <a href="#faq" class="nav-link">FAQ</a>
+        <a href="/#steps" class="nav-link">How we work</a>
+        <div class="services-wrap">
+          <button class="nav-link" aria-haspopup="true" aria-expanded="false">Services</button>
+          <div class="mega">
+            {byCategory.map((group) => (
+              <div>
+                <h4>{group.category}</h4>
+                {group.items.map((item) => <a href={`/services/${item.slug}/`}>{item.shortTitle}</a>)}
+              </div>
+            ))}
+          </div>
+        </div>
+        <a href="/#inside" class="nav-link">Inside</a>
+        <a href="/pricing/" class="nav-link">Engagement</a>
+        <a href="/#faq" class="nav-link">FAQ</a>
         <a href="/projects/" class="nav-link">Projects</a>
         <div class="nav-menu" id="navMenuWrap">
           <button class="lang-btn nav-menu-btn" id="navMenuBtn" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
-          <div class="lang-menu nav-drop" id="navDrop"><a href="#steps">How we work</a><a href="#signature">Services</a><a href="#inside">Inside</a><a href="#pricing">Engagement</a><a href="#faq">FAQ</a><a href="/projects/">Projects</a></div>
+          <div class="lang-menu nav-drop" id="navDrop">
+            <a href="/#steps">How we work</a>
+            {byCategory.map((group) => (
+              <>
+                <strong>{group.category}</strong>
+                {group.items.map((item) => <a href={`/services/${item.slug}/`}>{item.shortTitle}</a>)}
+              </>
+            ))}
+            <a href="/#inside">Inside</a>
+            <a href="/pricing/">Engagement</a>
+            <a href="/#faq">FAQ</a>
+            <a href="/projects/">Projects</a>
+            <a href="/dedicated-team/">Dedicated Team</a>
+            <a href="/blog/">Blog</a>
+            <a href="/contact/">Contact</a>
+          </div>
         </div>
-        <a href="#cta" class="nav-cta">Start a project</a>
+        <a href="/#cta" class="nav-cta">Start a project</a>
       </div>
     </nav>
 
