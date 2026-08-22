@@ -443,15 +443,6 @@
     ScrollTrigger.refresh();
   });
 
-  /* ───────── scroll-to-top button ───────── */
-  const toTop = document.getElementById('toTop');
-  if (toTop) {
-    lenis.on('scroll', ({ scroll }) => {
-      toTop.classList.toggle('is-visible', scroll > innerHeight * 1.5);
-    });
-    toTop.addEventListener('click', () => lenis.scrollTo(0, { duration: 1.4 }));
-  }
-
   /* ───────── logo click = fresh reload of the home page ───────── */
   const navLogo = document.querySelector('.nav-logo');
   if (navLogo) {
@@ -518,11 +509,23 @@
   const navMenuBtn = document.getElementById('navMenuBtn');
   const navDrop = document.getElementById('navDrop');
   if (navMenuBtn && navDrop) {
+    const closeNavMenu = () => {
+      navDrop.classList.remove('is-open');
+      navMenuBtn.setAttribute('aria-expanded', 'false');
+    };
     navMenuBtn.addEventListener('click', e => {
       e.stopPropagation();
-      navDrop.classList.toggle('is-open');
+      const isOpen = navDrop.classList.toggle('is-open');
+      navMenuBtn.setAttribute('aria-expanded', String(isOpen));
     });
-    addEventListener('click', () => navDrop.classList.remove('is-open'));
+    navDrop.addEventListener('click', e => e.stopPropagation());
+    addEventListener('click', closeNavMenu);
+    addEventListener('keydown', e => {
+      if (e.key === 'Escape') {
+        closeNavMenu();
+        navMenuBtn.focus();
+      }
+    });
   }
   const heroChars = [];
   const ctaChars = [];

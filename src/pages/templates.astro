@@ -1,0 +1,88 @@
+---
+import HomeLayout from '@/layouts/HomeLayout.astro';
+import HomeConnector from '@/components/HomeConnector.astro';
+import HeroNet from '@/components/HeroNet.astro';
+
+const templates = [
+  ['Project Brief Template', 'Capture goals, audience, scope, success metrics, timelines, and stakeholder decisions before design or development begins.'],
+  ['Website Launch Checklist', 'Review content, SEO, analytics, responsiveness, accessibility, redirects, performance, and post-launch monitoring.'],
+  ['AI Automation Planner', 'Map repetitive workflows, data sources, approval steps, risks, and measurable automation outcomes.'],
+  ['SEO Content Framework', 'Plan search intent, page structure, internal links, metadata, schema, and content refresh priorities.']
+];
+
+const categories = [
+  ['Strategy', 'Briefs, discovery notes, scope planning, stakeholder alignment, and product decision templates.'],
+  ['Design', 'UX audit worksheets, landing page outlines, brand checklists, and interface planning tools.'],
+  ['Development', 'Launch checklists, integration maps, QA notes, performance reviews, and maintenance planning.'],
+  ['Growth', 'SEO frameworks, content calendars, analytics review sheets, and conversion optimization templates.']
+];
+
+const process = [
+  ['Choose', 'Select the template that matches your current planning or delivery stage.'],
+  ['Complete', 'Fill in the key decisions, constraints, and missing information with your internal team.'],
+  ['Review', 'Use the completed template to spot unclear scope, risk, dependencies, and priority gaps.'],
+  ['Share', 'Send it to SynoIT so we can respond with clearer recommendations, timelines, and estimates.']
+];
+---
+
+<HomeLayout title="Templates | SynoIT Digital Project Planning Resources" description="Use SynoIT templates for project briefs, website launches, AI automation planning, SEO content strategy, UX audits, and digital product delivery." canonical="/templates/">
+  <main id="main" class="service-page">
+    <section class="hero service-hero" id="hero">
+      <div class="hero-content">
+        <p class="section-kicker service-kicker">TEMPLATES</p>
+        <h1 class="hero-title"><span class="line" data-split>Plan smarter</span>{' '}<span class="line accent" data-split>before you build.</span></h1>
+        <p class="hero-sub reveal-line"><span>Use SynoIT templates to organize project briefs, launch checks, AI automation ideas, SEO content plans, and digital product decisions.</span></p>
+        <div class="hero-badges reveal-line"><span class="badges-wrap"><a href="mailto:support@synoit.com" class="store-btn"><span class="service-icon">↗</span><span><small>REQUEST A TEMPLATE</small><b>Email SynoIT</b></span></a><a href="/contact/" class="store-btn"><span class="service-icon">✦</span><span><small>PLAN A PROJECT</small><b>Talk to our team</b></span></a></span></div>
+      </div>
+      <HeroNet />
+    </section>
+
+    <HomeConnector />
+
+    <section class="statement service-statement" id="statement">
+      <div class="statement-pin" id="statementPin">
+        <svg class="net statement-net" viewBox="0 0 100 100" preserveAspectRatio="none" fill="none"><path class="spine" data-sdraw d="M50,0 V16" /><path data-sdraw d="M50,16 H84 Q90,16 90,22 V78 Q90,84 84,84 H16 Q10,84 10,78 V22 Q10,16 16,16 H50" /><path class="spine" data-sdraw d="M50,84 V100" /><path class="s-pulse" d="M50,16 H84 Q90,16 90,22 V78 Q90,84 84,84 H16 Q10,84 10,78 V22 Q10,16 16,16 H50" /><path class="s-pulse" d="M50,16 H84 Q90,16 90,22 V78 Q90,84 84,84 H16 Q10,84 10,78 V22 Q10,16 16,16 H50" /></svg>
+        <p class="statement-text" id="statementText">Clear templates reduce vague requirements, speed up discovery, and help every digital project start with better decisions.</p>
+      </div>
+    </section>
+
+    <HomeConnector flip />
+
+    <section class="features service-deliverables" id="features">
+      <div class="edge-glow left"></div><div class="edge-glow right"></div>
+      <h2 class="features-title">Planning templates <span class="dim">for digital projects</span></h2>
+      <div class="service-grid">
+        {templates.map(([title, text], index) => (
+          <article class="f-card service-card">
+            <span class="service-icon">{String(index + 1).padStart(2, '0')}</span>
+            <div><h3>{title}</h3><p>{text}</p><div class="chip-row"><span>Coming soon</span><span>Editable format</span></div><a class="inline-link" href="mailto:support@synoit.com">Request access</a></div>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <HomeConnector />
+
+    <section class="steps service-steps" id="steps">
+      <div class="steps-pin" id="stepsPin">
+        <div class="steps-head"><p class="section-kicker">HOW TO USE THEM</p><h2>Turn early ideas into<br />usable project inputs</h2></div>
+        <div class="steps-body"><div class="steps-text"><div class="steps-rail"><div class="steps-rail-fill" id="stepsRailFill"></div><div class="steps-rail-dot" id="stepsRailDot"></div></div><div class="steps-counter"><span id="stepsCounterNum">01</span><span class="steps-counter-total"> / 04</span></div><div class="steps-dots" role="tablist" aria-label="Template process">{process.map((_, index) => <button class:list={{ 'is-active': index === 0 }} aria-label={`Step ${index + 1}`} aria-selected={index === 0 ? 'true' : 'false'}>{String(index + 1).padStart(2, '0')}</button>)}</div>{process.map(([title, text], index) => <div class:list={['step-item', { 'is-active': index === 0 }]}><div class="step-num">{String(index + 1).padStart(2, '0')}</div><h3>{title}</h3><p>{text}</p><div class="step-line"><div class="step-line-fill"></div></div></div>)}</div><div class="steps-phone"><div class="phone-glow"></div><div class="phone-frame">{process.map(([title], index) => <div class:list={['step-video', { 'is-active': index === 0 }]}><strong>TEMPLATE FLOW</strong><b>{title}</b><span></span><span></span><span></span></div>)}</div></div></div>
+      </div>
+    </section>
+
+    <HomeConnector flip />
+
+    <section class="signature service-outcomes" id="inside">
+      <p class="section-kicker">RESOURCE CATEGORIES</p>
+      <h2 class="sig-title">Reusable tools <span class="dim">for each project phase</span></h2>
+      <div class="service-grid compact">{categories.map(([title, text], index) => <article class="review-card"><span class="review-stars">{String(index + 1).padStart(2, '0')}</span><blockquote>{title}</blockquote><figcaption>{text}</figcaption></article>)}</div>
+    </section>
+
+    <HomeConnector />
+
+    <section class="cta" id="cta">
+      <h2 class="cta-title"><span class="line" data-split>Have a project idea?</span>{' '}<span class="line accent" data-split>Start with a clear brief.</span></h2>
+      <div class="hero-badges"><span class="badges-wrap"><a href="mailto:support@synoit.com" class="store-btn"><span class="service-icon">↗</span><span><small>REQUEST TEMPLATE</small><b>Email SynoIT</b></span></a><a href="https://wa.me/6582034346" target="_blank" rel="noopener" class="store-btn"><span class="service-icon">✦</span><span><small>DISCUSS SCOPE</small><b>Chat with our team</b></span></a></span></div>
+    </section>
+  </main>
+</HomeLayout>
