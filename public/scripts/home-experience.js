@@ -587,6 +587,7 @@
   /* ───────── orb choreography ───────── */
   const isMobile = innerWidth < 900;
   function orbTo(vals, trigger) {
+    if (!document.querySelector(trigger)) return;
     ScrollTrigger.create({
       trigger, start: 'top 60%', end: 'bottom 40%',
       onEnter: () => Object.assign(orbState, vals),
@@ -604,46 +605,50 @@
   orbTo({ x: 0, y: 0, scale: 1, amp: .35, alpha: .55 }, '#hero');
 
   /* ───────── statement: pinned story — PCB frame draws around the text ───────── */
-  const words = isTranslated ? [] : splitWords(document.getElementById('statementText'));
-  if (isTranslated) document.getElementById('statementText').style.color = 'var(--text)';
-  const sDraws = gsap.utils.toArray('path[data-sdraw]');
-  const sPulses = gsap.utils.toArray('.statement-net .s-pulse');
-  sDraws.forEach(p => {
-    const L = p.getTotalLength();
-    p.style.strokeDasharray = L;
-    p.style.strokeDashoffset = L;
-  });
-  const stl = gsap.timeline({
-    scrollTrigger: {
-      trigger: '#statement', start: 'top top', end: '+=130%',
-      pin: '#statementPin', scrub: 1,
-      onUpdate: self => {
-        // words light up after the frame starts drawing
-        const wp = gsap.utils.clamp(0, 1, (self.progress - .18) / .68);
-        const n = Math.floor(wp * (words.length + 2));
-        words.forEach((w, i) => w.classList.toggle('is-on', i <= n));
+  const statementText = document.getElementById('statementText');
+  const statementSection = document.getElementById('statement');
+  if (statementText && statementSection) {
+    const words = isTranslated ? [] : splitWords(statementText);
+    if (isTranslated) statementText.style.color = 'var(--text)';
+    const sDraws = gsap.utils.toArray('path[data-sdraw]');
+    const sPulses = gsap.utils.toArray('.statement-net .s-pulse');
+    sDraws.forEach(p => {
+      const L = p.getTotalLength();
+      p.style.strokeDasharray = L;
+      p.style.strokeDashoffset = L;
+    });
+    const stl = gsap.timeline({
+      scrollTrigger: {
+        trigger: '#statement', start: 'top top', end: '+=130%',
+        pin: '#statementPin', scrub: 1,
+        onUpdate: self => {
+          // words light up after the frame starts drawing
+          const wp = gsap.utils.clamp(0, 1, (self.progress - .18) / .68);
+          const n = Math.floor(wp * (words.length + 2));
+          words.forEach((w, i) => w.classList.toggle('is-on', i <= n));
+        },
       },
-    },
-  });
-  stl.to(sDraws[0], { strokeDashoffset: 0, duration: .14, ease: 'none' })        // spine in
-     .to(sDraws[1], { strokeDashoffset: 0, duration: .5, ease: 'none' })         // frame
-     .to(sPulses, { opacity: .95, duration: .06 }, '>-.05')                       // lights on
-     .to(sDraws[2], { strokeDashoffset: 0, duration: .18, ease: 'none' })        // spine out
-     .to({}, { duration: .12 });                                                  // hold
-  // perimeter lights orbiting the frame forever (two, opposite phase)
-  sPulses.forEach((p, i) => {
-    const L = p.getTotalLength();
-    const seg = L * .1;
-    p.style.strokeDasharray = `${seg} ${L - seg}`;
-    gsap.fromTo(p,
-      { strokeDashoffset: i === 0 ? 0 : -L / 2 },
-      { strokeDashoffset: (i === 0 ? 0 : -L / 2) - L, duration: 7, repeat: -1, ease: 'none' });
-  });
+    });
+    stl.to(sDraws[0], { strokeDashoffset: 0, duration: .14, ease: 'none' })
+       .to(sDraws[1], { strokeDashoffset: 0, duration: .5, ease: 'none' })
+       .to(sPulses, { opacity: .95, duration: .06 }, '>-.05')
+       .to(sDraws[2], { strokeDashoffset: 0, duration: .18, ease: 'none' })
+       .to({}, { duration: .12 });
+    sPulses.forEach((p, i) => {
+      const L = p.getTotalLength();
+      const seg = L * .1;
+      p.style.strokeDasharray = `${seg} ${L - seg}`;
+      gsap.fromTo(p,
+        { strokeDashoffset: i === 0 ? 0 : -L / 2 },
+        { strokeDashoffset: (i === 0 ? 0 : -L / 2) - L, duration: 7, repeat: -1, ease: 'none' });
+    });
+  }
 
   /* ───────── steps: regular block, auto-advancing ─────────
      (design review: the pinned scroll animation demanded too much scrolling and
      ran out of sync — now each step holds 6 seconds with a progress line under
      the active step, then switches automatically; the phone video follows) */
+  const stepsSection = document.getElementById('steps');
   const stepItems = document.querySelectorAll('.step-item');
   const stepVideos = document.querySelectorAll('.step-video');
   const stepLineFills = document.querySelectorAll('.step-line-fill');
@@ -655,7 +660,7 @@
   function setStep(i) {
     if (i === activeStep) return;
     activeStep = i;
-    counterNum.textContent = '0' + (i + 1);
+    if (counterNum) counterNum.textContent = '0' + (i + 1);
     stepItems.forEach((el, k) => el.classList.toggle('is-active', k === i));
     stepDots.forEach((d, k) => {
       d.classList.toggle('is-active', k === i);
@@ -679,10 +684,10 @@
     stepTween = gsap.fromTo(stepProg, { p: 0 }, {
       p: 1, duration: STEP_SECONDS, ease: 'none',
       onUpdate() {
-        stepLineFills[i].style.width = (stepProg.p * 100) + '%';
+        if (stepLineFills[i]) stepLineFills[i].style.width = (stepProg.p * 100) + '%';
         const total = ((i + stepProg.p) / 4) * 100;
-        railFill.style.height = total + '%';
-        railDot.style.top = total + '%';
+        if (railFill) railFill.style.height = total + '%';
+        if (railDot) railDot.style.top = total + '%';
       },
       onComplete() { runStep((i + 1) % 4); },
     });
@@ -698,15 +703,17 @@
   stepDots.forEach((d, i) => d.addEventListener('click', () => userStep(i)));
   // run only while the section is on screen; pause when it scrolls away
   let stepsStarted = false;
-  new IntersectionObserver(entries => {
-    if (window.__capFrozen) return; // screenshot capture: keep the frozen step
-    entries.forEach(en => {
-      if (en.isIntersecting) {
-        if (!stepsStarted) { stepsStarted = true; runStep(activeStep); }
-        else if (stepTween) stepTween.play();
-      } else if (stepTween) stepTween.pause();
-    });
-  }, { threshold: .25 }).observe(document.getElementById('steps'));
+  if (stepsSection && stepItems.length) {
+    new IntersectionObserver(entries => {
+      if (window.__capFrozen) return; // screenshot capture: keep the frozen step
+      entries.forEach(en => {
+        if (en.isIntersecting) {
+          if (!stepsStarted) { stepsStarted = true; runStep(activeStep); }
+          else if (stepTween) stepTween.play();
+        } else if (stepTween) stepTween.pause();
+      });
+    }, { threshold: .25 }).observe(stepsSection);
+  }
 
   /* ───────── inside: connected rows reveal on entry (no pin) ───────── */
   gsap.utils.toArray('.i-row').forEach((row, idx) => {

@@ -1,17 +1,128 @@
 ---
-import BaseLayout from '@/layouts/BaseLayout.astro';
+import HomeLayout from '@/layouts/HomeLayout.astro';
+import HomeConnector from '@/components/HomeConnector.astro';
 import HeroNet from '@/components/HeroNet.astro';
-import CTA from '@/components/CTA.astro';
+
 const projects = [
-  ['Luminous Engineering', 'Corporate website for a leading engineering firm in Singapore, featuring modern design, responsive layout, and optimized performance.', 'Web design · Development · SEO'],
-  ['NextGen Commerce', 'High-performance ecommerce platform with real-time inventory management, integrated payments, and AI-powered product recommendations.', 'Commerce · Integrations · AI'],
-  ['HealthTrack Pro', 'Cross-platform health and wellness mobile application with real-time tracking, doctor consultations, and personalized insights.', 'Mobile app · Backend · UX']
+  {
+    name: 'Luminous Engineering',
+    tag: 'Web Development',
+    description: 'A complete corporate website for a leading engineering firm in Singapore, featuring modern design, responsive layout, and optimized performance.',
+    stack: ['Angular', 'Tailwind CSS', 'Firebase'],
+    result: 'Stronger corporate credibility, faster page experience, and clearer enquiry paths for high-value engineering clients.',
+    href: 'https://luminousengineering.com.sg/'
+  },
+  {
+    name: 'NextGen Commerce',
+    tag: 'E-Commerce',
+    description: 'A high-performance e-commerce platform with real-time inventory management, integrated payments, and AI-powered product recommendations.',
+    stack: ['React', 'Node.js', 'AWS'],
+    result: 'A scalable commerce foundation built for catalog growth, operational visibility, and personalized product discovery.'
+  },
+  {
+    name: 'HealthTrack Pro',
+    tag: 'Mobile App',
+    description: 'A cross-platform health and wellness mobile application with real-time data tracking, doctor consultations, and personalized health insights.',
+    stack: ['Flutter', 'Firebase', 'GCP'],
+    result: 'A mobile-first product experience designed around retention, secure data flows, and everyday health engagement.'
+  }
 ];
+
+const process = [
+  ['Brief', 'We clarify the business goal, audience, market context, and measurable success criteria behind each project.'],
+  ['Blueprint', 'We translate the project into content, UX, architecture, integrations, and launch priorities.'],
+  ['Build', 'Designers, engineers, QA, and growth specialists execute through visible sprints and review checkpoints.'],
+  ['Improve', 'After launch, we monitor performance, learn from real usage, and recommend the next growth moves.']
+];
+
+const capabilities = [
+  ['Web platforms', 'Corporate websites, landing pages, portals, dashboards, CMS builds, and scalable web applications.'],
+  ['Product design', 'UI/UX, mobile app design, product audits, brand systems, pitch decks, and conversion journeys.'],
+  ['AI and automation', 'Chatbots, AI agents, AI SaaS features, workflow automation, and safe product integrations.'],
+  ['Growth systems', 'Technical SEO, content strategy, social media marketing, analytics, and conversion optimization.']
+];
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: 'SynoIT Projects',
+  description: 'A selection of SynoIT web development, mobile app, ecommerce, design, AI, and digital growth projects.',
+  url: 'https://synoit.com/projects/'
+};
 ---
-<BaseLayout title="Projects | SynoIT Digital Architecture" description="Explore SynoIT projects across web development, design, mobile apps, ecommerce, AI, and digital growth.">
-  <main>
-    <section class="hero"><div class="hero-content"><p class="kicker" data-reveal>Featured projects</p><h1 class="hero-title" data-reveal>Projects we’ve <span class="accent">delivered.</span></h1><p class="hero-sub" data-reveal>Explore a selection of SynoIT work across web development, design, and digital strategy.</p></div><HeroNet /></section>
-    <section class="section alt"><div class="container grid">{projects.map(([name, text, tag], index) => <article class="card" data-reveal><div class="icon-tile">{String(index + 1).padStart(2, '0')}</div><small>{tag}</small><h3>{name}</h3><p>{text}</p></article>)}</div></section>
-    <CTA />
+
+<HomeLayout title="Projects | SynoIT Digital Product Portfolio" description="Explore SynoIT projects across web development, design, mobile apps, ecommerce, AI automation, SEO, and digital growth." canonical="/projects/" schema={schema}>
+  <main id="main" class="service-page">
+    <section class="hero service-hero" id="hero">
+      <div class="hero-content">
+        <p class="section-kicker service-kicker">OUR PORTFOLIO</p>
+        <div class="hero-phone" id="heroPhone" aria-hidden="true"><div class="hero-device"><div class="hero-device-screen"></div></div></div>
+        <h1 class="hero-title"><span class="line" data-split>Projects we’ve</span>{' '}<span class="line accent" data-split>delivered.</span></h1>
+        <p class="hero-sub reveal-line"><span>Explore a selection of successfully completed projects across web development, design, mobile products, ecommerce, AI, and digital marketing.</span></p>
+        <div class="hero-badges reveal-line"><span class="badges-wrap"><a href="mailto:support@synoit.com" class="store-btn"><span class="service-icon">↗</span><span><small>START YOUR PROJECT</small><b>Get a free quote</b></span></a><a href="/contact/" class="store-btn"><span class="service-icon">✦</span><span><small>SHARE THE BRIEF</small><b>Talk to SynoIT</b></span></a></span></div>
+      </div>
+      <HeroNet />
+    </section>
+
+    <HomeConnector />
+
+    <section class="statement service-statement" id="statement">
+      <div class="statement-pin" id="statementPin">
+        <svg class="net statement-net" viewBox="0 0 100 100" preserveAspectRatio="none" fill="none"><path class="spine" data-sdraw d="M50,0 V16" /><path data-sdraw d="M50,16 H84 Q90,16 90,22 V78 Q90,84 84,84 H16 Q10,84 10,78 V22 Q10,16 16,16 H50" /><path class="spine" data-sdraw d="M50,84 V100" /><path class="s-pulse" d="M50,16 H84 Q90,16 90,22 V78 Q90,84 84,84 H16 Q10,84 10,78 V22 Q10,16 16,16 H50" /><path class="s-pulse" d="M50,16 H84 Q90,16 90,22 V78 Q90,84 84,84 H16 Q10,84 10,78 V22 Q10,16 16,16 H50" /></svg>
+        <p class="statement-text" id="statementText">A selection of impactful work showing how SynoIT turns strategy, design, engineering, AI, and growth execution into practical digital solutions.</p>
+      </div>
+    </section>
+
+    <HomeConnector flip />
+
+    <section class="features service-deliverables" id="features">
+      <div class="edge-glow left"></div><div class="edge-glow right"></div>
+      <h2 class="features-title">Featured projects <span class="dim">with measurable delivery depth</span></h2>
+      <div class="service-grid">
+        {projects.map((project, index) => (
+          <article class="f-card service-card">
+            <span class="service-icon">{String(index + 1).padStart(2, '0')}</span>
+            <div>
+              <small>{project.tag}</small>
+              <h3>{project.name}</h3>
+              <p>{project.description}</p>
+              <div class="chip-row">{project.stack.map((item) => <span>{item}</span>)}</div>
+              {project.href ? <a class="inline-link" href={project.href} target="_blank" rel="noopener">Visit website</a> : <span class="inline-link muted">Client confidential</span>}
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <HomeConnector />
+
+    <section class="steps service-steps" id="steps">
+      <div class="steps-pin" id="stepsPin">
+        <div class="steps-head"><p class="section-kicker">HOW PROJECTS MOVE</p><h2>From first brief to live product<br />with one accountable team</h2></div>
+        <div class="steps-body"><div class="steps-text"><div class="steps-rail"><div class="steps-rail-fill" id="stepsRailFill"></div><div class="steps-rail-dot" id="stepsRailDot"></div></div><div class="steps-counter"><span id="stepsCounterNum">01</span><span class="steps-counter-total"> / 04</span></div><div class="steps-dots" role="tablist" aria-label="Project process">{process.map((_, index) => <button class:list={{ 'is-active': index === 0 }} aria-label={`Step ${index + 1}`} aria-selected={index === 0 ? 'true' : 'false'}>{String(index + 1).padStart(2, '0')}</button>)}</div>{process.map(([title, text], index) => <div class:list={['step-item', { 'is-active': index === 0 }]}><div class="step-num">{String(index + 1).padStart(2, '0')}</div><h3>{title}</h3><p>{text}</p><div class="step-line"><div class="step-line-fill"></div></div></div>)}</div><div class="steps-phone"><div class="phone-glow"></div><div class="phone-frame">{process.map(([title], index) => <div class:list={['step-video', { 'is-active': index === 0 }]}><strong>PROJECT DELIVERY</strong><b>{title}</b><span></span><span></span><span></span></div>)}</div></div></div>
+      </div>
+    </section>
+
+    <HomeConnector flip />
+
+    <section class="signature service-outcomes" id="inside">
+      <p class="section-kicker">WHAT WE BUILD</p>
+      <h2 class="sig-title">Project capabilities <span class="dim">across the full lifecycle</span></h2>
+      <div class="service-grid compact">{capabilities.map(([title, text], index) => <article class="review-card"><span class="review-stars">{String(index + 1).padStart(2, '0')}</span><blockquote>{title}</blockquote><figcaption>{text}</figcaption></article>)}</div>
+    </section>
+
+    <HomeConnector />
+
+    <section class="reviews">
+      <h2 class="reviews-title">Business outcomes <span class="dim">behind the portfolio</span></h2>
+      <div class="reviews-grid">{projects.map((project) => <article class="review-card"><span class="review-stars">{project.tag}</span><blockquote>{project.result}</blockquote><figcaption>{project.name}</figcaption></article>)}</div>
+    </section>
+
+    <HomeConnector />
+
+    <section class="cta" id="cta">
+      <h2 class="cta-title"><span class="line" data-split>Want to be our next success story?</span>{' '}<span class="line accent" data-split>Let’s bring your vision to life.</span></h2>
+      <div class="hero-badges"><span class="badges-wrap"><a href="mailto:support@synoit.com" class="store-btn"><span class="service-icon">↗</span><span><small>START A PROJECT</small><b>Get a free quote</b></span></a><a href="https://wa.me/6582034346" target="_blank" rel="noopener" class="store-btn"><span class="service-icon">✦</span><span><small>TALK THROUGH YOUR IDEA</small><b>Chat with our team</b></span></a></span></div>
+    </section>
   </main>
-</BaseLayout>
+</HomeLayout>

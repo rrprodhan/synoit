@@ -1,11 +1,92 @@
 ---
-import BaseLayout from '@/layouts/BaseLayout.astro';
+import HomeLayout from '@/layouts/HomeLayout.astro';
+import HomeConnector from '@/components/HomeConnector.astro';
 import HeroNet from '@/components/HeroNet.astro';
 import { services } from '@/data/services';
+
+const offices = [
+  ['Singapore HQ', '30 Roberts Lane, #02-01', 'Singapore 218309'],
+  ['London Hub', 'Level 42, Canary Wharf', 'United Kingdom'],
+  ['San Francisco', '201 Mission Street', 'California, USA'],
+  ['Bangladesh Hub', 'Motijheel Commercial Area', 'Dhaka-1000']
+];
+
+const process = [
+  ['Share', 'Tell us what you want to build, improve, automate, redesign, or grow.'],
+  ['Clarify', 'We review goals, users, current systems, constraints, timeline, and budget range.'],
+  ['Recommend', 'SynoIT suggests the right service path, scope, team model, and next delivery step.'],
+  ['Start', 'Once aligned, we move into discovery, proposal, onboarding, and focused execution.']
+];
+
+const contactCards = [
+  ['Email us', 'support@synoit.com', 'mailto:support@synoit.com'],
+  ['Call us', '+65 8203 4346', 'tel:+6582034346'],
+  ['WhatsApp', '+65 8203 4346', 'https://wa.me/6582034346']
+];
 ---
-<BaseLayout title="Contact SynoIT | Start Your Digital Project" description="Contact SynoIT for web development, UI/UX design, mobile apps, AI automation, SEO, branding, and dedicated team projects.">
-  <main>
-    <section class="hero"><div class="hero-content"><p class="kicker" data-reveal>Connect with our architects</p><h1 class="hero-title" data-reveal>Let’s build <span class="accent">something great.</span></h1><p class="hero-sub" data-reveal>From visionary blueprints to digital execution, we bridge the gap between technical complexity and business growth.</p></div><HeroNet /></section>
-    <section class="section alt"><div class="container split"><div class="card" data-reveal style="min-height:auto"><h2 style="font-size:28px;margin-bottom:16px">Initiate project</h2><form class="form" action="mailto:support@synoit.com" method="post" enctype="text/plain"><div class="field"><label for="name">Name</label><input id="name" name="Name" autocomplete="name" required placeholder="John Doe" /></div><div class="field"><label for="email">Email</label><input id="email" name="Email" type="email" autocomplete="email" required placeholder="john@example.com" /></div><div class="field"><label for="service">Service interest</label><select id="service" name="Service">{services.map((service) => <option>{service.shortTitle}</option>)}</select></div><div class="field"><label for="message">Message</label><textarea id="message" name="Message" rows="4" required placeholder="Tell us about your digital vision..."></textarea></div><button class="btn-primary" type="submit">Send message</button></form></div><aside data-reveal><div class="card" style="min-height:auto;margin-bottom:16px"><p class="kicker">Direct lines</p><h3>Email us</h3><p><a href="mailto:support@synoit.com">support@synoit.com</a></p><h3 style="margin-top:18px">Call us</h3><p><a href="tel:+6582034346">+65 8203 4346</a></p></div><div class="card" style="min-height:auto"><p class="kicker">Global presence</p><h3>Singapore HQ</h3><p>30 Roberts Lane, #02-01<br/>Singapore 218309</p><h3 style="margin-top:18px">Bangladesh Hub</h3><p>Motijheel Commercial Area<br/>Dhaka-1000</p></div></aside></div></section>
+
+<HomeLayout title="Contact SynoIT | Start Your Digital Project" description="Contact SynoIT for web development, UI/UX design, mobile apps, AI automation, SEO, branding, dedicated teams, and digital growth projects." canonical="/contact/">
+  <main id="main" class="service-page">
+    <section class="hero service-hero" id="hero">
+      <div class="hero-content">
+        <p class="section-kicker service-kicker">CONNECT WITH OUR ARCHITECTS</p>
+        <div class="hero-phone" id="heroPhone" aria-hidden="true"><div class="hero-device"><div class="hero-device-screen"></div></div></div>
+        <h1 class="hero-title"><span class="line" data-split>Let’s build</span>{' '}<span class="line accent" data-split>something great.</span></h1>
+        <p class="hero-sub reveal-line"><span>From visionary blueprints to digital execution, we bridge the gap between technical complexity and business growth.</span></p>
+        <div class="hero-badges reveal-line"><span class="badges-wrap"><a href="mailto:support@synoit.com" class="store-btn"><span class="service-icon">↗</span><span><small>EMAIL THE TEAM</small><b>support@synoit.com</b></span></a><a href="https://wa.me/6582034346" target="_blank" rel="noopener" class="store-btn"><span class="service-icon">✦</span><span><small>QUICK CHAT</small><b>WhatsApp SynoIT</b></span></a></span></div>
+      </div>
+      <HeroNet />
+    </section>
+
+    <HomeConnector />
+
+    <section class="statement service-statement" id="statement">
+      <div class="statement-pin" id="statementPin">
+        <svg class="net statement-net" viewBox="0 0 100 100" preserveAspectRatio="none" fill="none"><path class="spine" data-sdraw d="M50,0 V16" /><path data-sdraw d="M50,16 H84 Q90,16 90,22 V78 Q90,84 84,84 H16 Q10,84 10,78 V22 Q10,16 16,16 H50" /><path class="spine" data-sdraw d="M50,84 V100" /><path class="s-pulse" d="M50,16 H84 Q90,16 90,22 V78 Q90,84 84,84 H16 Q10,84 10,78 V22 Q10,16 16,16 H50" /><path class="s-pulse" d="M50,16 H84 Q90,16 90,22 V78 Q90,84 84,84 H16 Q10,84 10,78 V22 Q10,16 16,16 H50" /></svg>
+        <p class="statement-text" id="statementText">Start with a message. SynoIT will help clarify the right scope, service path, team shape, and delivery plan.</p>
+      </div>
+    </section>
+
+    <HomeConnector flip />
+
+    <section class="features service-deliverables contact-section" id="features">
+      <div class="edge-glow left"></div><div class="edge-glow right"></div>
+      <h2 class="features-title">Initiate project <span class="dim">with the SynoIT team</span></h2>
+      <div class="contact-grid">
+        <form class="contact-form" action="mailto:support@synoit.com" method="post" enctype="text/plain">
+          <div class="field-row"><div class="field"><label for="name">Name</label><input id="name" name="Name" autocomplete="name" required placeholder="John Doe" /></div><div class="field"><label for="email">Email</label><input id="email" name="Email" type="email" autocomplete="email" required placeholder="john@example.com" /></div></div>
+          <div class="field"><label for="service">Service Interest</label><select id="service" name="Service">{services.map((service) => <option>{service.shortTitle}</option>)}</select></div>
+          <div class="field"><label for="message">Message</label><textarea id="message" name="Message" rows="5" required placeholder="Tell us about your digital vision..."></textarea></div>
+          <button class="btn-primary" type="submit">Send message</button>
+        </form>
+        <aside class="contact-aside">
+          <div class="service-grid contact-cards">{contactCards.map(([label, value, href], index) => <a class="review-card" href={href}><span class="review-stars">{String(index + 1).padStart(2, '0')}</span><blockquote>{label}</blockquote><figcaption>{value}</figcaption></a>)}</div>
+        </aside>
+      </div>
+    </section>
+
+    <HomeConnector />
+
+    <section class="steps service-steps" id="steps">
+      <div class="steps-pin" id="stepsPin">
+        <div class="steps-head"><p class="section-kicker">WHAT HAPPENS NEXT</p><h2>From first message to<br />a practical project path</h2></div>
+        <div class="steps-body"><div class="steps-text"><div class="steps-rail"><div class="steps-rail-fill" id="stepsRailFill"></div><div class="steps-rail-dot" id="stepsRailDot"></div></div><div class="steps-counter"><span id="stepsCounterNum">01</span><span class="steps-counter-total"> / 04</span></div><div class="steps-dots" role="tablist" aria-label="Contact process">{process.map((_, index) => <button class:list={{ 'is-active': index === 0 }} aria-label={`Step ${index + 1}`} aria-selected={index === 0 ? 'true' : 'false'}>{String(index + 1).padStart(2, '0')}</button>)}</div>{process.map(([title, text], index) => <div class:list={['step-item', { 'is-active': index === 0 }]}><div class="step-num">{String(index + 1).padStart(2, '0')}</div><h3>{title}</h3><p>{text}</p><div class="step-line"><div class="step-line-fill"></div></div></div>)}</div><div class="steps-phone"><div class="phone-glow"></div><div class="phone-frame">{process.map(([title], index) => <div class:list={['step-video', { 'is-active': index === 0 }]}><strong>CONTACT FLOW</strong><b>{title}</b><span></span><span></span><span></span></div>)}</div></div></div>
+      </div>
+    </section>
+
+    <HomeConnector flip />
+
+    <section class="signature service-outcomes" id="inside">
+      <p class="section-kicker">GLOBAL PRESENCE</p>
+      <h2 class="sig-title">Delivery hubs <span class="dim">for global collaboration</span></h2>
+      <div class="service-grid compact">{offices.map(([city, line1, line2], index) => <article class="review-card"><span class="review-stars">{String(index + 1).padStart(2, '0')}</span><blockquote>{city}</blockquote><figcaption>{line1}<br />{line2}</figcaption></article>)}</div>
+    </section>
+
+    <HomeConnector />
+
+    <section class="cta" id="cta">
+      <h2 class="cta-title"><span class="line" data-split>Tell us what you are building.</span>{' '}<span class="line accent" data-split>We’ll help shape the next step.</span></h2>
+      <div class="hero-badges"><span class="badges-wrap"><a href="mailto:support@synoit.com" class="store-btn"><span class="service-icon">↗</span><span><small>EMAIL THE TEAM</small><b>support@synoit.com</b></span></a><a href="https://wa.me/6582034346" target="_blank" rel="noopener" class="store-btn"><span class="service-icon">✦</span><span><small>TALK THROUGH YOUR IDEA</small><b>Chat with our team</b></span></a></span></div>
+    </section>
   </main>
-</BaseLayout>
+</HomeLayout>

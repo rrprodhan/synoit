@@ -1,28 +1,41 @@
-<div class="hero-visual" id="heroVisual" aria-hidden="true">
+<div class="hero-visual" id="heroVisual">
   <div class="edge-glow left"></div>
   <div class="edge-glow right"></div>
-  <svg class="net" viewBox="0 0 1200 340" preserveAspectRatio="none">
-    <path data-hero-draw data-draw d="M18 316V58Q18 44 32 44H276Q306 44 306 74V102Q306 132 336 132H540"></path>
-    <path data-hero-draw data-draw d="M1182 64H944Q914 64 914 94V116Q914 146 884 146H660"></path>
-    <path data-hero-draw data-draw d="M104 250H380Q410 250 410 220V206Q410 176 440 176H540"></path>
-    <path data-hero-draw data-draw d="M1118 244H824Q794 244 794 214V206Q794 176 764 176H660"></path>
-    <path data-hero-draw data-draw d="M172 206H406Q436 206 436 206H540"></path>
-    <path data-hero-draw data-draw d="M1044 206H794Q764 206 764 206H660"></path>
-    <path data-hero-draw data-draw d="M356 158H540"></path>
-    <path data-hero-draw data-draw d="M660 158H1028"></path>
-    <path data-hero-draw data-draw d="M600 18V110"></path>
-    <path data-hero-draw data-draw d="M600 230V340"></path>
-
-    <path data-pulse d="M18 316V58Q18 44 32 44H276Q306 44 306 74V102Q306 132 336 132H540"></path>
-    <path data-pulse d="M1182 64H944Q914 64 914 94V116Q914 146 884 146H660"></path>
-    <path data-pulse d="M104 250H380Q410 250 410 220V206Q410 176 440 176H540"></path>
-    <path data-pulse d="M1118 244H824Q794 244 794 214V206Q794 176 764 176H660"></path>
-    <path data-pulse d="M172 206H406Q436 206 436 206H540"></path>
-    <path data-pulse d="M1044 206H794Q764 206 764 206H660"></path>
-    <path data-pulse d="M356 158H540"></path>
-    <path data-pulse d="M660 158H1028"></path>
-    <path data-pulse d="M600 18V110"></path>
-    <path data-pulse d="M600 230V340"></path>
+  <svg class="net hero-net" viewBox="0 0 1200 340" fill="none" preserveAspectRatio="none">
+    <defs>
+      <filter id="homeGlow" x="-40%" y="-40%" width="180%" height="180%">
+        <feGaussianBlur stdDeviation="3.2" result="blur" />
+        <feMerge>
+          <feMergeNode in="blur" />
+          <feMergeNode in="SourceGraphic" />
+        </feMerge>
+      </filter>
+    </defs>
+    <g class="traces">
+      <path data-hero-draw d="M590,146 H320 Q312,146 312,138 V96 Q312,88 304,88 H32 Q24,88 24,96 V300" />
+      <path data-hero-draw d="M590,170 H80" />
+      <path data-hero-draw d="M590,194 H430 Q422,194 422,202 V252 Q422,260 414,260 H60 Q52,260 52,268 V340" />
+      <path data-hero-draw class="faint" d="M590,158 H300" />
+      <path data-hero-draw class="faint" d="M590,182 H340" />
+    </g>
+    <g class="traces" transform="translate(1200 0) scale(-1 1)">
+      <path data-hero-draw d="M590,146 H320 Q312,146 312,138 V96 Q312,88 304,88 H32 Q24,88 24,96 V300" />
+      <path data-hero-draw d="M590,170 H80" />
+      <path data-hero-draw d="M590,194 H430 Q422,194 422,202 V252 Q422,260 414,260 H60 Q52,260 52,268 V340" />
+      <path data-hero-draw class="faint" d="M590,158 H300" />
+      <path data-hero-draw class="faint" d="M590,182 H340" />
+    </g>
+    <path data-hero-draw class="spine" d="M600,216 V340" />
+    <g class="pulses" filter="url(#homeGlow)">
+      <path data-pulse d="M590,146 H320 Q312,146 312,138 V96 Q312,88 304,88 H32 Q24,88 24,96 V300" />
+      <path data-pulse d="M590,170 H80" />
+      <path data-pulse transform="translate(1200 0) scale(-1 1)" d="M590,170 H80" />
+      <path data-pulse transform="translate(1200 0) scale(-1 1)" d="M590,194 H430 Q422,194 422,202 V252 Q422,260 414,260 H60 Q52,260 52,268 V340" />
+      <path data-pulse d="M600,216 V340" />
+    </g>
   </svg>
-  <div class="hero-chip" id="heroChip"><span>S</span></div>
+  <div class="chip3d hero-chip" id="heroChip">
+    <div class="chip-face front app-chip"><span class="visual-mark">S</span></div>
+    <div class="chip-face back app-chip"><span class="visual-mark">S</span></div>
+  </div>
 </div>

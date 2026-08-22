@@ -1,15 +1,88 @@
 ---
-import BaseLayout from '@/layouts/BaseLayout.astro';
+import HomeLayout from '@/layouts/HomeLayout.astro';
+import HomeConnector from '@/components/HomeConnector.astro';
 import HeroNet from '@/components/HeroNet.astro';
+
 const posts = [
-  ['Why Your Business Needs a Modern Web Presence in 2026', 'Discover how a modern web platform can transform your customer acquisition and retention strategy.', 'Web strategy'],
-  ['The Psychology Behind High-Converting Landing Pages', 'Learn the design principles and psychological triggers that turn visitors into customers.', 'Conversion design'],
-  ['SEO in 2026: The Complete Guide to Ranking #1', 'Everything you need to know about modern SEO strategies, from technical audits to content optimization.', 'SEO']
+  ['Web Development', 'Why Your Business Needs a Modern Web Presence in 2026', 'Discover how a modern web platform can transform your customer acquisition and retention strategy.', 'April 15, 2026'],
+  ['Design', 'The Psychology Behind High-Converting Landing Pages', 'Learn the design principles and psychological triggers that turn visitors into customers.', 'April 10, 2026'],
+  ['SEO', 'SEO in 2026: The Complete Guide to Ranking #1', 'Everything you need to know about modern SEO strategies, from technical audits to content optimization.', 'April 5, 2026']
+];
+
+const themes = [
+  ['Product strategy', 'How to turn customer insight, positioning, and business goals into a practical product roadmap.'],
+  ['Design systems', 'Patterns for clearer UI, stronger conversion journeys, accessibility, and faster future delivery.'],
+  ['Engineering', 'Architecture, performance, integrations, QA, DevOps, and maintenance practices for scalable products.'],
+  ['AI and SEO', 'Operational AI, automation, AI search visibility, technical SEO, content growth, and measurable acquisition.']
+];
+
+const process = [
+  ['Research', 'We watch market shifts, client questions, and delivery lessons to identify useful topics.'],
+  ['Explain', 'We turn complex design, engineering, AI, and growth ideas into practical decision frameworks.'],
+  ['Apply', 'Each article is shaped around actions teams can take before or during a digital project.'],
+  ['Update', 'We refresh recommendations as technology, search behavior, and product expectations change.']
 ];
 ---
-<BaseLayout title="Blog | SynoIT Insights and Perspectives" description="Read SynoIT insights on design, development, technology, SEO, product strategy, and digital growth.">
-  <main>
-    <section class="hero"><div class="hero-content"><p class="kicker" data-reveal>Insights</p><h1 class="hero-title" data-reveal>Insights & <span class="accent">perspectives.</span></h1><p class="hero-sub" data-reveal>Stay ahead with expert takes on design, development, technology, and digital strategy.</p></div><HeroNet /></section>
-    <section class="section alt"><div class="container grid">{posts.map(([title, text, tag], index) => <article class="card" data-reveal><div class="icon-tile">{String(index + 1).padStart(2, '0')}</div><small>{tag}</small><h3>{title}</h3><p>{text}</p><a class="btn-ghost" style="margin-top:20px" href="/contact/">Discuss this topic</a></article>)}</div></section>
+
+<HomeLayout title="Blog | SynoIT Insights on Design, Development, AI and SEO" description="Read SynoIT insights on web development, UI/UX design, product strategy, AI automation, SEO, conversion, and digital growth." canonical="/blog/">
+  <main id="main" class="service-page">
+    <section class="hero service-hero" id="hero">
+      <div class="hero-content">
+        <p class="section-kicker service-kicker">OUR BLOG</p>
+        <div class="hero-phone" id="heroPhone" aria-hidden="true"><div class="hero-device"><div class="hero-device-screen"></div></div></div>
+        <h1 class="hero-title"><span class="line" data-split>Insights &</span>{' '}<span class="line accent" data-split>perspectives.</span></h1>
+        <p class="hero-sub reveal-line"><span>Stay ahead of the curve with SynoIT’s expert takes on design, development, technology, AI, SEO, and digital strategy.</span></p>
+        <div class="hero-badges reveal-line"><span class="badges-wrap"><a href="/contact/" class="store-btn"><span class="service-icon">↗</span><span><small>DISCUSS A TOPIC</small><b>Talk to SynoIT</b></span></a><a href="mailto:support@synoit.com" class="store-btn"><span class="service-icon">✦</span><span><small>START A PROJECT</small><b>Get a free quote</b></span></a></span></div>
+      </div>
+      <HeroNet />
+    </section>
+
+    <HomeConnector />
+
+    <section class="statement service-statement" id="statement">
+      <div class="statement-pin" id="statementPin">
+        <svg class="net statement-net" viewBox="0 0 100 100" preserveAspectRatio="none" fill="none"><path class="spine" data-sdraw d="M50,0 V16" /><path data-sdraw d="M50,16 H84 Q90,16 90,22 V78 Q90,84 84,84 H16 Q10,84 10,78 V22 Q10,16 16,16 H50" /><path class="spine" data-sdraw d="M50,84 V100" /><path class="s-pulse" d="M50,16 H84 Q90,16 90,22 V78 Q90,84 84,84 H16 Q10,84 10,78 V22 Q10,16 16,16 H50" /><path class="s-pulse" d="M50,16 H84 Q90,16 90,22 V78 Q90,84 84,84 H16 Q10,84 10,78 V22 Q10,16 16,16 H50" /></svg>
+        <p class="statement-text" id="statementText">SynoIT insights are written for teams making real product decisions, not collecting abstract trends.</p>
+      </div>
+    </section>
+
+    <HomeConnector flip />
+
+    <section class="features service-deliverables" id="features">
+      <div class="edge-glow left"></div><div class="edge-glow right"></div>
+      <h2 class="features-title">Latest articles <span class="dim">from the SynoIT team</span></h2>
+      <div class="service-grid">
+        {posts.map(([tag, title, text, date], index) => (
+          <article class="f-card service-card">
+            <span class="service-icon">{String(index + 1).padStart(2, '0')}</span>
+            <div><small>{tag}</small><h3>{title}</h3><p>{text}</p><div class="chip-row"><span>{date}</span><span>Coming soon</span></div><a class="inline-link" href="/contact/">Discuss this topic</a></div>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <HomeConnector />
+
+    <section class="steps service-steps" id="steps">
+      <div class="steps-pin" id="stepsPin">
+        <div class="steps-head"><p class="section-kicker">EDITORIAL APPROACH</p><h2>Practical thinking for teams<br />building digital products</h2></div>
+        <div class="steps-body"><div class="steps-text"><div class="steps-rail"><div class="steps-rail-fill" id="stepsRailFill"></div><div class="steps-rail-dot" id="stepsRailDot"></div></div><div class="steps-counter"><span id="stepsCounterNum">01</span><span class="steps-counter-total"> / 04</span></div><div class="steps-dots" role="tablist" aria-label="Editorial approach">{process.map((_, index) => <button class:list={{ 'is-active': index === 0 }} aria-label={`Step ${index + 1}`} aria-selected={index === 0 ? 'true' : 'false'}>{String(index + 1).padStart(2, '0')}</button>)}</div>{process.map(([title, text], index) => <div class:list={['step-item', { 'is-active': index === 0 }]}><div class="step-num">{String(index + 1).padStart(2, '0')}</div><h3>{title}</h3><p>{text}</p><div class="step-line"><div class="step-line-fill"></div></div></div>)}</div><div class="steps-phone"><div class="phone-glow"></div><div class="phone-frame">{process.map(([title], index) => <div class:list={['step-video', { 'is-active': index === 0 }]}><strong>SYNOIT INSIGHTS</strong><b>{title}</b><span></span><span></span><span></span></div>)}</div></div></div>
+      </div>
+    </section>
+
+    <HomeConnector flip />
+
+    <section class="signature service-outcomes" id="inside">
+      <p class="section-kicker">TOPICS</p>
+      <h2 class="sig-title">More articles coming soon <span class="dim">across core growth areas</span></h2>
+      <div class="service-grid compact">{themes.map(([title, text], index) => <article class="review-card"><span class="review-stars">{String(index + 1).padStart(2, '0')}</span><blockquote>{title}</blockquote><figcaption>{text}</figcaption></article>)}</div>
+    </section>
+
+    <HomeConnector />
+
+    <section class="cta" id="cta">
+      <h2 class="cta-title"><span class="line" data-split>Need guidance for a digital decision?</span>{' '}<span class="line accent" data-split>Talk with SynoIT before you build.</span></h2>
+      <div class="hero-badges"><span class="badges-wrap"><a href="mailto:support@synoit.com" class="store-btn"><span class="service-icon">↗</span><span><small>START A PROJECT</small><b>Get a free quote</b></span></a><a href="https://wa.me/6582034346" target="_blank" rel="noopener" class="store-btn"><span class="service-icon">✦</span><span><small>ASK A QUESTION</small><b>Chat with our team</b></span></a></span></div>
+    </section>
   </main>
-</BaseLayout>
+</HomeLayout>

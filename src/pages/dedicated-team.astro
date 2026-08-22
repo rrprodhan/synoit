@@ -1,24 +1,90 @@
 ---
-import BaseLayout from '@/layouts/BaseLayout.astro';
+import HomeLayout from '@/layouts/HomeLayout.astro';
+import HomeConnector from '@/components/HomeConnector.astro';
 import HeroNet from '@/components/HeroNet.astro';
-import CTA from '@/components/CTA.astro';
-const steps = [
-  ['Discovery', 'We analyze your project requirements, tech stack, and team structure needs.'],
-  ['Recruitment', 'We source and vet talent matching your exact technical and cultural requirements.'],
-  ['Onboarding', 'Your dedicated team is onboarded to your processes, tools, and workflows.'],
-  ['Delivery', 'Continuous delivery with transparent reporting, standups, and sprint management.']
+
+const process = [
+  ['Discovery', 'We analyze your project requirements, tech stack, delivery goals, and team structure needs.'],
+  ['Recruitment', 'We source and vet top talent matching your exact technical, communication, and cultural requirements.'],
+  ['Onboarding', 'Your dedicated team is onboarded to your processes, tools, workflows, roadmap, and reporting rhythm.'],
+  ['Delivery', 'Continuous delivery with transparent reporting, standups, sprint management, QA, and performance visibility.']
 ];
+
 const benefits = [
-  ['Full Control', 'Direct access to your team members. You set priorities while we handle execution and management.'],
-  ['Cost Effective', 'Save 40-60% on hiring costs compared to building an in-house team. No recruitment overhead.'],
-  ['Scale Instantly', 'Ramp up or down based on project needs with flexible team compositions.']
+  ['Full Control', 'Direct access to your team members. You set priorities while SynoIT handles execution support, management, and delivery operations.'],
+  ['Cost Effective', 'Save 40-60% on hiring costs compared to building an in-house team, with no recruitment overhead or long onboarding drag.'],
+  ['Scale Instantly', 'Ramp up or down based on project needs with flexible team compositions and reduced commitment risk.'],
+  ['Managed Quality', 'Keep velocity high with delivery oversight, QA habits, documentation, and clear accountability from SynoIT.']
+];
+
+const roles = ['Product managers', 'UI/UX designers', 'Frontend engineers', 'Backend engineers', 'Mobile developers', 'QA specialists', 'DevOps engineers', 'AI automation specialists'];
+
+const faqs = [
+  ['How fast can a dedicated team start?', 'Most team setups can begin within 1 to 2 weeks after the role mix, tools, timeline, and engagement model are confirmed.'],
+  ['Can the team work with our existing managers?', 'Yes. SynoIT teams can plug into your product, design, and engineering rituals while we support staffing, delivery quality, and continuity.'],
+  ['Can we scale the team later?', 'Yes. You can add or reduce specialists as priorities change, including design, engineering, QA, DevOps, AI, and growth roles.']
 ];
 ---
-<BaseLayout title="Dedicated Team | SynoIT Digital Architecture" description="Scale development capacity with a hand-picked, fully managed SynoIT dedicated team for design, engineering, QA, and product delivery.">
-  <main>
-    <section class="hero"><div class="hero-content"><p class="kicker" data-reveal>Dedicated team</p><h1 class="hero-title" data-reveal>Your team, <span class="accent">our management.</span></h1><p class="hero-sub" data-reveal>Scale your development capacity with a hand-picked, fully managed team. We hire, train, and manage top-tier talent exclusively for your project.</p></div><HeroNet /></section>
-    <section class="section alt"><div class="container steps-body"><div data-reveal><p class="kicker">How it works</p><h2 style="font-size:var(--fs-h2);line-height:1.08;margin-bottom:16px">From requirements to an operational team.</h2><div class="step-list">{steps.map(([title, text], index) => <div class="step"><div class="step-num">{String(index + 1).padStart(2, '0')}</div><h3>{title}</h3><p>{text}</p></div>)}</div></div><div class="device" data-reveal><div class="orbit"></div><div class="screen"><div class="screen-card"><div class="screen-line short"></div><p style="color:var(--muted-2);font-size:14px;line-height:1.35">Product · Design · Engineering · QA</p></div><div class="screen-card"><div class="screen-line"></div><div class="screen-line short"></div></div><div class="screen-card"><div class="screen-line short"></div><div class="screen-line"></div></div></div></div></div></section>
-    <section class="section"><div class="container grid">{benefits.map(([title, text], index) => <div class="card" data-reveal><div class="icon-tile">{String(index + 1).padStart(2, '0')}</div><h3>{title}</h3><p>{text}</p></div>)}</div></section>
-    <CTA />
+
+<HomeLayout title="Dedicated Team | SynoIT Managed Product and Engineering Teams" description="Scale development capacity with a hand-picked, fully managed SynoIT dedicated team for design, engineering, QA, AI, DevOps, and product delivery." canonical="/dedicated-team/">
+  <main id="main" class="service-page">
+    <section class="hero service-hero" id="hero">
+      <div class="hero-content">
+        <p class="section-kicker service-kicker">DEDICATED TEAM</p>
+        <div class="hero-phone" id="heroPhone" aria-hidden="true"><div class="hero-device"><div class="hero-device-screen"></div></div></div>
+        <h1 class="hero-title"><span class="line" data-split>Your team,</span>{' '}<span class="line accent" data-split>our management.</span></h1>
+        <p class="hero-sub reveal-line"><span>Scale your development capacity with a hand-picked, fully managed team. We hire, train, and manage top-tier talent exclusively for your project.</span></p>
+        <div class="hero-badges reveal-line"><span class="badges-wrap"><a href="mailto:support@synoit.com" class="store-btn"><span class="service-icon">↗</span><span><small>BUILD YOUR TEAM</small><b>Get a free quote</b></span></a><a href="/contact/" class="store-btn"><span class="service-icon">✦</span><span><small>MAP THE ROLES</small><b>Talk to SynoIT</b></span></a></span></div>
+      </div>
+      <HeroNet />
+    </section>
+
+    <HomeConnector />
+
+    <section class="statement service-statement" id="statement">
+      <div class="statement-pin" id="statementPin">
+        <svg class="net statement-net" viewBox="0 0 100 100" preserveAspectRatio="none" fill="none"><path class="spine" data-sdraw d="M50,0 V16" /><path data-sdraw d="M50,16 H84 Q90,16 90,22 V78 Q90,84 84,84 H16 Q10,84 10,78 V22 Q10,16 16,16 H50" /><path class="spine" data-sdraw d="M50,84 V100" /><path class="s-pulse" d="M50,16 H84 Q90,16 90,22 V78 Q90,84 84,84 H16 Q10,84 10,78 V22 Q10,16 16,16 H50" /><path class="s-pulse" d="M50,16 H84 Q90,16 90,22 V78 Q90,84 84,84 H16 Q10,84 10,78 V22 Q10,16 16,16 H50" /></svg>
+        <p class="statement-text" id="statementText">A dedicated SynoIT team gives you direct delivery capacity without the recruitment overhead, fragmented vendors, or slow in-house hiring cycle.</p>
+      </div>
+    </section>
+
+    <HomeConnector flip />
+
+    <section class="steps service-steps" id="steps">
+      <div class="steps-pin" id="stepsPin">
+        <div class="steps-head"><p class="section-kicker">HOW IT WORKS</p><h2>From requirements to a fully<br />operational delivery team</h2></div>
+        <div class="steps-body"><div class="steps-text"><div class="steps-rail"><div class="steps-rail-fill" id="stepsRailFill"></div><div class="steps-rail-dot" id="stepsRailDot"></div></div><div class="steps-counter"><span id="stepsCounterNum">01</span><span class="steps-counter-total"> / 04</span></div><div class="steps-dots" role="tablist" aria-label="Dedicated team setup">{process.map((_, index) => <button class:list={{ 'is-active': index === 0 }} aria-label={`Step ${index + 1}`} aria-selected={index === 0 ? 'true' : 'false'}>{String(index + 1).padStart(2, '0')}</button>)}</div>{process.map(([title, text], index) => <div class:list={['step-item', { 'is-active': index === 0 }]}><div class="step-num">{String(index + 1).padStart(2, '0')}</div><h3>{title}</h3><p>{text}</p><div class="step-line"><div class="step-line-fill"></div></div></div>)}</div><div class="steps-phone"><div class="phone-glow"></div><div class="phone-frame">{process.map(([title], index) => <div class:list={['step-video', { 'is-active': index === 0 }]}><strong>TEAM SETUP</strong><b>{title}</b><span></span><span></span><span></span></div>)}</div></div></div>
+      </div>
+    </section>
+
+    <HomeConnector />
+
+    <section class="features service-deliverables" id="features">
+      <div class="edge-glow left"></div><div class="edge-glow right"></div>
+      <h2 class="features-title">Why choose a <span class="dim">dedicated SynoIT team</span></h2>
+      <div class="service-grid compact">{benefits.map(([title, text], index) => <article class="f-card service-card"><span class="service-icon">{String(index + 1).padStart(2, '0')}</span><div><h3>{title}</h3><p>{text}</p></div></article>)}</div>
+    </section>
+
+    <HomeConnector flip />
+
+    <section class="languages" aria-label="Dedicated team roles">
+      <p class="section-kicker">ROLES YOU CAN ADD TO YOUR TEAM</p>
+      <div class="marquee"><div class="service-marquee-track">{roles.map((role) => <span class="lang-chip">{role}</span>)}{roles.map((role) => <span class="lang-chip" aria-hidden="true">{role}</span>)}</div></div>
+    </section>
+
+    <HomeConnector />
+
+    <section class="faq" id="faq">
+      <p class="section-kicker">FAQ</p>
+      <h2 class="faq-title">Questions, <span class="dim">answered</span></h2>
+      <div class="faq-list">{faqs.map(([q, a], index) => <details class="faq-item" open={index === 0}><summary>{q}</summary><div class="faq-body"><p>{a}</p></div></details>)}</div>
+    </section>
+
+    <HomeConnector />
+
+    <section class="cta" id="cta">
+      <h2 class="cta-title"><span class="line" data-split>Ready to build your dream team?</span>{' '}<span class="line accent" data-split>We can assemble the right specialists fast.</span></h2>
+      <div class="hero-badges"><span class="badges-wrap"><a href="mailto:support@synoit.com" class="store-btn"><span class="service-icon">↗</span><span><small>BUILD YOUR TEAM</small><b>Get a free quote</b></span></a><a href="https://wa.me/6582034346" target="_blank" rel="noopener" class="store-btn"><span class="service-icon">✦</span><span><small>TALK THROUGH ROLES</small><b>Chat with our team</b></span></a></span></div>
+    </section>
   </main>
-</BaseLayout>
+</HomeLayout>
