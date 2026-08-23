@@ -15,8 +15,9 @@ const article = {
   lead:
     'A practical framework for deciding where Sanity creates leverage, where it adds unnecessary complexity, and how to architect it without blurring content and application logic.',
   href: '/blog/when-to-choose-sanity-cms/',
-  image: '/images/blog/sanity-cms-structured-content-hero.png'
+  image: '/images/blog/sanity-cms-structured-content-hero.webp'
 };
+const articleSrcset = '/images/blog/sanity-cms-structured-content-hero-768.webp 768w, /images/blog/sanity-cms-structured-content-hero-1200.webp 1200w, /images/blog/sanity-cms-structured-content-hero.webp 1672w';
 
 const shareUrl = `https://synoit.com${article.href}`;
 const tocHeadings = getHeadings().filter(
@@ -75,6 +76,7 @@ const schema = {
   ogType="article"
   publishedTime={article.dateTime}
   modifiedTime={article.dateTime}
+  effects="shell"
 >
   <main id="main" class="blog-page blog-article-page">
     <article class="blog-article" aria-labelledby="article-title">
@@ -93,6 +95,8 @@ const schema = {
         <img
           class="blog-article-hero__image"
           src={article.image}
+          srcset={articleSrcset}
+          sizes="(max-width: 767px) calc(100vw - 40px), 704px"
           width="1672"
           height="941"
           alt="A structured content platform distributing modular content to websites, mobile applications, and commerce experiences"
@@ -149,7 +153,7 @@ const schema = {
       <div class="blog-related-grid">
         <article class="blog-related-card">
           <a class="blog-related-card__image" href={article.href} aria-label={`Read ${article.title}`}>
-            <img src={article.image} width="1672" height="941" alt="" loading="lazy" />
+            <img src={article.image} srcset={articleSrcset} sizes="(max-width: 767px) calc(100vw - 40px), 363px" width="1672" height="941" alt="" loading="lazy" decoding="async" />
           </a>
           <div class="blog-post-meta">
             <a href="/blog/#categories">{article.category}</a>
@@ -165,7 +169,7 @@ const schema = {
 
     <section class="blog-editorial-cta blog-editorial-cta--article" aria-labelledby="article-cta-title">
       <div class="blog-editorial-cta__image" aria-hidden="true">
-        <img src={article.image} width="1672" height="941" alt="" loading="lazy" />
+        <img src={article.image} srcset={articleSrcset} sizes="(max-width: 767px) calc(100vw - 40px), 604px" width="1672" height="941" alt="" loading="lazy" decoding="async" />
       </div>
       <div class="blog-editorial-cta__content">
         <p class="blog-eyebrow">CONTENT ARCHITECTURE WORKSHOP</p>

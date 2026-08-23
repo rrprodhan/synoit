@@ -1,11 +1,14 @@
 /* Lightweight pricing-page interactions. Heavy cinematic effects stay off this route. */
 (() => {
   'use strict';
+  window.__synoitRuntime = 'adaptive';
 
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
   window.scrollTo(0, 0);
 
-  document.querySelectorAll('[data-pricing-carousel]').forEach(carousel => {
+  function initPricingCarousel(carousel) {
+    if (carousel.dataset.carouselReady === 'true') return;
+    carousel.dataset.carouselReady = 'true';
     const viewport = carousel.querySelector('[data-pricing-viewport]');
     const cards = Array.from(carousel.querySelectorAll('[data-pricing-card]'));
     if (!viewport || !cards.length) return;
@@ -202,10 +205,7 @@
 
     if ('IntersectionObserver' in window) {
       new IntersectionObserver(entries => {
-        const rect = viewport.getBoundingClientRect();
-        carouselInView = rect.top < window.innerHeight + 280
-          && rect.bottom > -280
-          && entries.some(entry => entry.isIntersecting);
+        carouselInView = entries.some(entry => entry.isIntersecting);
         if (carouselInView) ensureSurfaces();
         syncMedia();
       }, { rootMargin: '280px 0px' }).observe(viewport);
@@ -223,7 +223,21 @@
     }
 
     commitActive(activeIndex);
-  });
+  }
+
+  const pricingCarousels = Array.from(document.querySelectorAll('[data-pricing-carousel]'));
+  if ('IntersectionObserver' in window) {
+    const carouselBootstrap = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        initPricingCarousel(entry.target);
+        carouselBootstrap.unobserve(entry.target);
+      });
+    }, { rootMargin: '360px 0px', threshold: 0 });
+    pricingCarousels.forEach(carousel => carouselBootstrap.observe(carousel));
+  } else {
+    pricingCarousels.forEach(initPricingCarousel);
+  }
 
   const nav = document.getElementById('nav');
   const progress = document.getElementById('scrollProgress');
@@ -233,8 +247,11 @@
     const top = window.scrollY || document.documentElement.scrollTop;
     nav?.classList.toggle('is-solid', top > 80);
     if (progress) {
-      const max = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
-      progress.style.transform = `scaleX(${Math.min(1, top / max)})`;
+      if (top <= 0) progress.style.transform = 'scaleX(0)';
+      else {
+        const max = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+        progress.style.transform = `scaleX(${Math.min(1, top / max)})`;
+      }
     }
   }
   window.addEventListener('scroll', () => {
@@ -289,5 +306,101 @@
       if (entries.some(entry => entry.isIntersecting)) startSteps();
       else clearInterval(stepTimer);
     }, { threshold: .2 }).observe(steps);
+  }
+
+  /* Lightweight equivalents of the homepage's visible motion language. */
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const animateIn = (element, delay = 0, distance = 34, fade = true) => {
+      if (!element || typeof element.animate !== 'function') return;
+      const from = { transform: `translate3d(0, ${distance}px, 0)` };
+      const to = { transform: 'translate3d(0, 0, 0)' };
+      if (fade) {
+        from.opacity = 0;
+        to.opacity = 1;
+      }
+      element.animate([from, to], {
+        duration: 720,
+        delay,
+        easing: 'cubic-bezier(.22, 1, .36, 1)',
+        fill: 'both',
+      });
+    };
+
+    document.querySelectorAll('.hero-title .line').forEach((line, index) => {
+      animateIn(line, 70 + index * 90, 46, false);
+    });
+    document.querySelectorAll('.hero-sub span, .hero-badges .badges-wrap').forEach((element, index) => {
+      animateIn(element, 230 + index * 100, 28);
+    });
+
+    const revealSelector = [
+      '.section-kicker', '.features-title', '.pricing h2', '.steps-head',
+      '.exploded-head', '.reviews-title', '.review-card', '.qr-box',
+      '.f-card', '.sig-row', '.i-row', '.blog-editorial-cta',
+    ].join(',');
+    if ('IntersectionObserver' in window) {
+      const revealObserver = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+          entry.target.querySelectorAll(revealSelector).forEach((element, index) => {
+            animateIn(element, Math.min(index, 5) * 55, 30);
+          });
+          revealObserver.unobserve(entry.target);
+        });
+      }, { rootMargin: '0px 0px -8% 0px', threshold: .08 });
+      document.querySelectorAll('main > section:not(.hero)').forEach(section => revealObserver.observe(section));
+    }
+
+    const drawPath = path => {
+      if (path.dataset.drawReady === 'true') return;
+      path.dataset.drawReady = 'true';
+      const length = path.getTotalLength();
+      path.style.strokeDasharray = String(length);
+      path.animate([
+        { strokeDashoffset: length },
+        { strokeDashoffset: 0 },
+      ], {
+        duration: 1050,
+        easing: 'cubic-bezier(.22, 1, .36, 1)',
+        fill: 'forwards',
+      });
+    };
+    document.querySelectorAll('path[data-hero-draw]').forEach((path, index) => {
+      window.setTimeout(() => drawPath(path), 180 + index * 55);
+    });
+    if ('IntersectionObserver' in window) {
+      const pathObserver = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+          entry.target.querySelectorAll('path[data-draw], path[data-sdraw]').forEach(drawPath);
+          pathObserver.unobserve(entry.target);
+        });
+      }, { rootMargin: '0px 0px -5% 0px', threshold: .04 });
+      document.querySelectorAll('svg:has(path[data-draw]), svg:has(path[data-sdraw])').forEach(svg => pathObserver.observe(svg));
+    }
+
+    const startPulse = (path, index = 0) => {
+      if (path.dataset.pulseReady === 'true') return;
+      path.dataset.pulseReady = 'true';
+      const length = path.getTotalLength();
+      const segment = Math.min(60, length * .18);
+      path.style.strokeDasharray = `${segment} ${length}`;
+      path.style.strokeDashoffset = String(segment);
+      path.style.setProperty('--pulse-to', `${-length}px`);
+      path.style.animation = `tracePulse ${3.2 + (index % 4) * .45}s linear ${index * .12}s infinite`;
+    };
+    document.querySelectorAll('.hero-visual path[data-pulse]').forEach(startPulse);
+    if ('IntersectionObserver' in window) {
+      const pulseObserver = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+          entry.target.querySelectorAll('path[data-pulse], .s-pulse, .i-pulse').forEach(startPulse);
+          pulseObserver.unobserve(entry.target);
+        });
+      }, { rootMargin: '180px 0px', threshold: .01 });
+      document.querySelectorAll('main > :not(.hero) svg').forEach(svg => pulseObserver.observe(svg));
+    }
+
+    document.querySelectorAll('.service-marquee-track').forEach(track => track.classList.add('is-running'));
   }
 })();

@@ -6,6 +6,7 @@ dist/
 # Browser QA / Playwright artifacts
 output/playwright/
 output/lighthouse-*.json
+output/lighthouse-all-final/
 playwright-report/
 test-results/
 .playwright-cli/

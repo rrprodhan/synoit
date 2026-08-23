@@ -35,7 +35,7 @@ interface Props {
   ogType?: 'website' | 'article';
   publishedTime?: string;
   modifiedTime?: string;
-  effects?: 'full' | 'lean';
+  effects?: 'full' | 'lean' | 'shell';
 }
 
 const {
@@ -266,14 +266,8 @@ const serviceIcons: Record<string, typeof Monitor> = {
       <p class="footer-credit">Singapore HQ · Bangladesh Hub · Global delivery</p>
     </footer>
 
-    {effects === 'full' && <script is:inline src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>}
-    {effects === 'full' && <script is:inline src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>}
-    {effects === 'full' && <script is:inline src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>}
-    {effects === 'full' && <script is:inline src="https://cdn.jsdelivr.net/npm/lenis@1.3.11/dist/lenis.min.js"></script>}
-    {
-      effects === 'lean'
-        ? <script is:inline src="/scripts/pricing-experience.js"></script>
-        : <script is:inline src="/scripts/home-experience.js"></script>
-    }
+    {effects === 'full' && <script is:inline src="/scripts/effects-loader.js"></script>}
+    {effects === 'lean' && <script is:inline defer src="/scripts/pricing-experience.js"></script>}
+    {effects === 'shell' && <script is:inline defer src="/scripts/shell-experience.js"></script>}
   </body>
 </html>

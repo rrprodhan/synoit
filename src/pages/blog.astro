@@ -11,8 +11,9 @@ const post = {
   excerpt:
     'Sanity can be an exceptional content foundation when structured content, editorial workflows, and multi-channel delivery matter. This guide helps teams recognize the right fit, the trade-offs, and the architecture needed around it.',
   href: '/blog/when-to-choose-sanity-cms/',
-  image: '/images/blog/sanity-cms-structured-content-hero.png'
+  image: '/images/blog/sanity-cms-structured-content-hero.webp'
 };
+const postSrcset = '/images/blog/sanity-cms-structured-content-hero-768.webp 768w, /images/blog/sanity-cms-structured-content-hero-1200.webp 1200w, /images/blog/sanity-cms-structured-content-hero.webp 1672w';
 ---
 
 <HomeLayout
@@ -20,6 +21,7 @@ const post = {
   description="Read practical SynoIT guidance on headless CMS architecture, product engineering, design systems, AI, SEO, and sustainable digital growth."
   canonical="/blog/"
   image={post.image}
+  effects="shell"
 >
   <main id="main" class="blog-page blog-index-page">
     <h1 class="blog-sr-only">SynoIT insights</h1>
@@ -50,6 +52,8 @@ const post = {
         <a class="blog-feature-image" href={post.href} aria-label={`Read ${post.title}`}>
           <img
             src={post.image}
+            srcset={postSrcset}
+            sizes="(max-width: 767px) calc(100vw - 40px), 448px"
             width="1672"
             height="941"
             alt="A structured content platform distributing modular content to websites, mobile applications, and commerce experiences"
@@ -67,7 +71,7 @@ const post = {
 
     <section class="blog-editorial-cta" aria-labelledby="blog-cta-title">
       <div class="blog-editorial-cta__image" aria-hidden="true">
-        <img src={post.image} width="1672" height="941" alt="" loading="lazy" />
+        <img src={post.image} srcset={postSrcset} sizes="(max-width: 767px) calc(100vw - 40px), 604px" width="1672" height="941" alt="" loading="lazy" decoding="async" />
       </div>
       <div class="blog-editorial-cta__content">
         <p class="blog-eyebrow">SYNOIT EDITORIAL</p>

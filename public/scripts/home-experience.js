@@ -1,6 +1,7 @@
 /* SynoIT homepage — adapted from /js/main.js cinematic experience. */
 (() => {
   'use strict';
+  window.__synoitRuntime = 'cinematic';
   const leanEffects = document.body && document.body.dataset.effects === 'lean';
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
   window.scrollTo(0, 0);
@@ -262,9 +263,7 @@
 
     if ('IntersectionObserver' in window) {
       new IntersectionObserver(entries => {
-        const rect = viewport.getBoundingClientRect();
-        const nearViewport = rect.top < window.innerHeight + 280 && rect.bottom > -280;
-        carouselInView = nearViewport && entries.some(entry => entry.isIntersecting);
+        carouselInView = entries.some(entry => entry.isIntersecting);
         if (carouselInView) ensureSurfaces();
         syncMedia();
       }, { rootMargin: '280px 0px' }).observe(viewport);
@@ -393,11 +392,13 @@
   }
   bakeGrain();
   let grainTick = 0;
-  (function grainLoop() {
-    if (grainTick++ % 3 === 0 && grainFrames.length) {
-      gtx.drawImage(grainFrames[(grainTick / 3 | 0) % grainFrames.length], 0, 0);
-    }
+  let grainLast = 0;
+  (function grainLoop(now = 0) {
     requestAnimationFrame(grainLoop);
+    if (document.hidden || now - grainLast < 120 || !grainFrames.length) return;
+    grainLast = now;
+    grainTick += 1;
+    gtx.drawImage(grainFrames[grainTick % grainFrames.length], 0, 0);
   })();
 
   /* ───────── WebGL voice orb (ambient) ───────── */
@@ -407,17 +408,23 @@
   function initGL() {
     let renderer;
     try {
-      renderer = new THREE.WebGLRenderer({ canvas: glCanvas, antialias: true, alpha: true });
+      renderer = new THREE.WebGLRenderer({
+        canvas: glCanvas,
+        antialias: false,
+        alpha: true,
+        powerPreference: 'low-power',
+      });
     } catch (e) { glCanvas.style.display = 'none'; return; }
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1));
     renderer.setSize(window.innerWidth, window.innerHeight);
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(45, innerWidth / innerHeight, .1, 100);
     camera.position.z = 7;
 
-    // dense, structured fibonacci lattice — double the previous resolution
-    const COUNT = innerWidth < 900 ? 5500 : 11000;
+    // Preserve the same organic lattice while keeping each animation frame
+    // below the main-thread budget on mobile and CPU-throttled devices.
+    const COUNT = innerWidth < 900 ? 1400 : 3800;
     const pos = new Float32Array(COUNT * 3);
     const rnd = new Float32Array(COUNT);
     const off = new Float32Array(COUNT); // stray particles floating off the surface
@@ -525,7 +532,8 @@
 
     // wireframe net: a lat/long grid deformed by the exact same displacement,
     // so the lines connect through the dots and move as one organism
-    const SEG_LON = 64, SEG_LAT = 42;
+    const SEG_LON = innerWidth < 900 ? 24 : 36;
+    const SEG_LAT = innerWidth < 900 ? 16 : 24;
     const lv = [];
     for (let la = 1; la < SEG_LAT; la++) {
       const phi = la / SEG_LAT * Math.PI, sp = Math.sin(phi), cp = Math.cos(phi);
@@ -593,8 +601,8 @@
 
     // deep space: a volumetric starfield behind the orb + a few dust specks in front,
     // so camera parallax reads as true depth
-    const SCOUNT = innerWidth < 900 ? 700 : 1500;
-    const FG = 70; // foreground dust
+    const SCOUNT = innerWidth < 900 ? 280 : 650;
+    const FG = innerWidth < 900 ? 18 : 36; // foreground dust
     const sPos = new Float32Array((SCOUNT + FG) * 3);
     const sRnd = new Float32Array(SCOUNT + FG);
     for (let i = 0; i < SCOUNT; i++) {
@@ -694,7 +702,11 @@
     });
 
     const clock = new THREE.Clock();
-    (function tick() {
+    let lastRender = 0;
+    (function tick(now = 0) {
+      requestAnimationFrame(tick);
+      if (document.hidden || now - lastRender < 33) return;
+      lastRender = now;
       const t = clock.getElapsedTime();
       mat.uniforms.uTime.value = t;
       mat.uniforms.uAmp.value += (orbState.amp - mat.uniforms.uAmp.value) * .03;
@@ -726,10 +738,10 @@
       points.scale.y += (s - points.scale.y) * .028;
       points.scale.z += (s - points.scale.z) * .028;
       renderer.render(scene, camera);
-      requestAnimationFrame(tick);
     })();
   }
-  if (window.THREE) initGL(); else glCanvas.style.display = 'none';
+  if (window.THREE && !matchMedia('(prefers-reduced-motion: reduce)').matches) initGL();
+  else glCanvas.style.display = 'none';
 
   /* ───────── custom cursor: visible dot + ring, zero catch-up lag ─────────
      (design review: the thin line was hard to see and the trailing lerp made
@@ -751,17 +763,44 @@
      instantly instead of letting the user watch blocks flicker in */
   const REVEALS = [];
 
-  /* ───────── smooth scroll (extra buttery) ───────── */
-  const lenis = new Lenis({ lerp: .095, smoothWheel: true, wheelMultiplier: 1 });
-  window.__lenis = lenis;
-  lenis.on('scroll', ScrollTrigger.update);
-  gsap.ticker.add(t => lenis.raf(t * 1000));
-  gsap.ticker.lagSmoothing(0);
-  // keep Lenis's scroll limit in sync with the real page height — pin spacers
-  // and reveals grow the page after init, and a stale limit made wheel
-  // scrolling stop short of the footer (scrollbar still reached it)
-  new ResizeObserver(() => lenis.resize()).observe(document.body);
-  ScrollTrigger.addEventListener('refresh', () => lenis.resize());
+  /* ───────── smooth scroll ─────────
+     Lenis remains on precision-pointer layouts, where it materially improves
+     the experience. Touch layouts use native compositor scrolling so the same
+     motion design stays responsive without a perpetual JavaScript ticker. */
+  const useLenis = innerWidth >= 900
+    && matchMedia('(pointer: fine)').matches
+    && !matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const nativeScroller = {
+    resize() {},
+    scrollTo(target, options = {}) {
+      const element = typeof target === 'string' ? document.querySelector(target) : null;
+      const baseTop = typeof target === 'number'
+        ? target
+        : element
+          ? element.getBoundingClientRect().top + window.scrollY
+          : 0;
+      window.scrollTo({
+        top: baseTop + (options.offset || 0),
+        behavior: options.immediate ? 'auto' : 'smooth',
+      });
+      if (typeof options.onComplete === 'function') {
+        window.setTimeout(options.onComplete, options.immediate ? 0 : 500);
+      }
+    },
+  };
+  const lenis = useLenis
+    ? new Lenis({ lerp: .095, smoothWheel: true, wheelMultiplier: 1 })
+    : nativeScroller;
+  window.__lenis = useLenis ? lenis : null;
+  gsap.ticker.fps(30);
+  gsap.ticker.lagSmoothing(500, 33);
+  if (useLenis) {
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add(t => lenis.raf(t * 1000));
+    // Keep the Lenis limit aligned with pin spacers and delayed reveals.
+    new ResizeObserver(() => lenis.resize()).observe(document.body);
+    ScrollTrigger.addEventListener('refresh', () => lenis.resize());
+  }
   addEventListener('load', () => {
     ScrollTrigger.refresh();
     // arriving with a hash (e.g. from a blog page's "Pricing" link) must land
@@ -807,13 +846,12 @@
   document.querySelectorAll('path[data-pulse]').forEach(p => {
     const L = p.getTotalLength();
     const seg = Math.min(60, L * .22);
+    const duration = 2.2 + Math.random() * 2.4;
+    const delay = Math.random() * 2.5;
     p.style.strokeDasharray = `${seg} ${L}`;
     p.style.strokeDashoffset = seg;
-    gsap.to(p, {
-      strokeDashoffset: -L, duration: 2.2 + Math.random() * 2.4,
-      repeat: -1, ease: 'none', delay: Math.random() * 2.5,
-      repeatDelay: .6 + Math.random() * 1.4,
-    });
+    p.style.setProperty('--pulse-to', `${-L}px`);
+    p.style.animation = `tracePulse ${duration}s linear ${delay}s infinite`;
   });
 
   /* ───────── hero net: draws on entrance ───────── */
@@ -826,12 +864,7 @@
 
   /* ───────── SynoIT service marquee ───────── */
   document.querySelectorAll('.service-marquee-track').forEach(track => {
-    const half = () => track.scrollWidth / 2;
-    gsap.to(track, {
-      x: () => -half(),
-      duration: 50, ease: 'none', repeat: -1,
-      modifiers: { x: gsap.utils.unitize(x => parseFloat(x) % half()) },
-    });
+    track.classList.add('is-running');
   });
 
   // when Google Translate is active, letter-splitting would garble the translation
@@ -868,11 +901,16 @@
   }
   const heroTargets = isTranslated ? '.hero-title .line' : heroChars;
   const ctaTargets = isTranslated ? '.cta-title .line' : ctaChars;
+  const heroSubTargets = document.querySelectorAll('.hero-sub span');
+  const heroBadgeTargets = document.querySelectorAll('.hero-badges .badges-wrap');
+  const heroChip = document.getElementById('heroChip');
+  const heroPhone = document.getElementById('heroPhone');
   const heroFromVars = isTranslated ? { y: 46, opacity: 0 } : { yPercent: 110 };
   gsap.set(heroTargets, heroFromVars);
-  gsap.set('.hero-sub span, .hero-badges .badges-wrap', { yPercent: 120 });
-  gsap.set('#heroChip', { scale: 0, opacity: 0 });
-  gsap.set('#heroPhone', { opacity: 0, y: 90, rotation: -6, scale: .9 });
+  if (heroSubTargets.length) gsap.set(heroSubTargets, { yPercent: 120 });
+  if (heroBadgeTargets.length) gsap.set(heroBadgeTargets, { yPercent: 120 });
+  if (heroChip) gsap.set(heroChip, { scale: 0, opacity: 0 });
+  if (heroPhone) gsap.set(heroPhone, { opacity: 0, y: 90, rotation: -6, scale: .9 });
 
   // no preloader (design review: the 0→100% screen was a barrier between the
   // user and the content) — the hero entrance starts immediately
@@ -881,39 +919,40 @@
   function enter() {
     const tl = gsap.timeline();
     // the phone lands first, headline rises up behind the hand
-    tl.to('#heroPhone', { opacity: 1, y: 0, rotation: 0, scale: 1, duration: 1.2, ease: 'power3.out' })
-      .to(heroTargets,
-        isTranslated
-          ? { y: 0, opacity: 1, duration: 1, stagger: .14, ease: 'power4.out' }
-          : { yPercent: 0, duration: 1.1, stagger: .022, ease: 'power4.out' }, '-=.75')
-      .to('.hero-sub span', { yPercent: 0, duration: .9, ease: 'power3.out' }, '-=.8')
-      .to('.hero-badges .badges-wrap', { yPercent: 0, duration: .9, ease: 'power3.out' }, '-=.7')
-      .to('#heroChip', { scale: 1, opacity: 1, duration: .9, ease: 'back.out(1.6)' }, '-=.6')
-      .to(heroPaths, {
+    if (heroPhone) tl.to(heroPhone, { opacity: 1, y: 0, rotation: 0, scale: 1, duration: 1.2, ease: 'power3.out' });
+    tl.to(heroTargets,
+      isTranslated
+        ? { y: 0, opacity: 1, duration: 1, stagger: .14, ease: 'power4.out' }
+        : { yPercent: 0, duration: 1.1, stagger: .022, ease: 'power4.out' }, heroPhone ? '-=.75' : 0);
+    if (heroSubTargets.length) tl.to(heroSubTargets, { yPercent: 0, duration: .9, ease: 'power3.out' }, '-=.8');
+    if (heroBadgeTargets.length) tl.to(heroBadgeTargets, { yPercent: 0, duration: .9, ease: 'power3.out' }, '-=.7');
+    if (heroChip) tl.to(heroChip, { scale: 1, opacity: 1, duration: .9, ease: 'back.out(1.6)' }, '-=.6');
+    if (heroPaths.length) tl.to(heroPaths, {
         strokeDashoffset: 0, duration: 1.4, ease: 'power2.inOut',
         stagger: { each: .07, from: 'random' },
-      }, '-=.5')
-      // release the reveal masks so hover lifts are never clipped
-      .set('.reveal-line', { overflow: 'visible' });
+      }, '-=.5');
+    // Release the reveal masks so hover lifts are never clipped.
+    if (document.querySelector('.reveal-line')) tl.set('.reveal-line', { overflow: 'visible' });
   }
 
   /* ───────── hero phone: idle float + scroll parallax ───────── */
-  gsap.to('#heroPhone .hero-device', {
-    y: 13, rotation: 1.4, duration: 3.4, yoyo: true, repeat: -1,
-    ease: 'sine.inOut', delay: 2.4,
-  });
-  gsap.to('#heroPhone', {
-    yPercent: -20, ease: 'none', immediateRender: false,
-    scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: 1 },
-  });
+  document.querySelector('#heroPhone .hero-device')?.classList.add('is-idle-floating');
+  if (heroPhone) {
+    gsap.to(heroPhone, {
+      yPercent: -20, ease: 'none', immediateRender: false,
+      scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: 1 },
+    });
+  }
 
   /* ───────── hero chip: scroll rotates it (scrub) ───────── */
-  gsap.to('#heroChip', {
-    rotationY: 360, ease: 'none',
-    scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: 1 },
-  });
-  // idle float so it always feels alive
-  gsap.to('#heroChip', { y: -10, duration: 2.4, yoyo: true, repeat: -1, ease: 'sine.inOut' });
+  if (heroChip) {
+    gsap.to(heroChip, {
+      rotationY: 360, ease: 'none',
+      scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: 1 },
+    });
+  }
+  // Idle motion uses compositor-native CSS so GSAP can sleep between scrolls.
+  heroChip?.classList.add('is-chip-floating');
 
   /* ───────── nav solid on scroll ───────── */
   ScrollTrigger.create({
@@ -974,9 +1013,9 @@
       const L = p.getTotalLength();
       const seg = L * .1;
       p.style.strokeDasharray = `${seg} ${L - seg}`;
-      gsap.fromTo(p,
-        { strokeDashoffset: i === 0 ? 0 : -L / 2 },
-        { strokeDashoffset: (i === 0 ? 0 : -L / 2) - L, duration: 7, repeat: -1, ease: 'none' });
+      p.style.strokeDashoffset = i === 0 ? '0' : `${-L / 2}px`;
+      p.style.setProperty('--pulse-to', `${(i === 0 ? 0 : -L / 2) - L}px`);
+      p.style.animation = `tracePulse 7s linear ${i * -3.5}s infinite`;
     });
   }
 
@@ -1080,10 +1119,8 @@
       const seg = L * .16;
       pulse.style.strokeDasharray = `${seg} ${L}`;
       gsap.set(pulse, { opacity: .95, strokeDashoffset: seg });
-      gsap.to(pulse, {
-        strokeDashoffset: -L, duration: 3 + idx * .45,
-        repeat: -1, ease: 'none', delay: 1.4 + idx * .4, repeatDelay: 1.1,
-      });
+      pulse.style.setProperty('--pulse-to', `${-L}px`);
+      pulse.style.animation = `tracePulse ${4.1 + idx * .45}s linear ${1.4 + idx * .4}s infinite`;
     }
   });
 
@@ -1094,10 +1131,14 @@
       scrollTrigger: { trigger: card, start: 'top 90%' }, delay: (i % 3) * .1,
     }));
   });
-  REVEALS.push(gsap.from('.f-chip', {
-    scale: 0, opacity: 0, duration: 1, ease: 'back.out(1.7)',
-    scrollTrigger: { trigger: '.features-wrap', start: 'top 70%' },
-  }));
+  const featureChip = document.querySelector('.f-chip');
+  const featuresWrap = document.querySelector('.features-wrap');
+  if (featureChip && featuresWrap) {
+    REVEALS.push(gsap.from(featureChip, {
+      scale: 0, opacity: 0, duration: 1, ease: 'back.out(1.7)',
+      scrollTrigger: { trigger: featuresWrap, start: 'top 70%' },
+    }));
+  }
 
   /* ───────── imagine section: reveal + floating phones image ───────── */
   const imagine = document.querySelector('.imagine');
@@ -1111,7 +1152,7 @@
     const tl = gsap.timeline({
       paused: true,
       onComplete() {
-        gsap.to(phonesImg, { y: '+=16', duration: 3.6, yoyo: true, repeat: -1, ease: 'sine.inOut' });
+        phonesImg?.classList.add('is-content-floating');
       },
     });
     tl.to('.imagine-title', { y: 0, opacity: 1, duration: .8, ease: 'power3.out' })
@@ -1134,7 +1175,10 @@
     const tl = gsap.timeline({
       paused: true,
       onComplete() {
-        gsap.to(phone, { y: '+=14', duration: 3.4 + idx * .3, yoyo: true, repeat: -1, ease: 'sine.inOut' });
+        if (phone) {
+          phone.style.setProperty('--float-duration', `${3.4 + idx * .3}s`);
+          phone.classList.add('is-content-floating');
+        }
       },
     });
     tl.to(copy, { x: 0, opacity: 1, duration: .9, ease: 'power3.out' })
@@ -1197,10 +1241,13 @@
       scrollTrigger: { trigger: item, start: 'top 92%' }, delay: (i % 4) * .05,
     }));
   });
-  REVEALS.push(gsap.from('.faq-title', {
-    y: 40, opacity: 0, duration: .9, ease: 'power3.out',
-    scrollTrigger: { trigger: '.faq-title', start: 'top 90%' },
-  }));
+  const faqTitle = document.querySelector('.faq-title');
+  if (faqTitle) {
+    REVEALS.push(gsap.from(faqTitle, {
+      y: 40, opacity: 0, duration: .9, ease: 'power3.out',
+      scrollTrigger: { trigger: faqTitle, start: 'top 90%' },
+    }));
+  }
 
   /* ───────── language switcher (Google Translate) ───────── */
   const SUPPORTED = { en: 'EN', es: 'ES', fr: 'FR', de: 'DE', it: 'IT', pt: 'PT', ru: 'RU' };
