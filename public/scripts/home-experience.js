@@ -1,7 +1,7 @@
 /* SynoIT homepage — adapted from /js/main.js cinematic experience. */
 (() => {
   'use strict';
-  gsap.registerPlugin(ScrollTrigger);
+  const leanEffects = document.body && document.body.dataset.effects === 'lean';
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
   window.scrollTo(0, 0);
 
@@ -40,9 +40,10 @@
 
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
     let activeIndex = Math.max(0, cards.findIndex(card => card.classList.contains('is-active')));
-    let suppressScrollSelection = false;
-    let scrollFrame = 0;
-    let releaseTimer = 0;
+    let carouselInView = false;
+    let pendingIndex = null;
+    let pendingFocus = false;
+    let settleTimer = 0;
 
     function optionFor(card) {
       return card.querySelector('[data-pricing-select]');
@@ -57,11 +58,44 @@
       });
     }
 
+    function ensureMedia(video) {
+      if (video.dataset.mediaReady === 'true') return;
+      const sources = [
+        [video.dataset.webm, 'video/webm'],
+        [video.dataset.mp4, 'video/mp4'],
+      ];
+      sources.forEach(([src, type]) => {
+        if (!src) return;
+        const source = document.createElement('source');
+        source.src = src;
+        source.type = type;
+        video.appendChild(source);
+      });
+      video.dataset.mediaReady = 'true';
+      video.load();
+    }
+
+    function pauseMedia() {
+      cards.forEach(card => {
+        const video = card.querySelector('[data-pricing-video]');
+        if (video) video.pause();
+      });
+    }
+
+    function ensureSurfaces() {
+      cards.forEach(card => {
+        const surface = card.querySelector('[data-pricing-surface]');
+        if (!surface || surface.getAttribute('src')) return;
+        surface.setAttribute('src', surface.dataset.src || '');
+      });
+    }
+
     function syncMedia() {
       cards.forEach((card, index) => {
-        const video = card.querySelector('video');
+        const video = card.querySelector('[data-pricing-video]');
         if (!video) return;
-        if (index === activeIndex && !reducedMotion.matches) {
+        if (index === activeIndex && carouselInView && !reducedMotion.matches) {
+          ensureMedia(video);
           const playback = video.play();
           if (playback && typeof playback.catch === 'function') playback.catch(() => {});
         } else {
@@ -89,31 +123,11 @@
       return nearest;
     }
 
-    function centerCard(card) {
-      const viewportRect = viewport.getBoundingClientRect();
-      const cardRect = card.getBoundingClientRect();
-      const rawTarget = viewport.scrollLeft
-        + cardRect.left - viewportRect.left
-        - (viewportRect.width - cardRect.width) / 2;
-      const maxScroll = Math.max(0, viewport.scrollWidth - viewport.clientWidth);
-      const target = Math.min(maxScroll, Math.max(0, rawTarget));
-      if (Math.abs(target - viewport.scrollLeft) < 1) return;
-
-      suppressScrollSelection = true;
-      window.clearTimeout(releaseTimer);
-      viewport.scrollTo({
-        left: target,
-        behavior: reducedMotion.matches ? 'auto' : 'smooth',
-      });
-      releaseTimer = window.setTimeout(() => {
-        suppressScrollSelection = false;
-        setActive(nearestCardIndex());
-      }, reducedMotion.matches ? 0 : 520);
-    }
-
-    function setActive(nextIndex, options = {}) {
+    function commitActive(nextIndex, focus = false) {
       const index = Math.min(cards.length - 1, Math.max(0, nextIndex));
       activeIndex = index;
+      pendingIndex = null;
+      carousel.classList.remove('is-centering');
       cards.forEach((card, cardIndex) => {
         const selected = cardIndex === index;
         const option = optionFor(card);
@@ -124,11 +138,48 @@
         }
       });
       syncMedia();
-      if (options.scroll) centerCard(cards[index]);
-      if (options.focus) {
+      if (focus) {
         const option = optionFor(cards[index]);
         if (option) option.focus({ preventScroll: true });
       }
+      pendingFocus = false;
+    }
+
+    function finishCentering() {
+      window.clearTimeout(settleTimer);
+      const index = pendingIndex === null ? nearestCardIndex() : pendingIndex;
+      commitActive(index, pendingFocus);
+    }
+
+    function scheduleSettle(delay = 150) {
+      window.clearTimeout(settleTimer);
+      settleTimer = window.setTimeout(finishCentering, delay);
+    }
+
+    function centerCard(card, options = {}) {
+      const index = cards.indexOf(card);
+      if (index < 0) return;
+      const viewportRect = viewport.getBoundingClientRect();
+      const cardRect = card.getBoundingClientRect();
+      const rawTarget = viewport.scrollLeft
+        + cardRect.left - viewportRect.left
+        - (viewportRect.width - cardRect.width) / 2;
+      const maxScroll = Math.max(0, viewport.scrollWidth - viewport.clientWidth);
+      const target = Math.min(maxScroll, Math.max(0, rawTarget));
+      pendingIndex = index;
+      pendingFocus = Boolean(options.focus);
+      carousel.classList.add('is-centering');
+      pauseMedia();
+      if (Math.abs(target - viewport.scrollLeft) < 1 || reducedMotion.matches) {
+        viewport.scrollLeft = target;
+        finishCentering();
+        return;
+      }
+      viewport.scrollTo({
+        left: target,
+        behavior: 'smooth',
+      });
+      scheduleSettle(220);
     }
 
     cards.forEach((card, index) => {
@@ -136,10 +187,10 @@
       if (option) {
         option.addEventListener('click', () => {
           closeTooltips();
-          setActive(index, { scroll: true });
+          centerCard(cards[index]);
         });
         option.addEventListener('focus', () => {
-          if (activeIndex !== index) setActive(index, { scroll: true });
+          if (activeIndex !== index) centerCard(cards[index]);
         });
         option.addEventListener('keydown', event => {
           let next = null;
@@ -149,13 +200,13 @@
           if (event.key === 'End') next = cards.length - 1;
           if (next === null) return;
           event.preventDefault();
-          setActive(next, { scroll: true, focus: true });
+          centerCard(cards[next], { focus: true });
         });
       }
 
       card.addEventListener('focusin', event => {
         if (event.target === option || activeIndex === index) return;
-        setActive(index, { scroll: true });
+        centerCard(cards[index]);
       });
     });
 
@@ -173,27 +224,22 @@
 
     viewport.addEventListener('scroll', () => {
       closeTooltips();
-      if (suppressScrollSelection || scrollFrame) return;
-      scrollFrame = window.requestAnimationFrame(() => {
-        scrollFrame = 0;
-        setActive(nearestCardIndex());
-      });
+      carousel.classList.add('is-centering');
+      pauseMedia();
+      scheduleSettle();
     }, { passive: true });
 
-    function releaseProgrammaticScroll() {
-      suppressScrollSelection = false;
-      window.clearTimeout(releaseTimer);
+    function releaseProgrammaticTarget() {
+      pendingIndex = null;
+      pendingFocus = false;
     }
-    viewport.addEventListener('pointerdown', releaseProgrammaticScroll, { passive: true });
-    viewport.addEventListener('wheel', releaseProgrammaticScroll, { passive: true });
+    viewport.addEventListener('pointerdown', releaseProgrammaticTarget, { passive: true });
+    viewport.addEventListener('wheel', releaseProgrammaticTarget, { passive: true });
 
     window.addEventListener('resize', () => {
       closeTooltips();
-      if (scrollFrame) return;
-      scrollFrame = window.requestAnimationFrame(() => {
-        scrollFrame = 0;
-        setActive(nearestCardIndex());
-      });
+      pendingIndex = null;
+      scheduleSettle(80);
     }, { passive: true });
 
     document.addEventListener('click', event => {
@@ -206,7 +252,7 @@
 
     const handleMotionChange = () => {
       syncMedia();
-      if (reducedMotion.matches) suppressScrollSelection = false;
+      if (reducedMotion.matches) finishCentering();
     };
     if (typeof reducedMotion.addEventListener === 'function') {
       reducedMotion.addEventListener('change', handleMotionChange);
@@ -214,8 +260,110 @@
       reducedMotion.addListener(handleMotionChange);
     }
 
-    setActive(activeIndex);
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(entries => {
+        const rect = viewport.getBoundingClientRect();
+        const nearViewport = rect.top < window.innerHeight + 280 && rect.bottom > -280;
+        carouselInView = nearViewport && entries.some(entry => entry.isIntersecting);
+        if (carouselInView) ensureSurfaces();
+        syncMedia();
+      }, { rootMargin: '280px 0px' }).observe(viewport);
+    } else {
+      carouselInView = true;
+      ensureSurfaces();
+    }
+
+
+    if ('IntersectionObserver' in window) {
+      const fontObserver = new IntersectionObserver(entries => {
+        if (!entries.some(entry => entry.isIntersecting)) return;
+        carousel.classList.add('is-font-ready');
+        fontObserver.disconnect();
+      }, { rootMargin: '900px 0px' });
+      fontObserver.observe(viewport);
+    } else {
+      carousel.classList.add('is-font-ready');
+    }
+
+    commitActive(activeIndex);
   });
+
+  function initLeanShell() {
+    const nav = document.getElementById('nav');
+    const progress = document.getElementById('scrollProgress');
+    let shellFrame = 0;
+    const updateShell = () => {
+      shellFrame = 0;
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      if (nav) nav.classList.toggle('is-solid', scrollTop > 80);
+      if (progress) {
+        const max = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+        progress.style.transform = `scaleX(${Math.min(1, scrollTop / max)})`;
+      }
+    };
+    window.addEventListener('scroll', () => {
+      if (shellFrame) return;
+      shellFrame = window.requestAnimationFrame(updateShell);
+    }, { passive: true });
+    updateShell();
+
+    const navMenuBtn = document.getElementById('navMenuBtn');
+    const navDrop = document.getElementById('navDrop');
+    if (navMenuBtn && navDrop) {
+      const closeNavMenu = () => {
+        navDrop.classList.remove('is-open');
+        navMenuBtn.setAttribute('aria-expanded', 'false');
+      };
+      navMenuBtn.addEventListener('click', event => {
+        event.stopPropagation();
+        const open = navDrop.classList.toggle('is-open');
+        navMenuBtn.setAttribute('aria-expanded', String(open));
+      });
+      navDrop.addEventListener('click', event => event.stopPropagation());
+      document.addEventListener('click', closeNavMenu);
+      document.addEventListener('keydown', event => {
+        if (event.key === 'Escape') closeNavMenu();
+      });
+    }
+
+    const stepItems = Array.from(document.querySelectorAll('.step-item'));
+    const stepVideos = Array.from(document.querySelectorAll('.step-video'));
+    const stepDots = Array.from(document.querySelectorAll('.steps-dots button'));
+    const counterNum = document.getElementById('stepsCounterNum');
+    let stepIndex = 0;
+    let stepTimer = 0;
+    const showStep = index => {
+      stepIndex = index;
+      if (counterNum) counterNum.textContent = String(index + 1).padStart(2, '0');
+      stepItems.forEach((item, itemIndex) => item.classList.toggle('is-active', itemIndex === index));
+      stepVideos.forEach((video, videoIndex) => video.classList.toggle('is-active', videoIndex === index));
+      stepDots.forEach((dot, dotIndex) => {
+        const selected = dotIndex === index;
+        dot.classList.toggle('is-active', selected);
+        dot.setAttribute('aria-selected', String(selected));
+      });
+    };
+    const startSteps = () => {
+      window.clearInterval(stepTimer);
+      stepTimer = window.setInterval(() => showStep((stepIndex + 1) % Math.max(1, stepItems.length)), 6000);
+    };
+    stepItems.forEach((item, index) => item.addEventListener('click', () => { showStep(index); startSteps(); }));
+    stepDots.forEach((dot, index) => dot.addEventListener('click', () => { showStep(index); startSteps(); }));
+    const stepsSection = document.getElementById('steps');
+    if (stepsSection && stepItems.length && 'IntersectionObserver' in window) {
+      new IntersectionObserver(entries => {
+        if (entries.some(entry => entry.isIntersecting)) startSteps();
+        else window.clearInterval(stepTimer);
+      }, { threshold: .2 }).observe(stepsSection);
+    }
+  }
+
+  if (leanEffects) {
+    initLeanShell();
+    return;
+  }
+
+  gsap.registerPlugin(ScrollTrigger);
 
   /* ───────── film grain ───────── */
   const grainCanvas = document.getElementById('grain');

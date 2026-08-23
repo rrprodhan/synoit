@@ -669,7 +669,7 @@ section { position:relative; z-index:2; }
   width:8px; height:8px; border-radius:50%;
   background:linear-gradient(135deg, var(--violet), var(--pink));
 }
-.pricing--storm { background:#090a0c; }
+.pricing--storm { background:var(--bg); }
 .pricing-carousel {
   position:relative;
   left:50%;
@@ -677,7 +677,7 @@ section { position:relative; z-index:2; }
   margin-block:-208px;
   margin-left:-50vw;
   overflow:hidden;
-  background:#090a0c;
+  background:var(--bg);
   -webkit-mask-image:linear-gradient(270deg, transparent 9.82%, #000 30.43%, #000 78.87%, transparent 99.54%);
   mask-image:linear-gradient(270deg, transparent 9.82%, #000 30.43%, #000 78.87%, transparent 99.54%);
 }
@@ -1350,4 +1350,15 @@ body { top:0 !important; }
 
 @media (prefers-reduced-motion: reduce) {
   #gl, #grain { display:none; }
+}
+
+body[data-effects='lean'] .cursor,
+body[data-effects='lean'] .vignette { display:none; }
+
+body[data-effects='lean'] .brand-mark,
+body[data-effects='lean'] .visual-mark { animation:none !important; }
+
+body[data-effects='lean'] .service-page > section:not(.hero) {
+  content-visibility:auto;
+  contain-intrinsic-size:auto 900px;
 }

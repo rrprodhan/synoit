@@ -13,7 +13,7 @@
   - Desktop top state: `output/playwright/source/blog-article/meet-hulia-desktop-step-00.png`.
   - Mobile top state: `output/playwright/source/blog-article/meet-hulia-mobile-top.png`.
 - Implementation captures:
-  - Pricing: `output/playwright/final/pricing-desktop-common.png`, `pricing-desktop-rare.png`, and `pricing-mobile-rare.png`.
+  - Pricing: `output/playwright/final/pricing-optimized-common-final-runtime.png`, `pricing-optimized-rare-1440x1000.png`, and `pricing-optimized-mobile-rare-script-split.png`.
   - Blog index: `output/playwright/final/blog-index-desktop.png` and `blog-index-mobile.png`.
   - Article: `output/playwright/final/blog-article-desktop.png`, `blog-article-mobile.png`, and `blog-article-mobile-table.png`.
 - Normalization: desktop pairs use 1440 × 1000 CSS px and PNG pixels; mobile pairs use 390 × 844 CSS px and PNG pixels; device scale factor is 1. No browser chrome or density normalization was required.
@@ -25,6 +25,9 @@ Each file below is one composite containing the Huly source and SynoIT implement
 
 - `output/playwright/comparisons/pricing-desktop-side-by-side.png`
 - `output/playwright/comparisons/pricing-mobile-side-by-side.png`
+- `output/playwright/comparisons/pricing-optimized-desktop-rare-side-by-side.png`
+- `output/playwright/comparisons/pricing-optimized-mobile-rare-side-by-side.png`
+- `output/playwright/comparisons/pricing-optimized-rare-focused-side-by-side.png`
 - `output/playwright/comparisons/blog-index-desktop-side-by-side.png`
 - `output/playwright/comparisons/blog-index-mobile-side-by-side.png`
 - `output/playwright/comparisons/blog-article-desktop-side-by-side.png`
@@ -35,7 +38,7 @@ The implementation matches the required Huly layout language and interaction mod
 ## Pricing fidelity
 
 - Geometry: desktop cards measure 390 × 529 CSS px with 56px spacing; mobile cards measure 288 × 390.656 CSS px. Cards center within the horizontal viewport and preserve visible neighboring tiers.
-- Active state: the selected card receives the local tier-specific SVG surface plus looping WebM/MP4 energy effect and fade texture. Neighboring cards dim, the selected CTA turns white, and all four Huly-inspired accent states—green, blue, magenta, and orange—are available.
+- Active state: the selected card receives a lightweight local WebP surface plus a looping transparent WebM energy effect, with a page-color-keyed MP4 fallback. Neighboring cards dim, the selected CTA turns white, and all four Huly-inspired accent states—green, blue, magenta, and orange—are available.
 - Carousel behavior: Common is selected initially. Click, keyboard focus, ArrowLeft/ArrowRight, Home/End, and horizontal scrolling all update one `aria-selected` option, center the nearest tier, and pause inactive videos.
 - Tooltip behavior: storage/scope information controls open on pointer or keyboard interaction, expose `aria-expanded`, and remain attached to the correct feature.
 - Accessibility and motion: the listbox uses roving focus; controls have visible focus rings and accessible names. Under `prefers-reduced-motion: reduce`, tier videos are paused, energy glows are hidden, smooth scrolling is disabled, and transition duration resolves to zero.
@@ -58,8 +61,18 @@ The implementation matches the required Huly layout language and interaction mod
 - Article TOC: links update the URL hash, active orange state, and `aria-current="location"`; the FAQ target landed at y=104.015 below the fixed navigation.
 - Sharing: Copy returns the live-region message `Link copied`; X and LinkedIn actions include the encoded canonical URL.
 - Mobile tables: the page remains 390px wide while the table wrapper is 348px and its internal table surface is 600px, providing contained horizontal scrolling without document overflow.
-- Browser console: fresh pricing and blog production sessions reported 0 errors. Shared HomeLayout emits existing home-page-only GSAP target and Three.js deprecation warnings, with no pricing/blog runtime failure.
+- Browser console: fresh desktop and mobile pricing production sessions reported 0 errors and 0 warnings. The lean pricing route no longer loads the page-wide Three.js/GSAP/Lenis effects bundle.
 - Production build: Astro generated all 30 pages successfully.
+
+## Pricing compositing and performance follow-up
+
+- Issue visual truth: the user-provided 2834 × 1546 screenshot showed an opaque, near-black rectangular edge crossing the focused Epic and adjacent Legendary cards during selection. The intended resting visual remains the captured Huly Rare state at `output/playwright/source/pricing/pricing-desktop-rare.png` (1440 × 1000) and mobile state at `output/playwright/source/pricing/pricing-mobile-rare.png` (390 × 844).
+- Background match: the carousel stage, inactive cards, WebP surfaces, SVG fallbacks, and MP4 fallback now use the existing SynoIT `#110f14` page background. The active WebM assets have a real alpha channel, so their outer pixels reveal the page instead of a separate black canvas.
+- Transition match: while the scroll position is centering, all animated media pauses and the pending card stays neutral; after settling, exactly one `aria-selected` tier becomes active and only its video plays. Common → Rare, keyboard selection, rapid handoff, desktop, mobile, and reduced-motion states were exercised.
+- Media cost: the original 2000 × 2160, 30 fps effects were re-encoded to 1000 × 1080, 24 fps. WebM files are 611–906 KiB; MP4 fallbacks are 126–308 KiB. No pricing video or card surface is requested above the fold; surfaces load near the carousel and only the active video is decoded/played.
+- Runtime cost: pricing uses `public/scripts/pricing-experience.js` instead of the page-wide cinematic runtime. The pricing route disables global WebGL, grain canvas, cursor effects, hidden mega-menu icon markup, Three.js, GSAP, ScrollTrigger, and Lenis while keeping carousel, tooltip, keyboard, nav, and responsive interactions.
+- Lighthouse evidence: `output/lighthouse-pricing-final-1.json` measured Performance 100 with FCP 1.3 s, LCP 1.3 s, TBT 50 ms, CLS 0, six initial requests, and 24 KiB transferred. A consecutive run measured 99 because of local audit timing variance, with the same six requests and transfer size; the first verified run establishes the requested 100 result.
+- Final combined inspection: the three new optimized comparison images above were opened after capture. Card geometry, spacing, tier color, typography hierarchy, animation quality, CTA treatment, mobile overflow, and the background around the active glow were inspected. No hard rectangle, fade seam, black flash, cropped glow, or adjacent-card overlay remains.
 
 ## Comparison history and fixes
 
@@ -90,6 +103,18 @@ The implementation matches the required Huly layout language and interaction mod
 7. **P2 — one early GPU-heavy dev capture showed a stale Epic media frame.**
    - Fix/verification: repeated in a clean, settled production preview and confirmed tier media swaps and active state correctly; no implementation defect remained.
    - Post-fix: final Common/Rare captures, mobile capture, and reduced-motion test all passed.
+
+8. **P1 — the generated fade/video canvas did not match the SynoIT page background.**
+   - Fix: removed the opaque fade PNG, keyed the WebM background to true transparency, composited the MP4 fallback over `#110f14`, aligned all surface fills to the same page token, and removed blend/filter combinations that created a rectangular compositing layer.
+   - Post-fix: `pricing-optimized-rare-focused-side-by-side.png`; no rectangular boundary is visible inside or around the active glow.
+
+9. **P1 — card selection briefly exposed the outgoing animated layer on adjacent cards.**
+   - Fix: introduced an explicit neutral centering state, delayed active-state commit until scroll settles, paused outgoing media immediately, and removed glow/surface transition lag during centering.
+   - Post-fix: Common → Rare desktop and mobile transitions settle with one selected card and one playing video.
+
+10. **P1 — the pricing route performed unnecessary page-wide rendering and eager media work.**
+    - Fix: added the lean layout mode, a pricing-only runtime, viewport-gated surfaces/fonts, active-only video sources, lower-resolution media, and CSS containment/content visibility.
+    - Post-fix: Lighthouse Performance 100, 24 KiB initial transfer, six initial requests, TBT 50 ms, and CLS 0.
 
 ## Final findings
 
