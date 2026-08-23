@@ -1,7 +1,7 @@
 ---
 interface Feature {
   text: string;
-  info?: boolean;
+  info?: boolean | string;
 }
 
 interface Props {
@@ -15,6 +15,7 @@ interface Props {
   ctaText?: string;
   href?: string;
   active?: boolean;
+  index?: number;
 }
 
 const {
@@ -27,41 +28,65 @@ const {
   features,
   ctaText = 'Start Free',
   href = 'mailto:support@synoit.com',
-  active = false
+  active = false,
+  index = 0
 } = Astro.props;
 
-const normalizedFeatures = features.map((feature) =>
-  typeof feature === 'string' ? { text: feature, info: false } : feature
-);
-const pathId = `pricing-orbit-${accent}`;
-const smokeMaskId = `pricing-smoke-mask-${accent}`;
+const normalizedFeatures = features.map((feature) => {
+  if (typeof feature === 'string') return { text: feature, info: '' };
+  return {
+    text: feature.text,
+    info: typeof feature.info === 'string'
+      ? feature.info
+      : feature.info
+        ? 'The final allowance is confirmed during project discovery.'
+        : ''
+  };
+});
+
+const mediaBase = `/media/pricing/${accent}`;
+const cardId = `pricing-tier-${accent}`;
+const optionId = `${cardId}-option`;
+const checkIcon = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGZpbGw9Im5vbmUiIHZpZXdCb3g9IjAgMCAxNiAxNiI+PHBhdGggc3Ryb2tlPSIjZmZmIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMS44MjkiIGQ9Im0xMy4zMyA0LTcuMzMzIDcuMzMzTDIuNjY0IDgiLz48L3N2Zz4=';
 ---
 
-<article class:list={['pricing-tier', `pricing-tier--${accent}`, { 'is-active': active }]} data-pricing-card data-reveal tabindex="0">
-  <span class="pricing-tier__glow" aria-hidden="true"></span>
-  <svg class="pricing-tier__storm" viewBox="0 0 390 530" preserveAspectRatio="none" aria-hidden="true">
-    <defs>
-      <mask id={smokeMaskId}>
-        <rect x="-80" y="-80" width="550" height="690" fill="white" />
-        <rect x="26" y="26" width="338" height="478" rx="24" fill="black" />
-      </mask>
-      <path id={pathId} d="M52 24H338Q366 24 366 52V478Q366 506 338 506H52Q24 506 24 478V52Q24 24 52 24Z" />
-    </defs>
-    <g mask={`url(#${smokeMaskId})`}>
-      <use class="storm-smoke storm-smoke--outer" href={`#${pathId}`} />
-      <use class="storm-smoke storm-smoke--inner" href={`#${pathId}`} />
-      <use class="storm-line storm-line--base" href={`#${pathId}`} />
-      <use class="storm-line storm-line--wide-a" href={`#${pathId}`} />
-      <use class="storm-line storm-line--wide-b" href={`#${pathId}`} />
-      <use class="storm-line storm-line--hot-a" href={`#${pathId}`} />
-      <use class="storm-line storm-line--hot-b" href={`#${pathId}`} />
-      <use class="storm-line storm-line--sparkle" href={`#${pathId}`} />
-      <use class="storm-meteor-trail storm-meteor-trail--a" href={`#${pathId}`} />
-      <use class="storm-meteor-trail storm-meteor-trail--b" href={`#${pathId}`} />
-      <use class="storm-meteor-head storm-meteor-head--a" href={`#${pathId}`} />
-      <use class="storm-meteor-head storm-meteor-head--b" href={`#${pathId}`} />
-    </g>
-  </svg>
+<article
+  id={cardId}
+  class:list={['pricing-tier', `pricing-tier--${accent}`, { 'is-active': active }]}
+  data-pricing-card
+  data-pricing-index={index}
+  role="presentation"
+>
+  <div class="pricing-tier__glow" aria-hidden="true">
+    <video autoplay muted loop playsinline preload="metadata" tabindex="-1">
+      <source src={`${mediaBase}.webm`} type="video/webm" />
+      <source src={`${mediaBase}.mp4`} type="video/mp4" />
+    </video>
+    <img class="pricing-tier__fade" src="/media/pricing/video-fade.png" width="500" height="540" alt="" loading="lazy" />
+  </div>
+
+  <img
+    class="pricing-tier__surface"
+    src={`${mediaBase}.svg`}
+    width="390"
+    height="530"
+    alt=""
+    loading={active ? 'eager' : 'lazy'}
+    aria-hidden="true"
+  />
+
+  <button
+    id={optionId}
+    class="pricing-tier__select"
+    type="button"
+    role="option"
+    aria-selected={active ? 'true' : 'false'}
+    aria-label={`Select the ${name} engagement tier, ${price}${cents}${suffix}`}
+    tabindex={active ? 0 : -1}
+    data-pricing-select
+  >
+    <span class="pricing-tier__sr-only">Select {name}</span>
+  </button>
 
   <h3>{name}</h3>
 
@@ -75,15 +100,34 @@ const smokeMaskId = `pricing-smoke-mask-${accent}`;
   <span class="pricing-tier__divider" aria-hidden="true"></span>
 
   <ul>
-    {normalizedFeatures.map((feature) => (
-      <li>
-        <span class="pricing-tier__check" aria-hidden="true"></span>
-        <span>{feature.text}</span>
-        {feature.info && (
-          <span class="pricing-tier__info" title="Final allowance is confirmed during discovery" aria-label="Final allowance is confirmed during discovery">i</span>
-        )}
-      </li>
-    ))}
+    {normalizedFeatures.map((feature, featureIndex) => {
+      const tooltipId = `${cardId}-tooltip-${featureIndex}`;
+      return (
+        <li>
+          <img class="pricing-tier__check" src={checkIcon} width="16" height="16" alt="" loading="lazy" />
+          <span>{feature.text}</span>
+          {feature.info && (
+            <span class="pricing-tier__info-wrap">
+              <button
+                class="pricing-tier__info"
+                type="button"
+                aria-label={`More information about ${feature.text}`}
+                aria-controls={tooltipId}
+                aria-describedby={tooltipId}
+                aria-expanded="false"
+                data-pricing-tooltip-button
+              >
+                <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
+                  <path fill="currentColor" d="M8.002 16.004A8.002 8.002 0 1 0 8.002 0a8.002 8.002 0 0 0 0 16.004" opacity=".11"></path>
+                  <path fill="#C9CBCF" d="M8.004 4.92c.576 0 .82-.308.82-.73v-.218c0-.423-.244-.73-.82-.73s-.832.307-.832.73v.218c0 .422.256.73.832.73M7.3 12.767h1.395V6.11H7.3v6.658Z"></path>
+                </svg>
+              </button>
+              <span id={tooltipId} class="pricing-tier__tooltip" role="tooltip">{feature.info}</span>
+            </span>
+          )}
+        </li>
+      );
+    })}
   </ul>
 
   <a class="pricing-tier__action" href={href}>{ctaText}</a>
@@ -92,237 +136,124 @@ const smokeMaskId = `pricing-smoke-mask-${accent}`;
 <style>
   .pricing-tier {
     --tier-rgb: 255, 255, 255;
-    --tier-hot: #ffffff;
-    --tier-core: #ffffff;
-    --tier-deep: #ffffff;
-    --tier-surface: #0d0f11;
-    --tier-border: rgba(255, 255, 255, .055);
     position: relative;
+    z-index: 1;
     isolation: isolate;
     display: flex;
-    flex-direction: column;
     flex: 0 0 auto;
-    width: min(100%, 320px);
-    min-height: 448px;
-    padding: 20px;
-    border: 1px solid var(--tier-border);
-    border-radius: 24px;
-    overflow: hidden;
-    color: #fff;
-    background:
-      linear-gradient(180deg, rgba(18, 20, 23, .98), rgba(9, 10, 12, .98)),
-      var(--tier-surface);
-    box-shadow: 4px 6px 25px rgba(0, 0, 0, .56);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    contain: layout paint;
-    cursor: pointer;
+    flex-direction: column;
+    width: 390px;
+    aspect-ratio: .7372;
+    margin-inline-end: 56px;
+    padding: 28px 28px 25px;
+    overflow: visible;
     scroll-snap-align: center;
-    outline: none;
-    transition:
-      transform .2s ease,
-      border-color .2s ease,
-      background .2s ease,
-      box-shadow .2s ease,
-      opacity .2s ease;
+    border: 1px solid rgba(255, 255, 255, .05);
+    border-radius: 24px;
+    color: #fff;
+    background: rgba(13, 15, 17, .4);
+    box-shadow: 4px 6px 25px rgba(0, 0, 0, .56);
+    font-family: 'Syno Inter', Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    text-align: left;
+    transition: background-color .2s ease, box-shadow .2s ease;
   }
 
-  .pricing-tier--common {
-    --tier-rgb: 42, 243, 190;
-    --tier-hot: #e8fff8;
-    --tier-core: #ffffff;
-    --tier-deep: #19a87d;
-  }
+  .pricing-tier--common { --tier-rgb: 81, 255, 182; }
+  .pricing-tier--rare { --tier-rgb: 64, 106, 255; }
+  .pricing-tier--epic { --tier-rgb: 244, 120, 255; }
+  .pricing-tier--legendary { --tier-rgb: 255, 116, 56; }
 
-  .pricing-tier--rare {
-    --tier-rgb: 75, 148, 255;
-    --tier-hot: #eef6ff;
-    --tier-core: #ffffff;
-    --tier-deep: #315dff;
-  }
-
-  .pricing-tier--epic {
-    --tier-rgb: 218, 76, 255;
-    --tier-hot: #fff0ff;
-    --tier-core: #ffffff;
-    --tier-deep: #9b36ff;
-  }
-
-  .pricing-tier--legendary {
-    --tier-rgb: 255, 134, 42;
-    --tier-hot: #ffd36f;
-    --tier-core: #fff8df;
-    --tier-deep: #c83212;
-    --tier-border: rgba(255, 255, 255, .1);
-    --tier-surface: #20120d;
+  .pricing-tier.is-active {
+    z-index: 0;
+    background: transparent;
+    box-shadow: none;
   }
 
   .pricing-tier__glow,
-  .pricing-tier__storm {
+  .pricing-tier__surface {
     position: absolute;
     pointer-events: none;
+    user-select: none;
     opacity: 0;
-    transition: opacity .26s ease, transform .26s ease;
   }
 
   .pricing-tier__glow {
-    inset: -28px;
+    z-index: -2;
+    top: -300px;
+    left: -70%;
+    width: 1000px;
+    aspect-ratio: .925925;
+    border-radius: inherit;
+    transition: opacity .8s cubic-bezier(.42, 0, .09, 1);
+  }
+
+  .pricing-tier__glow video,
+  .pricing-tier__fade {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    border-radius: inherit;
+    object-fit: contain;
+  }
+
+  .pricing-tier__fade {
+    z-index: 1;
+  }
+
+  .pricing-tier__surface {
     z-index: -1;
-    border-radius: 42px;
-    background:
-      radial-gradient(circle at 18% 0%, rgba(var(--tier-rgb), .72), transparent 34%),
-      radial-gradient(circle at 88% 44%, rgba(var(--tier-rgb), .36), transparent 48%),
-      radial-gradient(circle at 92% 105%, rgba(var(--tier-rgb), .46), transparent 42%);
-    filter: blur(22px);
-    transform: scale(.96);
-    animation: tierGlowBreath 5.8s ease-in-out infinite alternate;
-    animation-play-state: paused;
+    inset: -1px;
+    width: calc(100% + 2px);
+    height: calc(100% + 2px);
+    max-width: none;
+    border-radius: inherit;
+    backdrop-filter: blur(1px);
+    transition: opacity .5s cubic-bezier(.42, 0, .09, 1);
   }
 
-  .pricing-tier__storm {
-    inset: -13px;
-    z-index: 4;
-    width: calc(100% + 26px);
-    height: calc(100% + 26px);
-    opacity: .68;
-    overflow: visible;
+  .pricing-tier.is-active .pricing-tier__glow {
+    opacity: 1;
+    transition-delay: .1s;
   }
 
-  .pricing-tier__storm use,
-  .pricing-tier__storm path,
-  .pricing-tier__storm ellipse,
-  .pricing-tier__storm circle {
-    vector-effect: non-scaling-stroke;
+  .pricing-tier.is-active .pricing-tier__surface {
+    opacity: 1;
   }
 
-  .storm-smoke,
-  .storm-line,
-  .storm-meteor-trail,
-  .storm-meteor-head {
-    fill: none;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    animation-play-state: paused !important;
+  .pricing-tier__select {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    border: 0;
+    border-radius: inherit;
+    outline: 0;
+    color: inherit;
+    background: transparent;
+    cursor: pointer;
+    touch-action: pan-x pan-y;
   }
 
-  .storm-smoke {
-    stroke: rgb(var(--tier-rgb));
-    opacity: .14;
-    filter:
-      drop-shadow(0 0 16px rgba(var(--tier-rgb), .5))
-      drop-shadow(0 0 38px rgba(var(--tier-rgb), .34));
+  .pricing-tier__select:focus-visible {
+    outline: 2px solid rgba(var(--tier-rgb), .95);
+    outline-offset: 6px;
   }
 
-  .storm-smoke--outer {
-    stroke-width: 28;
-    stroke-dasharray: 420 310 230 250 640 420;
-    animation: stormSmokeDrift 24s linear infinite, stormSmokePulse 12s ease-in-out infinite alternate;
-  }
-
-  .storm-smoke--inner {
-    stroke-width: 14;
-    stroke-dasharray: 170 250 480 330 240 310;
-    animation: stormSmokeDriftReverse 22s linear infinite, stormSmokePulse 10.5s ease-in-out -.8s infinite alternate;
-  }
-
-  .storm-line--base {
-    stroke: rgb(var(--tier-rgb));
-    stroke-width: 6.2;
-    opacity: .9;
-    filter:
-      drop-shadow(0 0 8px rgb(var(--tier-rgb)))
-      drop-shadow(0 0 28px rgba(var(--tier-rgb), .68))
-      drop-shadow(0 0 58px rgba(var(--tier-rgb), .34));
-    animation: stormBasePulse 5.2s ease-in-out infinite alternate;
-  }
-
-  .storm-line--wide-a,
-  .storm-line--wide-b {
-    stroke: rgb(var(--tier-rgb));
-    opacity: .55;
-    filter:
-      drop-shadow(0 0 10px rgb(var(--tier-rgb)))
-      drop-shadow(0 0 34px rgba(var(--tier-rgb), .55));
-  }
-
-  .storm-line--wide-a {
-    stroke-width: 7.4;
-    stroke-dasharray: 520 420 310 360 780 540;
-    animation: stormDash 16s linear infinite, stormSmokePulse 8.8s ease-in-out infinite alternate;
-  }
-
-  .storm-line--wide-b {
-    stroke: var(--tier-hot);
-    stroke-width: 5;
-    stroke-dasharray: 260 360 640 520 180 430;
-    opacity: .34;
-    animation: stormDashReverse 17s linear infinite, stormCrackle 3s steps(3, end) -.35s infinite;
-  }
-
-  .storm-line--hot-a {
-    stroke: var(--tier-core);
-    stroke-width: 4.6;
-    stroke-dasharray: 520 160 310 170 760 220;
-    filter:
-      drop-shadow(0 0 5px var(--tier-hot))
-      drop-shadow(0 0 18px rgb(var(--tier-rgb)));
-    animation: stormDash 10.5s linear infinite, stormCrackle 2.2s steps(3, end) infinite;
-  }
-
-  .storm-line--hot-b {
-    stroke: var(--tier-hot);
-    stroke-width: 3;
-    stroke-dasharray: 70 110 260 130 62 150 430 180;
-    opacity: .92;
-    animation: stormDashReverse 12.6s linear infinite, stormCrackle 2.4s steps(2, end) -.2s infinite;
-  }
-
-  .storm-line--sparkle {
-    stroke: var(--tier-core);
-    stroke-width: 1.6;
-    stroke-dasharray: 24 70 14 120 36 95 210 130;
-    opacity: .78;
-    filter: drop-shadow(0 0 7px var(--tier-hot));
-    animation: stormDash 7.8s linear infinite, stormCrackle 1.8s steps(2, end) infinite;
-  }
-
-  .storm-meteor-trail,
-  .storm-meteor-head {
-    opacity: .94;
-    filter:
-      drop-shadow(0 0 7px var(--tier-core))
-      drop-shadow(0 0 18px var(--tier-hot))
-      drop-shadow(0 0 38px rgb(var(--tier-rgb)));
-  }
-
-  .storm-meteor-trail--a {
-    stroke: var(--tier-core);
-    stroke-width: 5;
-    stroke-dasharray: 36 1192;
-    animation: stormTrailA 11.2s linear infinite, stormCrackle 1.44s steps(2, end) infinite;
-  }
-
-  .storm-meteor-trail--b {
-    stroke: var(--tier-hot);
-    stroke-width: 4.4;
-    stroke-dasharray: 28 1200;
-    opacity: .68;
-    animation: stormTrailB 11.2s linear infinite, stormCrackle 1.68s steps(2, end) -.18s infinite;
-  }
-
-  .storm-meteor-head--a {
-    stroke: var(--tier-core);
-    stroke-width: 9.2;
-    stroke-dasharray: 3 1225;
-    animation: stormTrailA 11.2s linear infinite;
-  }
-
-  .storm-meteor-head--b {
-    stroke: var(--tier-hot);
-    stroke-width: 7.4;
-    stroke-dasharray: 3 1225;
-    opacity: .82;
-    animation: stormTrailB 11.2s linear infinite;
+  .pricing-tier__sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
   }
 
   h3,
@@ -335,57 +266,69 @@ const smokeMaskId = `pricing-smoke-mask-${accent}`;
     z-index: 2;
   }
 
+  h3,
+  .pricing-tier__price,
+  .pricing-tier__description,
+  .pricing-tier__divider,
+  ul {
+    pointer-events: none;
+  }
+
   h3 {
     margin: 0;
     color: #fff;
     font-size: 20px;
-    line-height: 1.18;
-    font-weight: 650;
-    letter-spacing: 0;
+    font-weight: 600;
+    line-height: 1.375;
+    letter-spacing: -.04em;
   }
 
   .pricing-tier__price {
     display: flex;
     align-items: baseline;
     margin-top: 10px;
-    line-height: 1.1;
+    line-height: 1.375;
     white-space: nowrap;
   }
 
   .pricing-tier__price span {
     color: #fff;
-    font-size: clamp(36px, 3.4vw, 50px);
-    line-height: .95;
-    font-weight: 650;
-    letter-spacing: -2px;
+    font-size: 64px;
+    font-weight: 600;
+    letter-spacing: -.04em;
   }
 
   .pricing-tier__price small,
   .pricing-tier__price em {
-    color: #c9cbcf;
-    font-weight: 520;
-    letter-spacing: 0;
-  }
-
-  .pricing-tier__price small {
-    font-size: clamp(16px, 1.45vw, 20px);
-  }
-
-  .pricing-tier__price em {
     margin-left: 4px;
-    font-size: clamp(16px, 1.45vw, 20px);
+    color: #c9cbcf;
+    font-size: 20px;
     font-style: normal;
+    font-weight: 500;
+    letter-spacing: -.04em;
+  }
+
+  .pricing-tier__price small + em {
+    margin-left: 3px;
+  }
+
+  .pricing-tier--legendary .pricing-tier__price span {
+    font-size: 58px;
+  }
+
+  .pricing-tier--legendary .pricing-tier__price em {
+    font-size: 18px;
   }
 
   .pricing-tier__description {
-    min-height: 54px;
+    min-height: 74.25px;
     margin: 4px 0 0;
     padding-right: 12px;
-    color: rgba(255, 255, 255, .9);
-    font-size: clamp(14px, 1.1vw, 16px);
-    line-height: 1.34;
-    font-weight: 520;
-    letter-spacing: 0;
+    color: rgba(255, 255, 255, .96);
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 1.375;
+    letter-spacing: -.03em;
   }
 
   .pricing-tier__divider {
@@ -399,215 +342,295 @@ const smokeMaskId = `pricing-smoke-mask-${accent}`;
   ul {
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    margin: 18px 0 20px;
+    gap: 16px;
+    margin: 24px 0 0;
     padding: 0;
     list-style: none;
   }
 
   li {
+    position: relative;
     display: flex;
     align-items: center;
-    gap: 8px;
     min-width: 0;
+    gap: 8px;
     color: rgba(255, 255, 255, .9);
-    font-size: clamp(14px, 1.08vw, 16px);
+    font-size: 18px;
+    font-weight: 500;
     line-height: 1;
-    font-weight: 520;
-    letter-spacing: 0;
+    letter-spacing: -.02em;
+    white-space: nowrap;
   }
 
   .pricing-tier__check {
-    position: relative;
     width: 16px;
     height: 16px;
     flex: 0 0 16px;
-    opacity: .75;
+    opacity: 1;
   }
 
-  .pricing-tier__check::before {
-    content: "";
-    position: absolute;
-    left: 4px;
-    top: 1px;
-    width: 6px;
-    height: 11px;
-    border: solid currentColor;
-    border-width: 0 2px 2px 0;
-    transform: rotate(45deg);
+  .pricing-tier__info-wrap {
+    position: relative;
+    z-index: 4;
+    display: inline-flex;
+    margin-left: 4px;
+    pointer-events: auto;
   }
 
   .pricing-tier__info {
     display: inline-grid;
+    width: 16px;
+    height: 16px;
+    padding: 0;
     place-items: center;
-    width: 17px;
-    height: 17px;
-    flex: 0 0 17px;
-    border-radius: 50%;
-    color: rgba(255,255,255,.65);
-    background: rgba(255,255,255,.12);
-    font-size: 11px;
-    font-weight: 700;
+    border: 0;
+    color: #c9cbcf;
+    background: transparent;
     cursor: help;
+    transition: color .2s ease;
+  }
+
+  .pricing-tier__info:hover,
+  .pricing-tier__info:focus-visible,
+  .pricing-tier__info[aria-expanded='true'] {
+    color: #fff;
+  }
+
+  .pricing-tier__info:focus-visible {
+    outline: 2px solid rgba(var(--tier-rgb), .9);
+    outline-offset: 3px;
+    border-radius: 50%;
+  }
+
+  .pricing-tier__tooltip {
+    position: absolute;
+    z-index: 30;
+    bottom: calc(100% + 12px);
+    left: 50%;
+    width: 260px;
+    max-width: min(260px, calc(100vw - 32px));
+    padding: 18px 16px;
+    visibility: hidden;
+    border-radius: 12px;
+    color: #c9cbcf;
+    background: rgba(29, 30, 32, .98);
+    box-shadow: 0 14px 24px rgba(0, 0, 0, .9);
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1.375;
+    letter-spacing: 0;
+    white-space: normal;
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-50%, 4px);
+    transition: opacity .16s ease, transform .16s ease, visibility .16s;
+  }
+
+  .pricing-tier__info:focus-visible + .pricing-tier__tooltip,
+  .pricing-tier__info-wrap.is-open .pricing-tier__tooltip {
+    visibility: visible;
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+
+  @media (hover: hover) {
+    .pricing-tier__info-wrap:hover .pricing-tier__tooltip {
+      visibility: visible;
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
   }
 
   .pricing-tier__action {
-    min-height: 44px;
-    margin-top: auto;
+    z-index: 3;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     width: 100%;
-    border: 1px solid rgba(255,255,255,.2);
+    height: 56px;
+    margin-top: auto;
+    border: 1px solid rgba(255, 255, 255, .2);
     border-radius: 999px;
     color: #fff;
     background: transparent;
-    font-size: clamp(14px, 1.08vw, 16px);
-    line-height: 1;
-    font-weight: 680;
-    text-transform: capitalize;
-    transition: background .3s ease, border-color .3s ease, color .3s ease, transform .3s ease;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.75;
+    letter-spacing: -.02em;
+    pointer-events: auto;
+    transition: color .5s ease, background-color .5s ease, border-color .5s ease;
   }
 
-  .pricing-tier--legendary .pricing-tier__action,
-  .pricing-tier:hover .pricing-tier__action,
-  .pricing-tier:focus-visible .pricing-tier__action,
   .pricing-tier.is-active .pricing-tier__action {
-    border-color: #fff;
     color: #0b0d10;
     background: #fff;
   }
 
-  .pricing-tier:hover,
-  .pricing-tier:focus-visible,
-  .pricing-tier.is-active {
-    transform: translateY(-3px);
-    border-color: rgba(255, 255, 255, .16);
-    box-shadow:
-      4px 6px 25px rgba(0, 0, 0, .56),
-      0 0 50px rgba(var(--tier-rgb), .16);
-  }
-
-  .pricing-tier:hover .pricing-tier__glow,
-  .pricing-tier:focus-visible .pricing-tier__glow,
-  .pricing-tier.is-active .pricing-tier__glow {
-    opacity: 1;
-    transform: scale(1);
-    animation-play-state: running;
-  }
-
-  .pricing-tier:hover .pricing-tier__storm,
-  .pricing-tier:focus-visible .pricing-tier__storm,
-  .pricing-tier.is-active .pricing-tier__storm {
-    opacity: 1;
-  }
-
-  .pricing-tier:hover .storm-smoke,
-  .pricing-tier:hover .storm-line,
-  .pricing-tier:hover .storm-meteor-trail,
-  .pricing-tier:hover .storm-meteor-head,
-  .pricing-tier:focus-visible .storm-smoke,
-  .pricing-tier:focus-visible .storm-line,
-  .pricing-tier:focus-visible .storm-meteor-trail,
-  .pricing-tier:focus-visible .storm-meteor-head,
-  .pricing-tier.is-active .storm-smoke,
-  .pricing-tier.is-active .storm-line {
-    animation-play-state: running !important;
-  }
-
-  .pricing-tier.is-active .storm-meteor-trail,
-  .pricing-tier.is-active .storm-meteor-head {
-    animation-play-state: running !important;
-  }
-
   .pricing-tier__action:hover,
   .pricing-tier__action:focus-visible {
-    transform: scale(1.01);
-    border-color: rgba(255,255,255,.5);
-    background: rgba(255,255,255,.95);
-    color: #0b0d10;
+    border-color: rgba(255, 255, 255, .5);
   }
 
-  @keyframes tierGlowBreath {
-    0% { transform: scale(.96) translate3d(-1%, 0, 0); filter: blur(38px); }
-    48% { transform: scale(1.03) translate3d(1%, -1%, 0); filter: blur(28px); }
-    100% { transform: scale(.99) translate3d(0, 1%, 0); filter: blur(44px); }
+  .pricing-tier.is-active .pricing-tier__action:hover,
+  .pricing-tier.is-active .pricing-tier__action:focus-visible {
+    background: rgba(255, 255, 255, .85);
   }
 
-  @keyframes stormBasePulse {
-    0%, 100% { opacity: .6; stroke-width: 5; }
-    46% { opacity: 1; stroke-width: 8; }
-    72% { opacity: .82; stroke-width: 6.2; }
-  }
-
-  @keyframes stormDash {
-    to { stroke-dashoffset: -1960; }
-  }
-
-  @keyframes stormDashReverse {
-    to { stroke-dashoffset: 2080; }
-  }
-
-  @keyframes stormSmokeDrift {
-    to { stroke-dashoffset: -1520; }
-  }
-
-  @keyframes stormSmokeDriftReverse {
-    to { stroke-dashoffset: 1640; }
-  }
-
-  @keyframes stormTrailA {
-    from { stroke-dashoffset: 18; }
-    to { stroke-dashoffset: -1210; }
-  }
-
-  @keyframes stormTrailB {
-    from { stroke-dashoffset: -596; }
-    to { stroke-dashoffset: -1824; }
-  }
-
-  @keyframes stormSmokePulse {
-    0%, 100% { opacity: .08; }
-    52% { opacity: .22; }
-  }
-
-  @keyframes stormCrackle {
-    0%, 100% { opacity: .46; }
-    20% { opacity: 1; }
-    38% { opacity: .62; }
-    64% { opacity: .95; }
-  }
-
-  @media (max-width: 720px) {
+  @media (max-width: 1279px) {
     .pricing-tier {
-      width: 100%;
-      max-width: 310px;
-      min-height: 428px;
-      padding: 20px;
+      margin-inline-end: 48px;
     }
 
     .pricing-tier__price span {
-      font-size: 38px;
-      letter-spacing: -1.2px;
+      font-size: 56px;
+    }
+
+    .pricing-tier--legendary .pricing-tier__price span {
+      font-size: 54px;
+    }
+
+    ul {
+      margin-top: 32px;
+    }
+  }
+
+  @media (max-width: 1023px) {
+    .pricing-tier {
+      width: 366px;
+    }
+
+    .pricing-tier__glow {
+      top: -282px;
+      width: 932px;
+    }
+
+    .pricing-tier__price span {
+      font-size: 48px;
+    }
+
+    .pricing-tier--legendary .pricing-tier__price span {
+      font-size: 46px;
+    }
+
+    .pricing-tier__description {
+      margin-top: 0;
+    }
+
+    ul {
+      margin-top: 28px;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .pricing-tier {
+      margin-inline-end: 20px;
+      padding: 18px;
+    }
+
+    .pricing-tier__glow {
+      top: -56%;
+      left: -68.666%;
+      width: 255%;
+    }
+
+    .pricing-tier__surface {
+      border-radius: 18px;
+    }
+
+    h3 {
+      font-size: 16px;
+    }
+
+    .pricing-tier__price span {
+      font-size: 36px;
+    }
+
+    .pricing-tier--legendary .pricing-tier__price span {
+      font-size: 36px;
+    }
+
+    .pricing-tier--legendary .pricing-tier__price em {
+      font-size: 16px;
     }
 
     .pricing-tier__price small,
     .pricing-tier__price em {
-      font-size: 14px;
+      font-size: 16px;
+    }
+
+    .pricing-tier__description {
+      min-height: 66px;
+      padding-right: 0;
+      font-size: 16px;
+      line-height: 1.375;
+    }
+
+    .pricing-tier__divider {
+      margin-top: 16px;
+    }
+
+    ul {
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    li {
+      gap: 6px;
+      font-size: 16px;
+      letter-spacing: -.04em;
     }
 
     .pricing-tier__action {
-      min-height: 40px;
+      height: 40px;
+      font-size: 16px;
+      line-height: 1.65;
+    }
+  }
+
+  @media (max-width: 639px) {
+    .pricing-tier {
+      width: 288px;
+    }
+
+    .pricing-tier__fade {
+      width: 692px;
+      height: auto;
+      aspect-ratio: .925925;
+    }
+
+    .pricing-tier__tooltip {
+      position: fixed;
+      right: max(80px, calc(env(safe-area-inset-right) + 80px));
+      bottom: 20px;
+      left: 16px;
+      width: auto;
+      max-width: none;
+      transform: translateY(8px);
+    }
+
+    .pricing-tier__info:focus-visible + .pricing-tier__tooltip,
+    .pricing-tier__info-wrap.is-open .pricing-tier__tooltip {
+      transform: translateY(0);
+    }
+  }
+
+  @media (max-width: 639px) and (hover: hover) {
+    .pricing-tier__info-wrap:hover .pricing-tier__tooltip {
+      transform: translateY(0);
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
+    .pricing-tier,
     .pricing-tier__glow,
-    .storm-smoke,
-    .storm-line,
-    .storm-meteor-trail,
-    .storm-meteor-head {
-      animation: none !important;
+    .pricing-tier__surface,
+    .pricing-tier__action,
+    .pricing-tier__tooltip {
+      transition: none !important;
+    }
+
+    .pricing-tier__glow {
+      display: none;
     }
   }
 </style>

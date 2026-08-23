@@ -1,0 +1,287 @@
+---
+import HomeLayout from '@/layouts/HomeLayout.astro';
+import BlogAuthor from '@/components/blog/BlogAuthor.astro';
+import BlogShare from '@/components/blog/BlogShare.astro';
+import { ArrowUpRight, Clock3 } from '@lucide/astro';
+import { Content as ArticleBody, getHeadings } from '@/content/sanity-cms-article.md';
+import '@/styles/blog.css';
+
+const article = {
+  category: 'CMS & Engineering',
+  date: 'AUG 23, 2026',
+  dateTime: '2026-08-23',
+  readTime: '21 min read',
+  title: 'When to Choose Sanity CMS: Use Cases, Trade-offs, and a Practical Decision Framework',
+  lead:
+    'A practical framework for deciding where Sanity creates leverage, where it adds unnecessary complexity, and how to architect it without blurring content and application logic.',
+  href: '/blog/when-to-choose-sanity-cms/',
+  image: '/images/blog/sanity-cms-structured-content-hero.png'
+};
+
+const shareUrl = `https://synoit.com${article.href}`;
+const tocHeadings = getHeadings().filter(
+  (heading) => heading.depth === 2 && heading.slug !== 'table-of-contents'
+);
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'BlogPosting',
+      headline: article.title,
+      description: article.lead,
+      image: `https://synoit.com${article.image}`,
+      datePublished: article.dateTime,
+      dateModified: article.dateTime,
+      mainEntityOfPage: shareUrl,
+      author: {
+        '@type': 'Organization',
+        name: 'SynoIT',
+        url: 'https://synoit.com/'
+      },
+      publisher: {
+        '@type': 'Organization',
+        name: 'SynoIT',
+        url: 'https://synoit.com/'
+      }
+    },
+    {
+      '@type': 'FAQPage',
+      mainEntity: [
+        ['Is Sanity good for SEO?', 'Sanity can support excellent SEO when metadata, redirects, structured data, and frontend performance are implemented deliberately.'],
+        ['Can Sanity work with Astro?', 'Yes. Astro can retrieve Sanity content at build time or request time and can support Sanity visual editing.'],
+        ['Is Sanity free?', 'Sanity offers a Free plan with defined quotas, while paid plans add collaboration features and usage capacity. Check current pricing before estimating production costs.'],
+        ['Does Sanity replace a database?', 'Sanity is optimized for editorial content. Transactional and sensitive application data usually belongs in a dedicated service and database.'],
+        ['Does Sanity support multilingual content?', 'Yes. Teams can model localization at field or document level depending on publishing and governance needs.'],
+        ['Can non-technical editors use Sanity Studio?', 'Yes, when schemas, navigation, validation, and previews are designed around the editorial workflow.'],
+        ['Is Sanity self-hosted?', 'Sanity Studio can be hosted independently, but Content Lake is a managed Sanity service.'],
+        ['How long does a Sanity implementation take?', 'Timing depends on content complexity, migration, localization, integrations, preview requirements, and editor acceptance testing.']
+      ].map(([name, text]) => ({
+        '@type': 'Question',
+        name,
+        acceptedAnswer: { '@type': 'Answer', text }
+      }))
+    }
+  ]
+};
+---
+
+<HomeLayout
+  title="When to Choose Sanity CMS: Use Cases & Trade-offs | SynoIT"
+  description="Learn when to choose Sanity CMS, where it excels, its key trade-offs, and how to evaluate it with a practical decision framework from SynoIT."
+  canonical={article.href}
+  image={article.image}
+  schema={schema}
+  ogType="article"
+  publishedTime={article.dateTime}
+  modifiedTime={article.dateTime}
+>
+  <main id="main" class="blog-page blog-article-page">
+    <article class="blog-article" aria-labelledby="article-title">
+      <header class="blog-article-hero">
+        <div class="blog-post-meta">
+          <a href="/blog/#categories">{article.category}</a>
+          <span aria-hidden="true">·</span>
+          <time datetime={article.dateTime}>{article.date}</time>
+          <span aria-hidden="true">·</span>
+          <span class="blog-read-time"><Clock3 aria-hidden="true" /> {article.readTime}</span>
+        </div>
+
+        <h1 id="article-title">{article.title}</h1>
+        <p class="blog-article-lead">{article.lead}</p>
+
+        <img
+          class="blog-article-hero__image"
+          src={article.image}
+          width="1672"
+          height="941"
+          alt="A structured content platform distributing modular content to websites, mobile applications, and commerce experiences"
+          fetchpriority="high"
+        />
+
+        <div class="blog-mobile-byline">
+          <BlogAuthor showRole />
+          <BlogShare title={article.title} url={shareUrl} />
+        </div>
+      </header>
+
+      <div class="blog-article-layout">
+        <div class="blog-prose">
+          <ArticleBody />
+        </div>
+
+        <aside class="blog-article-sidebar" aria-label="Article information">
+          <nav class="blog-toc" aria-label="Table of contents">
+            <p>In this article</p>
+            <ol>
+              {tocHeadings.map((heading, index) => (
+                <li>
+                  <a
+                    href={`#${heading.slug}`}
+                    data-toc-link
+                    class:list={{ 'is-active': index === 0 }}
+                    aria-current={index === 0 ? 'location' : undefined}
+                  >
+                    {heading.text}
+                  </a>
+                </li>
+              ))}
+            </ol>
+          </nav>
+
+          <div class="blog-sidebar-author">
+            <p>Author</p>
+            <BlogAuthor showRole />
+          </div>
+
+          <BlogShare title={article.title} url={shareUrl} compact />
+        </aside>
+      </div>
+
+      <footer class="blog-article-footer">
+        <BlogAuthor showRole />
+        <BlogShare title={article.title} url={shareUrl} compact />
+      </footer>
+    </article>
+
+    <section class="blog-related" aria-labelledby="related-posts-title">
+      <h2 id="related-posts-title">Related post</h2>
+      <div class="blog-related-grid">
+        <article class="blog-related-card">
+          <a class="blog-related-card__image" href={article.href} aria-label={`Read ${article.title}`}>
+            <img src={article.image} width="1672" height="941" alt="" loading="lazy" />
+          </a>
+          <div class="blog-post-meta">
+            <a href="/blog/#categories">{article.category}</a>
+            <span aria-hidden="true">·</span>
+            <time datetime={article.dateTime}>{article.date}</time>
+          </div>
+          <h3><a href={article.href}>{article.title}</a></h3>
+          <p>{article.lead}</p>
+          <BlogAuthor compact />
+        </article>
+      </div>
+    </section>
+
+    <section class="blog-editorial-cta blog-editorial-cta--article" aria-labelledby="article-cta-title">
+      <div class="blog-editorial-cta__image" aria-hidden="true">
+        <img src={article.image} width="1672" height="941" alt="" loading="lazy" />
+      </div>
+      <div class="blog-editorial-cta__content">
+        <p class="blog-eyebrow">CONTENT ARCHITECTURE WORKSHOP</p>
+        <h2 id="article-cta-title">Choose a CMS from evidence, not assumptions.</h2>
+        <p>
+          Bring SynoIT your content model, workflows, and growth plans. We will help you compare the realistic options and leave with a practical implementation path.
+        </p>
+        <a class="blog-primary-link" href="/contact/">
+          Plan a focused workshop <ArrowUpRight aria-hidden="true" />
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <script is:inline>
+    (() => {
+      const tocLinks = Array.from(document.querySelectorAll('[data-toc-link]'));
+      const sections = tocLinks
+        .map((link) => document.getElementById(link.getAttribute('href')?.slice(1) || ''))
+        .filter(Boolean);
+
+      const activateToc = (id) => {
+        tocLinks.forEach((link) => {
+          const active = link.getAttribute('href') === `#${id}`;
+          link.classList.toggle('is-active', active);
+          if (active) link.setAttribute('aria-current', 'location');
+          else link.removeAttribute('aria-current');
+        });
+      };
+
+      let frame = 0;
+      const trackSection = () => {
+        if (frame) return;
+        frame = window.requestAnimationFrame(() => {
+          frame = 0;
+          const marker = window.scrollY + Math.min(190, window.innerHeight * 0.28);
+          let current = sections[0];
+          sections.forEach((section) => {
+            if (section.offsetTop <= marker) current = section;
+          });
+          if (current) activateToc(current.id);
+        });
+      };
+
+      window.addEventListener('scroll', trackSection, { passive: true });
+      window.addEventListener('resize', trackSection, { passive: true });
+      window.addEventListener('hashchange', () => {
+        if (window.location.hash) activateToc(window.location.hash.slice(1));
+      });
+      trackSection();
+
+      const articleAnchors = Array.from(
+        document.querySelectorAll('.blog-toc a[href^="#"], .blog-prose #table-of-contents + ol a[href^="#"]')
+      );
+
+      const scrollToArticleSection = (target, immediate = false) => {
+        const topOffset = window.innerWidth <= 767 ? 88 : 104;
+        const targetTop = target.getBoundingClientRect().top + window.scrollY - topOffset;
+        if (window.__lenis?.scrollTo) {
+          window.__lenis.scrollTo(targetTop, {
+            immediate,
+            duration: immediate ? 0 : 0.85
+          });
+          return;
+        }
+
+        window.scrollTo({
+          top: targetTop,
+          behavior: immediate || window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'
+        });
+      };
+
+      articleAnchors.forEach((link) => {
+        link.addEventListener('click', (event) => {
+          const hash = link.getAttribute('href');
+          const target = hash ? document.querySelector(hash) : null;
+          if (!hash || !target) return;
+
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          if (window.location.hash !== hash) window.history.pushState(null, '', hash);
+          activateToc(hash.slice(1));
+          scrollToArticleSection(target);
+        }, true);
+      });
+
+      window.addEventListener('load', () => {
+        const target = window.location.hash ? document.querySelector(window.location.hash) : null;
+        if (!target) return;
+        window.setTimeout(() => scrollToArticleSection(target, true), 0);
+      });
+
+      document.querySelectorAll('[data-copy-share]').forEach((button) => {
+        button.addEventListener('click', async () => {
+          const url = button.getAttribute('data-share-url') || window.location.href;
+          const status = button.closest('.blog-share')?.querySelector('[data-copy-status]');
+          try {
+            await navigator.clipboard.writeText(url);
+            if (status) status.textContent = 'Link copied';
+          } catch {
+            const input = document.createElement('textarea');
+            input.value = url;
+            input.setAttribute('readonly', '');
+            input.style.position = 'fixed';
+            input.style.opacity = '0';
+            document.body.appendChild(input);
+            input.select();
+            document.execCommand('copy');
+            input.remove();
+            if (status) status.textContent = 'Link copied';
+          }
+          window.setTimeout(() => {
+            if (status) status.textContent = '';
+          }, 2200);
+        });
+      });
+    })();
+  </script>
+</HomeLayout>

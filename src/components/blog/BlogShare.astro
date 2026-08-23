@@ -1,0 +1,45 @@
+---
+import { AtSign, BriefcaseBusiness, Copy } from '@lucide/astro';
+
+interface Props {
+  title: string;
+  url: string;
+  compact?: boolean;
+}
+
+const { title, url, compact = false } = Astro.props;
+const encodedTitle = encodeURIComponent(title);
+const encodedUrl = encodeURIComponent(url);
+---
+
+<div class:list={["blog-share", { "blog-share--compact": compact }]}>
+  <span class="blog-share__label">Share article:</span>
+  <ul aria-label="Share this article">
+    <li>
+      <button type="button" data-copy-share data-share-url={url} aria-label="Copy article link">
+        <Copy aria-hidden="true" />
+      </button>
+    </li>
+    <li>
+      <a
+        href={`https://twitter.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Share this article on X"
+      >
+        <AtSign aria-hidden="true" />
+      </a>
+    </li>
+    <li>
+      <a
+        href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Share this article on LinkedIn"
+      >
+        <BriefcaseBusiness aria-hidden="true" />
+      </a>
+    </li>
+  </ul>
+  <span class="blog-share__status" data-copy-status aria-live="polite"></span>
+</div>

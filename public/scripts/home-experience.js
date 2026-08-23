@@ -32,6 +32,191 @@
     return el.querySelectorAll('.word');
   }
 
+  /* ───────── pricing tier selector ───────── */
+  document.querySelectorAll('[data-pricing-carousel]').forEach(carousel => {
+    const viewport = carousel.querySelector('[data-pricing-viewport]');
+    const cards = Array.from(carousel.querySelectorAll('[data-pricing-card]'));
+    if (!viewport || !cards.length) return;
+
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let activeIndex = Math.max(0, cards.findIndex(card => card.classList.contains('is-active')));
+    let suppressScrollSelection = false;
+    let scrollFrame = 0;
+    let releaseTimer = 0;
+
+    function optionFor(card) {
+      return card.querySelector('[data-pricing-select]');
+    }
+
+    function closeTooltips(except) {
+      carousel.querySelectorAll('.pricing-tier__info-wrap.is-open').forEach(wrap => {
+        if (wrap === except) return;
+        wrap.classList.remove('is-open');
+        const trigger = wrap.querySelector('[data-pricing-tooltip-button]');
+        if (trigger) trigger.setAttribute('aria-expanded', 'false');
+      });
+    }
+
+    function syncMedia() {
+      cards.forEach((card, index) => {
+        const video = card.querySelector('video');
+        if (!video) return;
+        if (index === activeIndex && !reducedMotion.matches) {
+          const playback = video.play();
+          if (playback && typeof playback.catch === 'function') playback.catch(() => {});
+        } else {
+          video.pause();
+        }
+      });
+    }
+
+    function nearestCardIndex() {
+      // Huly keeps the first tier selected at the track's anchored start even
+      // though its deliberately offset desktop composition favours card two.
+      if (viewport.scrollLeft <= 64) return 0;
+      const viewportRect = viewport.getBoundingClientRect();
+      const viewportCenter = viewportRect.left + viewportRect.width / 2;
+      let nearest = 0;
+      let nearestDistance = Infinity;
+      cards.forEach((card, index) => {
+        const rect = card.getBoundingClientRect();
+        const distance = Math.abs(rect.left + rect.width / 2 - viewportCenter);
+        if (distance < nearestDistance) {
+          nearest = index;
+          nearestDistance = distance;
+        }
+      });
+      return nearest;
+    }
+
+    function centerCard(card) {
+      const viewportRect = viewport.getBoundingClientRect();
+      const cardRect = card.getBoundingClientRect();
+      const rawTarget = viewport.scrollLeft
+        + cardRect.left - viewportRect.left
+        - (viewportRect.width - cardRect.width) / 2;
+      const maxScroll = Math.max(0, viewport.scrollWidth - viewport.clientWidth);
+      const target = Math.min(maxScroll, Math.max(0, rawTarget));
+      if (Math.abs(target - viewport.scrollLeft) < 1) return;
+
+      suppressScrollSelection = true;
+      window.clearTimeout(releaseTimer);
+      viewport.scrollTo({
+        left: target,
+        behavior: reducedMotion.matches ? 'auto' : 'smooth',
+      });
+      releaseTimer = window.setTimeout(() => {
+        suppressScrollSelection = false;
+        setActive(nearestCardIndex());
+      }, reducedMotion.matches ? 0 : 520);
+    }
+
+    function setActive(nextIndex, options = {}) {
+      const index = Math.min(cards.length - 1, Math.max(0, nextIndex));
+      activeIndex = index;
+      cards.forEach((card, cardIndex) => {
+        const selected = cardIndex === index;
+        const option = optionFor(card);
+        card.classList.toggle('is-active', selected);
+        if (option) {
+          option.setAttribute('aria-selected', selected ? 'true' : 'false');
+          option.tabIndex = selected ? 0 : -1;
+        }
+      });
+      syncMedia();
+      if (options.scroll) centerCard(cards[index]);
+      if (options.focus) {
+        const option = optionFor(cards[index]);
+        if (option) option.focus({ preventScroll: true });
+      }
+    }
+
+    cards.forEach((card, index) => {
+      const option = optionFor(card);
+      if (option) {
+        option.addEventListener('click', () => {
+          closeTooltips();
+          setActive(index, { scroll: true });
+        });
+        option.addEventListener('focus', () => {
+          if (activeIndex !== index) setActive(index, { scroll: true });
+        });
+        option.addEventListener('keydown', event => {
+          let next = null;
+          if (event.key === 'ArrowLeft') next = Math.max(0, index - 1);
+          if (event.key === 'ArrowRight') next = Math.min(cards.length - 1, index + 1);
+          if (event.key === 'Home') next = 0;
+          if (event.key === 'End') next = cards.length - 1;
+          if (next === null) return;
+          event.preventDefault();
+          setActive(next, { scroll: true, focus: true });
+        });
+      }
+
+      card.addEventListener('focusin', event => {
+        if (event.target === option || activeIndex === index) return;
+        setActive(index, { scroll: true });
+      });
+    });
+
+    carousel.querySelectorAll('[data-pricing-tooltip-button]').forEach(trigger => {
+      trigger.addEventListener('click', event => {
+        event.stopPropagation();
+        const wrap = trigger.closest('.pricing-tier__info-wrap');
+        const willOpen = wrap && !wrap.classList.contains('is-open');
+        closeTooltips(wrap);
+        if (!wrap) return;
+        wrap.classList.toggle('is-open', willOpen);
+        trigger.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+      });
+    });
+
+    viewport.addEventListener('scroll', () => {
+      closeTooltips();
+      if (suppressScrollSelection || scrollFrame) return;
+      scrollFrame = window.requestAnimationFrame(() => {
+        scrollFrame = 0;
+        setActive(nearestCardIndex());
+      });
+    }, { passive: true });
+
+    function releaseProgrammaticScroll() {
+      suppressScrollSelection = false;
+      window.clearTimeout(releaseTimer);
+    }
+    viewport.addEventListener('pointerdown', releaseProgrammaticScroll, { passive: true });
+    viewport.addEventListener('wheel', releaseProgrammaticScroll, { passive: true });
+
+    window.addEventListener('resize', () => {
+      closeTooltips();
+      if (scrollFrame) return;
+      scrollFrame = window.requestAnimationFrame(() => {
+        scrollFrame = 0;
+        setActive(nearestCardIndex());
+      });
+    }, { passive: true });
+
+    document.addEventListener('click', event => {
+      if (!carousel.contains(event.target)) closeTooltips();
+    });
+    document.addEventListener('keydown', event => {
+      if (event.key !== 'Escape') return;
+      closeTooltips();
+    });
+
+    const handleMotionChange = () => {
+      syncMedia();
+      if (reducedMotion.matches) suppressScrollSelection = false;
+    };
+    if (typeof reducedMotion.addEventListener === 'function') {
+      reducedMotion.addEventListener('change', handleMotionChange);
+    } else {
+      reducedMotion.addListener(handleMotionChange);
+    }
+
+    setActive(activeIndex);
+  });
+
   /* ───────── film grain ───────── */
   const grainCanvas = document.getElementById('grain');
   const gtx = grainCanvas.getContext('2d');

@@ -2,6 +2,14 @@
    The four Nohemi @font-face rules were omitted because those font files are not present in the supplied project. */
 /* ═══════════════ SENTHORA — CINEMATIC ═══════════════ */
 
+@font-face {
+  font-family:'Syno Inter';
+  src:url('/fonts/inter-var.woff2') format('woff2');
+  font-style:normal;
+  font-weight:100 900;
+  font-display:swap;
+}
+
 :root {
   --bg:      #110F14;
   --bg-2:    #17151C;
@@ -661,21 +669,53 @@ section { position:relative; z-index:2; }
   width:8px; height:8px; border-radius:50%;
   background:linear-gradient(135deg, var(--violet), var(--pink));
 }
-.pricing-storm-grid {
-  width:min(100%, 1240px);
-  margin:0 auto;
-  display:grid;
-  grid-template-columns:repeat(4, minmax(0, 1fr));
-  gap:clamp(16px, 1.8vw, 24px);
-  align-items:stretch;
+.pricing--storm { background:#090a0c; }
+.pricing-carousel {
+  position:relative;
+  left:50%;
+  width:100vw;
+  margin-block:-208px;
+  margin-left:-50vw;
   overflow:hidden;
-  padding:16px;
+  background:#090a0c;
+  -webkit-mask-image:linear-gradient(270deg, transparent 9.82%, #000 30.43%, #000 78.87%, transparent 99.54%);
+  mask-image:linear-gradient(270deg, transparent 9.82%, #000 30.43%, #000 78.87%, transparent 99.54%);
 }
-.pricing-storm-grid .pricing-tier {
+.pricing-carousel__viewport {
   width:100%;
-  min-width:0;
-  max-width:300px;
-  justify-self:center;
+  padding:320px max(32px, calc((100vw - 896px) / 2));
+  overflow-x:auto;
+  overscroll-behavior-x:contain;
+  scroll-behavior:smooth;
+  scroll-snap-type:x mandatory;
+  scrollbar-width:none;
+  -webkit-overflow-scrolling:touch;
+}
+.pricing-carousel__viewport::-webkit-scrollbar { display:none; }
+.pricing-storm-grid {
+  display:flex;
+  width:3000px;
+  min-width:3000px;
+  align-items:flex-start;
+}
+@media (max-width: 767px) {
+  .pricing-carousel {
+    margin-block:-140px;
+    -webkit-mask-image:none;
+    mask-image:none;
+  }
+  .pricing-carousel__viewport {
+    padding-block:220px;
+    padding-inline:max(20px, calc((100vw - 317px) / 2));
+  }
+}
+@media (max-width: 639px) {
+  .pricing-carousel__viewport {
+    padding-inline:max(20px, calc((100vw - 317px) / 2));
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pricing-carousel__viewport { scroll-behavior:auto; }
 }
 .contact-section { overflow:visible; }
 .contact-grid {
@@ -1078,10 +1118,6 @@ body { top:0 !important; }
   .i-row { grid-template-columns:230px 1fr minmax(240px, 50%); }
   .i-tile { width:230px; }
   .inside-list::before { left:115px; }
-  .pricing-storm-grid { grid-template-columns:repeat(2, minmax(0, 300px)); justify-content:center; }
-}
-@media (max-width: 1180px) and (min-width: 901px) {
-  .pricing-storm-grid { grid-template-columns:repeat(2, minmax(0, 300px)); justify-content:center; }
 }
 /* mobile */
 @media (max-width: 900px) {
@@ -1140,8 +1176,6 @@ body { top:0 !important; }
   .features { padding:8vh 18px; }
   .service-grid,
   .service-grid.compact { grid-template-columns:1fr; }
-  .pricing-storm-grid { grid-template-columns:minmax(0, 1fr); justify-items:stretch; }
-  .pricing-storm-grid .pricing-tier { max-width:310px; justify-self:center; }
   .service-card { min-height:auto; }
   .contact-grid,
   .field-row { grid-template-columns:1fr; }
@@ -1181,7 +1215,6 @@ body { top:0 !important; }
   .hero-content { padding-inline:18px; }
   .hero-title { overflow-wrap:anywhere; hyphens:auto; }
   .service-page .hero { padding-top:92px; }
-  .pricing-storm-grid { width:100%; padding:10px 0; gap:18px; overflow:visible; }
   .contact-form { padding:20px 18px; border-radius:18px; }
   .f-card { gap:14px; padding:20px 18px; border-radius:16px; }
   .review-card { padding:24px 20px; border-radius:18px; }
