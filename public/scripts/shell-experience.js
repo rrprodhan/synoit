@@ -33,6 +33,7 @@
     const closeMenu = () => {
       menu.classList.remove('is-open');
       menuButton.setAttribute('aria-expanded', 'false');
+      menu.querySelectorAll('details[open]').forEach(item => { item.open = false; });
     };
     menuButton.addEventListener('click', event => {
       event.stopPropagation();

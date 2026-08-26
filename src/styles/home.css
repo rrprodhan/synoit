@@ -1139,11 +1139,60 @@ body.is-translated .nav-logo span { font-size:15px; }
   font-size:13.5px; color:var(--muted-2);
   padding:9px 14px; border-radius:9px; transition:all .25s;
 }
+.nav-drop-link,
+.nav-drop-cta {
+  font-weight:600;
+}
 .nav-drop strong {
   display:block; margin:12px 14px 4px;
   color:var(--violet); font-size:10.5px; letter-spacing:.22em; text-transform:uppercase;
 }
 .nav-drop a:hover { color:var(--text); background:var(--violet-dim); }
+.nav-accordion {
+  border-top:1px solid rgba(234,234,240,.08);
+}
+.nav-accordion summary {
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  min-height:42px; padding:10px 14px; border-radius:10px;
+  color:var(--muted-2); cursor:pointer; list-style:none;
+  font-size:13.5px; font-weight:600; transition:color .25s, background .25s;
+}
+.nav-accordion summary::-webkit-details-marker { display:none; }
+.nav-accordion summary::after {
+  content:'+';
+  display:grid; place-items:center; width:22px; height:22px; flex:0 0 22px;
+  border:1px solid rgba(154,138,251,.28); border-radius:50%;
+  color:var(--violet); font-size:16px; line-height:1; transition:transform .25s, background .25s;
+}
+.nav-accordion[open] > summary {
+  color:var(--text);
+  background:var(--violet-dim);
+}
+.nav-accordion[open] > summary::after {
+  transform:rotate(45deg);
+  background:rgba(154,138,251,.14);
+}
+.nav-accordion-panel {
+  display:grid; gap:2px; padding:4px 0 8px 10px;
+}
+.nav-accordion--nested {
+  border-top:0;
+}
+.nav-accordion--nested summary {
+  min-height:38px; padding-block:8px;
+  color:var(--violet); font-size:11px; letter-spacing:.18em; text-transform:uppercase;
+}
+.nav-accordion--nested .nav-accordion-panel {
+  padding-left:6px;
+}
+.nav-drop-cta {
+  justify-content:center;
+  min-height:44px;
+  margin-top:8px;
+  background:linear-gradient(100deg, var(--violet), #7B68F0);
+  color:#0E0C12 !important;
+  box-shadow:0 10px 30px rgba(154,138,251,.28);
+}
 
 /* hide the Google Translate banner/artifacts */
 .goog-te-banner-frame, #goog-gt-tt, .goog-te-balloon-frame { display:none !important; }
@@ -1177,20 +1226,21 @@ body { top:0 !important; }
   .nav-link { display:none; }
   .services-wrap,
   .nav-group { display:none; }
-  .nav-menu { display:block; flex:0 0 auto; }
+  .nav > .nav-menu { display:block; flex:0 0 auto; }
   .nav { padding:12px max(18px, env(safe-area-inset-right)) 12px max(18px, env(safe-area-inset-left)); }
   .nav-right { gap:8px; }
   .nav-cta { min-height:40px; display:inline-flex; align-items:center; justify-content:center; padding:9px 14px; flex:0 0 auto; }
   .nav-menu-btn { width:40px; height:40px; }
   .nav-drop {
-    position:fixed; top:64px; right:max(12px, env(safe-area-inset-right)); left:auto;
-    width:min(300px, calc(100vw - 40px)); min-width:0;
+    position:fixed; top:64px; right:max(12px, env(safe-area-inset-right)); left:max(12px, env(safe-area-inset-left));
+    width:auto; min-width:0;
     max-height:calc(100vh - 78px); max-height:calc(100dvh - 78px);
     overflow-y:auto; overscroll-behavior:contain; scrollbar-width:thin;
-    border-radius:14px; padding:8px;
+    border-radius:18px; padding:10px;
   }
   .nav-drop a { min-height:42px; padding:10px 12px; }
   .nav-drop strong { margin:14px 12px 5px; }
+  .nav-drop .mega-service-icon { width:18px; height:18px; flex-basis:18px; }
   .hero { padding-top:88px; }
   .hero-phone { width:clamp(160px, 24vh, 210px); margin-bottom:-24px; }
   /* trim the wrist so the hand ends at the headline — soft fade, no hard edge */
@@ -1265,6 +1315,8 @@ body { top:0 !important; }
   .lang-btn { padding:6px 7px; font-size:10.5px; gap:4px; }
   .lang-btn svg { width:12px; height:12px; }
   .nav-menu-btn { width:38px; height:38px; padding:0; }
+  .nav > .nav-menu { display:block; }
+  .nav-drop { top:58px; }
   .hero-content { padding-inline:18px; }
   .hero-title { overflow-wrap:anywhere; hyphens:auto; }
   .service-page .hero { padding-top:92px; }
@@ -1414,7 +1466,8 @@ body { top:0 !important; }
 }
 
 @media (max-width: 900px) {
-  /* #gl stays: the Canvas2D net in net-field.js renders the same structure here */
+  /* #gl stays: WebGL renders off-main-thread where supported, with Canvas2D as
+     the identical-design fallback for data-saving and older mobile browsers. */
   #grain { display:none; }
   body[data-effects='full'] main > section:not(.hero) {
     content-visibility:auto;

@@ -172,12 +172,14 @@ const serviceIcons: Record<string, typeof Monitor> = {
         .sig-phone { min-height:auto; }
         .sig-device { width:min(280px,74vw); }
       }
-      @media (max-width:640px) {
-        .nav-logo .brand-mark { width:26px; height:26px; border-radius:8px; }
-        .hero-device { border-radius:38px; }
-        .hero-device-screen { border-radius:30px; }
-        .service-marquee-track .lang-chip { padding:13px 22px; }
-      }
+	      @media (max-width:640px) {
+	        .nav-logo .brand-mark { width:26px; height:26px; border-radius:8px; }
+	        .nav-cta { display:none; }
+	        .nav-menu { display:block; }
+	        .hero-device { border-radius:38px; }
+	        .hero-device-screen { border-radius:30px; }
+	        .service-marquee-track .lang-chip { padding:13px 22px; }
+	      }
     </style>
     <script>history.scrollRestoration = 'manual'; window.scrollTo(0, 0);</script>
   </head>
@@ -193,24 +195,16 @@ const serviceIcons: Record<string, typeof Monitor> = {
       <a href="/" class="nav-logo" aria-label="SynoIT home"><span class="brand-mark" aria-hidden="true">S</span><span>SynoIT</span></a>
       {effects === 'lean' ? (
         <div class="nav-right">
+          <a href="/" class="nav-link">Home</a>
           <a href="/services/web-design/" class="nav-link">Services</a>
           <a href="/projects/" class="nav-link">Projects</a>
           <a href="/pricing/" class="nav-link">Pricing</a>
           <a href="/blog/" class="nav-link">Resources</a>
           <a href="/contact/" class="nav-cta"><span class="nav-cta-full">Get a Free Quote</span><span class="nav-cta-short">Free Quote</span></a>
-          <div class="nav-menu" id="navMenuWrap">
-            <button class="lang-btn nav-menu-btn" id="navMenuBtn" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
-            <div class="lang-menu nav-drop" id="navDrop">
-              <a href="/services/web-design/">Services</a>
-              <a href="/projects/">Projects</a>
-              <a href="/pricing/">Pricing</a>
-              <a href="/blog/">Blogs</a>
-              <a href="/templates/">Templates</a>
-            </div>
-          </div>
         </div>
       ) : (
       <div class="nav-right">
+        <a href="/" class="nav-link">Home</a>
         <div class="services-wrap">
           <button class="nav-link" aria-haspopup="true" aria-expanded="false">Services</button>
           <div class="mega">
@@ -235,27 +229,40 @@ const serviceIcons: Record<string, typeof Monitor> = {
           </div>
         </div>
         <a href="/contact/" class="nav-cta"><span class="nav-cta-full">Get a Free Quote</span><span class="nav-cta-short">Free Quote</span></a>
-        <div class="nav-menu" id="navMenuWrap">
-          <button class="lang-btn nav-menu-btn" id="navMenuBtn" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
-          <div class="lang-menu nav-drop" id="navDrop">
-            {byCategory.map((group) => (
-              <>
-                <strong>{group.category}</strong>
-                {group.items.map((item) => {
-                  const ServiceIcon = serviceIcons[item.slug];
-                  return <a href={`/services/${item.slug}/`}><ServiceIcon class="mega-service-icon" aria-hidden="true" />{item.shortTitle}</a>;
-                })}
-              </>
-            ))}
-            <a href="/projects/">Projects</a>
-            <a href="/pricing/">Pricing</a>
-            <strong>Resources</strong>
-            <a href="/blog/">Blogs</a>
-            <a href="/templates/">Templates</a>
-          </div>
-        </div>
       </div>
       )}
+      <div class="nav-menu" id="navMenuWrap">
+        <button class="lang-btn nav-menu-btn" id="navMenuBtn" aria-label="Open navigation menu" aria-expanded="false" aria-controls="navDrop"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+        <div class="lang-menu nav-drop" id="navDrop">
+          <a class="nav-drop-link" href="/">Home</a>
+          <details class="nav-accordion">
+            <summary>Services</summary>
+            <div class="nav-accordion-panel">
+              {byCategory.map((group) => (
+                <details class="nav-accordion nav-accordion--nested">
+                  <summary>{group.category}</summary>
+                  <div class="nav-accordion-panel">
+                    {group.items.map((item) => {
+                      const ServiceIcon = serviceIcons[item.slug];
+                      return <a href={`/services/${item.slug}/`}><ServiceIcon class="mega-service-icon" aria-hidden="true" />{item.shortTitle}</a>;
+                    })}
+                  </div>
+                </details>
+              ))}
+            </div>
+          </details>
+          <a href="/projects/">Projects</a>
+          <a href="/pricing/">Pricing</a>
+          <details class="nav-accordion">
+            <summary>Resources</summary>
+            <div class="nav-accordion-panel">
+              <a href="/blog/">Blogs</a>
+              <a href="/templates/">Templates</a>
+            </div>
+          </details>
+          <a class="nav-drop-cta" href="/contact/">Get a Free Quote</a>
+        </div>
+      </div>
     </nav>
 
     <slot />

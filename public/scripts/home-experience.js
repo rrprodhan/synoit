@@ -313,6 +313,7 @@
       const closeNavMenu = () => {
         navDrop.classList.remove('is-open');
         navMenuBtn.setAttribute('aria-expanded', 'false');
+        navDrop.querySelectorAll('details[open]').forEach(item => { item.open = false; });
       };
       navMenuBtn.addEventListener('click', event => {
         event.stopPropagation();
@@ -991,6 +992,7 @@
     const closeNavMenu = () => {
       navDrop.classList.remove('is-open');
       navMenuBtn.setAttribute('aria-expanded', 'false');
+        navDrop.querySelectorAll('details[open]').forEach(item => { item.open = false; });
     };
     navMenuBtn.addEventListener('click', e => {
       e.stopPropagation();

@@ -18,8 +18,9 @@
   }
 
   function adaptive() {
-    // Touch layouts use autonomous net motion, so they do not need the pointer
-    // bus or its document-wide input listeners.
+    // The Canvas2D renderer is the resilient/data-saving path. The adaptive
+    // controller still provides the page's compositor-only entrance, reveal,
+    // circuit, marquee, and carousel motion when motion is allowed.
     return load('/scripts/net-field.js').catch(() => {})
       .then(() => load('/scripts/pricing-experience.js'));
   }
@@ -33,8 +34,6 @@
       return;
     }
 
-    // The pointer bus must exist before the WebGL renderer reads it.
-    const cursor = load('/scripts/site-cursor.js').catch(() => {});
     const desktopScroller = innerWidth >= 900 && matchMedia('(pointer: fine)').matches;
     // Mobile runs the exact cinematic shader but uses the lightweight native
     // shell. GSAP, ScrollTrigger, and Lenis are desktop content/scroll concerns,
@@ -45,15 +44,17 @@
         && 'Worker' in window
         && HTMLCanvasElement.prototype.transferControlToOffscreen;
       if (workerNet) document.body.dataset.offscreenNet = 'true';
-      const mobileThree = workerNet
-        ? Promise.resolve()
-        : import('https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js')
-          .then(module => { window.THREE = module; });
-      Promise.all([cursor, mobileThree])
-        .then(() => load('/scripts/home-experience.js'))
+      const net = workerNet
+        ? load('/scripts/mobile-net.js')
+        : load('/scripts/net-field.js');
+      net
+        .then(() => load('/scripts/pricing-experience.js'))
         .catch(() => adaptive());
       return;
     }
+
+    // The pointer bus must exist before the desktop WebGL renderer reads it.
+    const cursor = load('/scripts/site-cursor.js').catch(() => {});
 
     const three = import('https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js')
       .then(module => { window.THREE = module; });

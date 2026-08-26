@@ -265,6 +265,7 @@
     const closeMenu = () => {
       navMenu.classList.remove('is-open');
       navMenuButton.setAttribute('aria-expanded', 'false');
+      navMenu.querySelectorAll('details[open]').forEach(item => { item.open = false; });
     };
     navMenuButton.addEventListener('click', event => {
       event.stopPropagation();
