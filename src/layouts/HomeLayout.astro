@@ -190,7 +190,7 @@ const serviceIcons: Record<string, typeof Monitor> = {
     <div class="cursor" id="cursor" aria-hidden="true"><span class="cursor-ring"></span><span class="cursor-dot"></span></div>
 
     <nav class="nav" id="nav" aria-label="Primary navigation">
-      <a href="/" class="nav-logo" aria-label="SynoIT home"><span class="brand-mark">S</span><span>SynoIT</span></a>
+      <a href="/" class="nav-logo" aria-label="SynoIT home"><span class="brand-mark" aria-hidden="true">S</span><span>SynoIT</span></a>
       {effects === 'lean' ? (
         <div class="nav-right">
           <a href="/services/web-design/" class="nav-link">Services</a>
@@ -267,7 +267,7 @@ const serviceIcons: Record<string, typeof Monitor> = {
       <p class="footer-credit">Singapore HQ · Bangladesh Hub · Global delivery</p>
     </footer>
 
-    {effects === 'full' && <script is:inline src="/scripts/effects-loader.js"></script>}
+    {effects === 'full' && <script is:inline defer src="/scripts/effects-loader.js"></script>}
     {effects === 'lean' && <script is:inline defer src="/scripts/pricing-experience.js"></script>}
   </body>
 </html>

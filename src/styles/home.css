@@ -414,7 +414,7 @@ section { position:relative; z-index:2; }
 .reveal-line { overflow:hidden; }
 /* breathing room so the buttons' hover lift is never clipped by the reveal mask */
 .hero-badges.reveal-line { padding:8px 0 14px; margin:-8px 0 -14px; }
-.badges-wrap { display:inline-flex; gap:14px; }
+.badges-wrap { display:inline-flex; justify-content:center; gap:14px; }
 /* store buttons: official badge look — black rounded rectangle, thin light
    outline, white text, original full-color store icons (current versions) */
 .store-btn {
@@ -648,7 +648,7 @@ section { position:relative; z-index:2; }
   filter:drop-shadow(0 0 6px rgba(154,138,251,.8));
 }
 .i-trace .i-pad.ring { stroke:rgba(154,138,251,.28); stroke-width:15; filter:none; }
-.i-info h4 { font-size:clamp(16px, 1.8vw, 20px); margin-bottom:6px; }
+.i-info h3 { font-size:clamp(16px, 1.8vw, 20px); margin-bottom:6px; }
 .i-info p { font-size:14px; color:var(--muted-2); font-weight:400; line-height:1.6; }
 
 /* ─────────── features (circuit board) ─────────── */
@@ -1290,11 +1290,17 @@ body { top:0 !important; }
   .footer-links { flex-wrap:wrap; justify-content:center; row-gap:6px; }
 }
 @media (max-width: 420px) {
-  .hero-badges { width:100%; max-width:280px; margin-inline:auto; }
+  /* Match the specificity of the reveal-mask spacing rule so the compact CTA
+     stack remains centered inside the hero instead of inheriting its zero side
+     margins. */
+  .hero-badges,
+  .hero-badges.reveal-line { width:100%; max-width:280px; margin-inline:auto; }
   .hero-badges .badges-wrap,
   .imagine-badges { width:100%; flex-direction:column; align-items:stretch; }
   .hero-badges .store-btn,
-  .imagine-badges .store-btn { width:100%; justify-content:flex-start; }
+  .imagine-badges .store-btn { width:100%; justify-content:center; }
+  .hero-badges .store-btn > span,
+  .imagine-badges .store-btn > span { align-items:center; text-align:center; }
   .imagine-points li { align-items:flex-start; }
   .imagine-stat { align-items:flex-start; gap:14px; padding:18px; }
   .qr-pair { width:100%; flex-direction:column; gap:16px; }
@@ -1370,7 +1376,7 @@ body { top:0 !important; }
   .i-tile .icon-tile--lg svg { width:36px; height:36px; }
   .i-tile span { font-size:19px; }
   .i-tile .app-chip { width:150px; }
-  .i-info h4 { font-size:27px; }
+  .i-info h3 { font-size:27px; }
   .i-info p { font-size:17.5px; }
   /* imagine */
   .imagine-grid { max-width:1640px; }

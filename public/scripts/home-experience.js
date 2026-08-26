@@ -3,6 +3,7 @@
   'use strict';
   window.__synoitRuntime = 'cinematic';
   const leanEffects = document.body && document.body.dataset.effects === 'lean';
+  const netOnly = document.body && document.body.dataset.netOnly === 'true';
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
   window.scrollTo(0, 0);
 
@@ -362,12 +363,16 @@
     return;
   }
 
-  gsap.registerPlugin(ScrollTrigger);
+  if (!netOnly) gsap.registerPlugin(ScrollTrigger);
 
   /* ───────── film grain ───────── */
   const grainCanvas = document.getElementById('grain');
   const gtx = grainCanvas.getContext('2d');
+  // CSS hides grain on touch layouts; avoid allocating and repainting six noise
+  // buffers that can never be seen there.
+  const grainEnabled = innerWidth > 900 && matchMedia('(pointer: fine)').matches;
   function sizeGrain() {
+    if (!grainEnabled) return;
     grainCanvas.width = window.innerWidth / 3;
     grainCanvas.height = window.innerHeight / 3;
   }
@@ -375,6 +380,7 @@
   // pre-baked noise frames — regenerating random pixels every frame was a CPU hog
   const grainFrames = [];
   function bakeGrain() {
+    if (!grainEnabled) return;
     grainFrames.length = 0;
     for (let f = 0; f < 6; f++) {
       const c = document.createElement('canvas');
@@ -393,13 +399,15 @@
   bakeGrain();
   let grainTick = 0;
   let grainLast = 0;
-  (function grainLoop(now = 0) {
-    requestAnimationFrame(grainLoop);
-    if (document.hidden || now - grainLast < 120 || !grainFrames.length) return;
-    grainLast = now;
-    grainTick += 1;
-    gtx.drawImage(grainFrames[grainTick % grainFrames.length], 0, 0);
-  })();
+  if (grainEnabled) {
+    (function grainLoop(now = 0) {
+      requestAnimationFrame(grainLoop);
+      if (document.hidden || now - grainLast < 120 || !grainFrames.length) return;
+      grainLast = now;
+      grainTick += 1;
+      gtx.drawImage(grainFrames[grainTick % grainFrames.length], 0, 0);
+    })();
+  }
 
   /* ───────── WebGL voice orb (ambient) ───────── */
   const glCanvas = document.getElementById('gl');
@@ -422,9 +430,11 @@
     const camera = new THREE.PerspectiveCamera(45, innerWidth / innerHeight, .1, 100);
     camera.position.z = 7;
 
-    // Preserve the same organic lattice while keeping each animation frame
-    // below the main-thread budget on mobile and CPU-throttled devices.
-    const COUNT = innerWidth < 900 ? 1400 : 3800;
+    const isTouchLayout = innerWidth < 900 || !matchMedia('(pointer: fine)').matches;
+    // One renderer and shader at every viewport. Density scales with available
+    // CSS pixels so the perceived spacing matches desktop instead of compressing
+    // the full desktop vertex count into one quarter of the screen area.
+    const COUNT = isTouchLayout ? 1400 : 3800;
     const pos = new Float32Array(COUNT * 3);
     const rnd = new Float32Array(COUNT);
     const off = new Float32Array(COUNT); // stray particles floating off the surface
@@ -527,13 +537,14 @@
     });
 
     const points = new THREE.Points(geo, mat);
-    points.scale.setScalar(2.1);
+    const baseScale = isTouchLayout ? 1.15 : 2.1;
+    points.scale.setScalar(baseScale);
     scene.add(points);
 
     // wireframe net: a lat/long grid deformed by the exact same displacement,
     // so the lines connect through the dots and move as one organism
-    const SEG_LON = innerWidth < 900 ? 24 : 36;
-    const SEG_LAT = innerWidth < 900 ? 16 : 24;
+    const SEG_LON = isTouchLayout ? 28 : 36;
+    const SEG_LAT = isTouchLayout ? 18 : 24;
     const lv = [];
     for (let la = 1; la < SEG_LAT; la++) {
       const phi = la / SEG_LAT * Math.PI, sp = Math.sin(phi), cp = Math.cos(phi);
@@ -601,8 +612,8 @@
 
     // deep space: a volumetric starfield behind the orb + a few dust specks in front,
     // so camera parallax reads as true depth
-    const SCOUNT = innerWidth < 900 ? 280 : 650;
-    const FG = innerWidth < 900 ? 18 : 36; // foreground dust
+    const SCOUNT = isTouchLayout ? 360 : 650;
+    const FG = isTouchLayout ? 24 : 36; // foreground dust
     const sPos = new Float32Array((SCOUNT + FG) * 3);
     const sRnd = new Float32Array(SCOUNT + FG);
     for (let i = 0; i < SCOUNT; i++) {
@@ -711,7 +722,7 @@
     // An ambient background can idle at 30fps on modest hardware, but where the
     // parallax follows the pointer, half frames read as cursor stutter — so
     // capable machines get the full rate.
-    const frameBudget = (navigator.hardwareConcurrency || 4) >= 8 ? 15 : 33;
+    const frameBudget = !isTouchLayout && (navigator.hardwareConcurrency || 4) >= 8 ? 15 : 33;
     let lastRender = 0;
     (function tick(now = 0) {
       requestAnimationFrame(tick);
@@ -744,17 +755,73 @@
       points.rotation.x = mouse.y * .11;
       points.position.x += (orbState.x - points.position.x) * .028;
       points.position.y += (orbState.y - points.position.y) * .028;
-      const s = 2.1 * orbState.scale;
+      const s = baseScale * orbState.scale;
       points.scale.x += (s - points.scale.x) * .028;
       points.scale.y += (s - points.scale.y) * .028;
       points.scale.z += (s - points.scale.z) * .028;
       renderer.render(scene, camera);
     })();
+    // The same state surface is used by the lightweight mobile shell and by the
+    // desktop ScrollTrigger choreography below.
+    window.__netField = {
+      setState(next) {
+        if (next) Object.assign(orbState, next);
+      },
+      start() {},
+      stop() {},
+    };
     return true;
   }
-  const glReady = window.THREE && !matchMedia('(prefers-reduced-motion: reduce)').matches
-    ? initGL()
-    : false;
+  function initOffscreenGL() {
+    if (!glCanvas.transferControlToOffscreen) return false;
+    const worker = new Worker('/scripts/net-worker.js', { type: 'module' });
+    const offscreen = glCanvas.transferControlToOffscreen();
+    const sendSize = () => worker.postMessage({
+      type: 'resize',
+      width: innerWidth,
+      height: innerHeight,
+      dpr: Math.min(devicePixelRatio, 1),
+    });
+    worker.postMessage({
+      type: 'init',
+      canvas: offscreen,
+      width: innerWidth,
+      height: innerHeight,
+      dpr: Math.min(devicePixelRatio, 1),
+      touch: true,
+    }, [offscreen]);
+    addEventListener('resize', sendSize, { passive: true });
+    let pointerFrame = 0;
+    let pointerX = innerWidth / 2;
+    let pointerY = innerHeight / 2;
+    addEventListener('pointermove', event => {
+      pointerX = event.clientX;
+      pointerY = event.clientY;
+      if (pointerFrame) return;
+      pointerFrame = requestAnimationFrame(() => {
+        pointerFrame = 0;
+        worker.postMessage({ type: 'pointer', x: pointerX, y: pointerY });
+      });
+    }, { passive: true });
+    addEventListener('pointerdown', event => {
+      worker.postMessage({ type: 'press', x: event.clientX, y: event.clientY });
+    }, { passive: true });
+    window.__netField = {
+      setState(next) {
+        if (next) worker.postMessage({ type: 'state', state: next });
+      },
+      start() { worker.postMessage({ type: 'visibility', visible: true }); },
+      stop() { worker.postMessage({ type: 'visibility', visible: false }); },
+    };
+    document.addEventListener('visibilitychange', () => {
+      worker.postMessage({ type: 'visibility', visible: !document.hidden });
+    });
+    return true;
+  }
+  const motionAllowed = !matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const glReady = motionAllowed && document.body.dataset.offscreenNet === 'true'
+    ? initOffscreenGL()
+    : Boolean(window.THREE && motionAllowed && initGL());
   if (!glReady) {
     // No WebGL (or reduced motion): fall back to the Canvas2D net so the
     // background structure is still there instead of a blank canvas.
@@ -762,6 +829,36 @@
     fallback.src = '/scripts/net-field.js';
     fallback.async = false;
     document.body.appendChild(fallback);
+  }
+
+  if (netOnly) {
+    initLeanShell();
+    if (window.__netField && 'IntersectionObserver' in window) {
+      const scenes = new Map();
+      const sceneObserver = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+          const values = scenes.get(entry.target);
+          if (values) window.__netField.setState(values);
+        });
+      }, { rootMargin: '-40% 0px -40% 0px', threshold: 0 });
+      [
+        ['#hero', { x: 0, y: 0, scale: 1, amp: .35, alpha: .55 }],
+        ['#statement', { x: 0, y: 0, scale: 1.3, amp: .6, alpha: .5 }],
+        ['.languages', { x: 0, y: 0, scale: .85, amp: .3, alpha: .35 }],
+        ['#steps', { x: 0, y: 0, scale: .7, amp: .5, alpha: .4 }],
+        ['#inside', { x: 0, y: 0, scale: .7, amp: .4, alpha: .35 }],
+        ['#features', { x: 0, y: 0, scale: .75, amp: .3, alpha: .3 }],
+        ['#pricing', { x: 0, y: 0, scale: 1, amp: .45, alpha: .45 }],
+        ['#cta', { x: 0, y: 0, scale: 1.6, amp: .85, alpha: .8 }],
+      ].forEach(([selector, values]) => {
+        document.querySelectorAll(selector).forEach(node => {
+          scenes.set(node, values);
+          sceneObserver.observe(node);
+        });
+      });
+    }
+    return;
   }
 
   /* The custom cursor lives in site-cursor.js: one pointermove listener for the

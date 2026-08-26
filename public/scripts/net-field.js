@@ -17,6 +17,7 @@
   const connection = navigator.connection;
   const saveData = Boolean(connection && connection.saveData);
   const narrow = innerWidth <= 480;
+  const fine = matchMedia('(pointer: fine)').matches;
 
   /* ── geometry: the same lat/long wireframe as home-experience.js ── */
   const SEG_LON = narrow ? 20 : 28;
@@ -122,8 +123,7 @@
   const state = { x: 0, y: 0, scale: 1, amp: 0.35, alpha: 0.55 };
   let pulse = 1;
 
-  const pointer = window.__synoitPointer;
-  const fine = pointer ? pointer.fine : matchMedia('(pointer: fine)').matches;
+  const pointer = fine ? window.__synoitPointer : null;
   let energy = 0;
   let prevDist = pointer ? pointer.dist : 0;
   let parX = 0;
@@ -139,16 +139,6 @@
   let frame = 0;
   let last = 0;
   let started = 0;
-  /* Cached: reading scrollHeight forces a synchronous layout, which must never
-     happen inside the render loop. Refreshed on resize and once a second, which
-     is enough to track lazily-loaded images and content-visibility reveals. */
-  let scrollSpan = 1;
-  let spanTick = 0;
-
-  function measureScrollSpan() {
-    scrollSpan = Math.max(1, document.documentElement.scrollHeight - height);
-  }
-
   function resize() {
     width = innerWidth;
     height = innerHeight;
@@ -156,7 +146,6 @@
     canvas.width = Math.round(width * dpr);
     canvas.height = Math.round(height * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    measureScrollSpan();
   }
 
   function smoothstep(edge0, edge1, x) {
@@ -182,11 +171,10 @@
       aimX = pointer.nx;
       aimY = pointer.ny;
     } else {
-      /* Touch layouts have no pointer, so scroll drives the highlight instead —
-         the structure still responds to the visitor rather than sitting inert. */
-      const progress = Math.min(1, (window.scrollY || 0) / scrollSpan);
-      aimX = Math.sin(progress * Math.PI * 2) * 0.8;
-      aimY = progress * 1.6 - 0.8;
+      /* Touch layouts run a calm autonomous highlight. This preserves the exact
+         field design without coupling every frame to touch or scroll input. */
+      aimX = Math.sin(t * 0.23) * 0.72;
+      aimY = Math.cos(t * 0.17) * 0.62;
     }
     parX += (aimX * 26 - parX) * 0.05;
     parY += (aimY * -16 - parY) * 0.05;
@@ -306,19 +294,17 @@
     ctx.globalCompositeOperation = 'source-over';
   }
 
-  /* 30fps is indistinguishable for an ambient background and halves the cost. */
-  const budget = 1000 / 30;
+  /* Touch screens only need occasional lattice deformation because the field's
+     motion is deliberately slow. Keeping those frames sparse preserves the
+     complete drawing while leaving a genuine CPU-idle window for taps, scroll,
+     and page startup on entry-level phones. */
+  const budget = 1000 / (fine ? 30 : 5);
 
   function loop(now) {
     if (!running) return;
     frame = requestAnimationFrame(loop);
     if (document.hidden || now - last < budget) return;
     last = now;
-    // the one layout read this renderer needs, kept to roughly once a second
-    if (!fine && ++spanTick >= 30) {
-      spanTick = 0;
-      measureScrollSpan();
-    }
     draw(now);
   }
 
