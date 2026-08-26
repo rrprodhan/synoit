@@ -733,51 +733,39 @@ section { position:relative; z-index:2; }
     radial-gradient(circle at 14% 68%, rgba(70,92,210,.07), transparent 34%),
     linear-gradient(180deg, rgba(17,15,20,0) 0%, rgba(23,21,28,.96) 20%, rgba(17,15,20,.98) 82%, rgba(17,15,20,0) 100%);
 }
-.pricing-carousel {
-  position:relative;
-  left:50%;
-  width:100vw;
-  margin-block:-208px;
-  margin-left:-50vw;
-  overflow:clip;
-  background:transparent;
-  -webkit-mask-image:linear-gradient(270deg, transparent 9.82%, #000 30.43%, #000 78.87%, transparent 99.54%);
-  mask-image:linear-gradient(270deg, transparent 9.82%, #000 30.43%, #000 78.87%, transparent 99.54%);
-}
-.pricing-carousel__viewport {
+.pricing-card-grid {
+  display:grid;
+  grid-template-columns:repeat(2, 390px);
+  justify-content:center;
+  align-items:start;
+  gap:76px 64px;
   width:100%;
-  padding:320px max(32px, calc((100vw - 896px) / 2));
-  overflow-x:auto;
-  overflow-y:hidden;
-  overscroll-behavior-x:contain;
-  overscroll-behavior-y:auto;
-  scroll-behavior:auto;
-  scroll-snap-type:x mandatory;
-  touch-action:pan-x pan-y pinch-zoom;
-  scrollbar-width:none;
-  -webkit-overflow-scrolling:touch;
+  max-width:920px;
+  margin:0 auto;
+  padding-block:40px;
 }
-.pricing-carousel__viewport::-webkit-scrollbar { display:none; }
-.pricing-storm-grid {
-  display:flex;
-  width:3000px;
-  min-width:3000px;
-  align-items:flex-start;
+.pricing--storm .pricing-card-grid > .pricing-tier {
+  width:100%;
+  min-width:0;
 }
-@media (max-width: 767px) {
-  .pricing-carousel {
-    margin-block:-140px;
-    -webkit-mask-image:none;
-    mask-image:none;
+@media (max-width: 1023px) {
+  .pricing-card-grid {
+    grid-template-columns:repeat(2, 366px);
+    gap:64px 48px;
   }
-  .pricing-carousel__viewport {
-    padding-block:220px;
-    padding-inline:max(20px, calc((100vw - 317px) / 2));
+}
+@media (max-width: 899px) {
+  .pricing-card-grid {
+    grid-template-columns:366px;
+    gap:56px;
+    padding-block:28px;
   }
 }
 @media (max-width: 639px) {
-  .pricing-carousel__viewport {
-    padding-inline:max(20px, calc((100vw - 317px) / 2));
+  .pricing-card-grid {
+    grid-template-columns:minmax(0, 288px);
+    gap:48px;
+    padding-block:20px;
   }
 }
 .contact-section { overflow:visible; }

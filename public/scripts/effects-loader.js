@@ -28,6 +28,11 @@
   function boot() {
     const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
     const saveData = Boolean(navigator.connection && navigator.connection.saveData === true);
+    const pricingGrid = document.querySelector('[data-pricing-grid]');
+    // The tier grid is independent of the visual engine. Loading its small,
+    // route-local controller here lets pricing use the exact same cinematic
+    // desktop runtime and adaptive mobile runtime as the homepage.
+    if (pricingGrid) load('/scripts/pricing-grid.js').catch(() => {});
 
     if (reduced || saveData) {
       adaptive();

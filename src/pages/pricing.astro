@@ -113,32 +113,21 @@ const process = [
     <section class="pricing pricing--storm" id="pricing" aria-labelledby="pricing-title">
       <p class="section-kicker">ENGAGEMENT TIERS</p>
       <h2 id="pricing-title">Choose the delivery level<br />that fits your next move</h2>
-      <div class="pricing-carousel" data-pricing-carousel>
-        <div
-          class="pricing-carousel__viewport"
-          data-pricing-viewport
-          aria-label="SynoIT engagement tiers"
-        >
-          <div
-            class="pricing-storm-grid"
-            data-pricing-track
-          >
-            {plans.map((plan, index) => (
-              <PricingCard
-                name={plan.name}
-                accent={plan.accent}
-                price={plan.price}
-                cents={plan.cents}
-                suffix={plan.unit}
-                description={plan.description}
-                features={plan.features}
-                ctaText="Request proposal"
-                active={index === 0}
-                index={index}
-              />
-            ))}
-          </div>
-        </div>
+      <div class="pricing-card-grid" data-pricing-grid role="group" aria-label="SynoIT engagement tiers">
+        {plans.map((plan, index) => (
+          <PricingCard
+            name={plan.name}
+            accent={plan.accent}
+            price={plan.price}
+            cents={plan.cents}
+            suffix={plan.unit}
+            description={plan.description}
+            features={plan.features}
+            ctaText="Request proposal"
+            active={index === 0}
+            index={index}
+          />
+        ))}
       </div>
     </section>
 

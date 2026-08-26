@@ -146,14 +146,11 @@ const checkIcon = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5
     z-index: 1;
     isolation: isolate;
     display: flex;
-    flex: 0 0 auto;
     flex-direction: column;
     width: 390px;
     aspect-ratio: .7372;
-    margin-inline-end: 56px;
     padding: 28px 28px 25px;
     overflow: visible;
-    scroll-snap-align: center;
     border: 1px solid rgba(255, 255, 255, .05);
     border-radius: 24px;
     color: #fff;
@@ -169,7 +166,7 @@ const checkIcon = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5
   .pricing-tier--epic { --tier-rgb: 244, 120, 255; }
   .pricing-tier--legendary { --tier-rgb: 255, 116, 56; }
 
-  :global(.pricing-carousel.is-font-ready) .pricing-tier {
+  :global(.pricing-card-grid.is-font-ready) .pricing-tier {
     font-family: 'Syno Inter', Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   }
 
@@ -227,17 +224,6 @@ const checkIcon = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5
 
   .pricing-tier.is-active .pricing-tier__surface {
     opacity: 1;
-  }
-
-  :global(.pricing-carousel.is-centering) .pricing-tier.is-active {
-    background: rgba(30, 28, 38, .42);
-    box-shadow: 4px 6px 25px rgba(0, 0, 0, .42);
-  }
-
-  :global(.pricing-carousel.is-centering) .pricing-tier__glow,
-  :global(.pricing-carousel.is-centering) .pricing-tier__surface {
-    opacity: 0;
-    transition: none;
   }
 
   .pricing-tier__select {
@@ -494,10 +480,6 @@ const checkIcon = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5
   }
 
   @media (max-width: 1279px) {
-    .pricing-tier {
-      margin-inline-end: 48px;
-    }
-
     .pricing-tier__price span {
       font-size: 56px;
     }
@@ -540,7 +522,6 @@ const checkIcon = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5
 
   @media (max-width: 767px) {
     .pricing-tier {
-      margin-inline-end: 20px;
       padding: 18px;
     }
 
