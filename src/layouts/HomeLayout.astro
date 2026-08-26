@@ -1,5 +1,6 @@
 ---
 import '../styles/home.css';
+import Footer from '@/components/Footer.astro';
 import { categories, services } from '@/data/services';
 import {
   AppWindow,
@@ -53,7 +54,6 @@ const {
 const site = 'https://synoit.com';
 const canonicalUrl = new URL(canonical, site).toString();
 const imageUrl = new URL(image, site).toString();
-const year = new Date().getFullYear();
 const byCategory = categories.map((category) => ({
   category,
   items: services.filter((service) => service.category === category)
@@ -267,12 +267,7 @@ const serviceIcons: Record<string, typeof Monitor> = {
 
     <slot />
 
-    <footer class="footer">
-      <span class="brand-mark" aria-hidden="true">S</span>
-      <div class="footer-links"><a href="/services/web-design/">Services</a><span>·</span><a href="/projects/">Projects</a><span>·</span><a href="/blog/">Blog</a><span>·</span><a href="/contact/">Contact</a></div>
-      <p>© {year} SynoIT. All rights reserved.</p>
-      <p class="footer-credit">Singapore HQ · Bangladesh Hub · Global delivery</p>
-    </footer>
+    <Footer />
 
     {effects === 'full' && <script is:inline defer src="/scripts/effects-loader.js"></script>}
     {effects === 'lean' && <script is:inline defer src="/scripts/pricing-experience.js"></script>}

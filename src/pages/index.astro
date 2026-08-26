@@ -61,13 +61,6 @@ const reasons = [
   ['4', 'Delivery hubs and partner regions']
 ];
 
-const pricingPlans = [
-  { name: 'Common', price: '$0', unit: '/consultation', description: 'For individuals and teams exploring the right SynoIT solution.' },
-  { name: 'Rare', price: '$1.9k+', unit: '/project', description: 'For focused websites, landing pages, audits, and brand refreshes.' },
-  { name: 'Epic', price: '$9.9k+', unit: '/project', description: 'For product builds, SaaS MVPs, mobile apps, and integrations.' },
-  { name: 'Legendary', price: '$39.9k+', unit: '/engagement', description: 'For dedicated teams, AI systems, cloud platforms, and growth programs.' }
-];
-
 const faqs = [
   ['What does SynoIT do?', 'SynoIT is a digital product studio for strategy, web and product design, software development, AI automation, SEO, digital marketing, and dedicated delivery teams.'],
   ['Can SynoIT take a project from idea to launch?', 'Yes. We can lead discovery, define the roadmap, design the experience, build and test the product, support launch, and continue with optimization and growth.'],
@@ -124,15 +117,11 @@ const schema = {
 
     <HomeConnector />
 
-    <section class="imagine" id="imagine"><div class="imagine-grid"><div class="imagine-copy"><h2 class="imagine-title">Imagine one team <span class="accent">moving the whole product forward</span></h2><ul class="imagine-points"><li><span class="point-icon">01</span><span>Strategy and execution stay connected.</span></li><li><span class="point-icon">02</span><span>Design, engineering, AI, and growth share one roadmap.</span></li><li><span class="point-icon">03</span><span>Every sprint produces visible, measurable progress.</span></li></ul><div class="imagine-stat"><span class="stat-num">500+</span><p>projects delivered across products, platforms, brands, and growth systems.</p></div><div class="badges-wrap imagine-badges"><a href="/projects/" class="store-btn"><span class="service-icon">↗</span><span><small>EXPLORE THE WORK</small><b>View our projects</b></span></a><a href="/dedicated-team/" class="store-btn"><span class="service-icon">✦</span><span><small>EXTEND YOUR TEAM</small><b>Dedicated specialists</b></span></a></div></div><div class="imagine-phones" aria-hidden="true"><div class="imagine-device"><div class="device-screen"></div></div></div></div></section>
+    <section class="imagine" id="imagine"><div class="imagine-grid"><div class="imagine-copy"><h2 class="imagine-title">Imagine one team <span class="accent">moving the whole product forward</span></h2><ul class="imagine-points"><li><span class="point-icon">01</span><span>Strategy and execution stay connected.</span></li><li><span class="point-icon">02</span><span>Design, engineering, AI, and growth share one roadmap.</span></li><li><span class="point-icon">03</span><span>Every sprint produces visible, measurable progress.</span></li></ul><div class="imagine-stat"><span class="stat-num">500+</span><p>projects delivered across products, platforms, brands, and growth systems.</p></div><div class="badges-wrap imagine-badges"><a href="/projects/" class="store-btn"><span class="service-icon">↗</span><span><small>EXPLORE THE WORK</small><b>View our projects</b></span></a><a href="/dedicated-team/" class="store-btn"><span class="service-icon">✦</span><span><small>EXTEND YOUR TEAM</small><b>Dedicated specialists</b></span></a></div></div><div class="imagine-phones"><img class="imagine-team-visual" src="/media/home/connected-delivery-team.svg" width="760" height="680" loading="lazy" decoding="async" alt="A connected SynoIT delivery system linking design, development, AI, and growth around one shared product roadmap" /></div></div></section>
 
     <HomeConnector />
 
     <section class="reviews"><h2 class="reviews-title">Delivery depth <span class="dim">you can build on</span></h2><div class="reviews-grid">{reasons.map(([number, label]) => <article class="review-card"><span class="review-stars">{number}</span><blockquote>{label}</blockquote><figcaption>SynoIT delivery network</figcaption></article>)}</div></section>
-
-    <HomeConnector />
-
-    <section class="pricing" id="pricing"><p class="section-kicker">ENGAGEMENT TIERS</p><h2>Choose the delivery level<br />that fits your next move</h2><div class="price-card"><div class="price-plans" role="group" aria-label="SynoIT pricing tiers">{pricingPlans.map((plan, index) => <button class:list={['plan', { 'is-active': index === pricingPlans.length - 1 }]} data-price={plan.price} data-unit={plan.unit} data-save={plan.description} aria-pressed={index === pricingPlans.length - 1 ? 'true' : 'false'}>{plan.name}</button>)}</div><div class="price-amount price-copy">$39.9k+<span>/engagement</span></div><p class="price-save" id="priceSave"><b>For dedicated teams, AI systems, cloud platforms, and growth programs.</b></p><p class="price-note">Starting points only · Final scope follows discovery</p><a class="btn-primary" href="mailto:support@synoit.com">Request a detailed proposal</a></div></section>
 
     <HomeConnector flip />
 

@@ -90,7 +90,7 @@ const schema = {
             <div class="steps-rail"><div class="steps-rail-fill" id="stepsRailFill"></div><div class="steps-rail-dot" id="stepsRailDot"></div></div>
             <div class="steps-counter"><span id="stepsCounterNum">01</span><span class="steps-counter-total"> / 04</span></div>
             <div class="steps-dots" id="stepsDots" role="tablist" aria-label={`${service.shortTitle} process steps`}>
-              {process.map((_, index) => <button data-step={index} class:list={{ 'is-active': index === 0 }} aria-label={`Step ${index + 1}`} aria-selected={index === 0 ? 'true' : 'false'}>{String(index + 1).padStart(2, '0')}</button>)}
+              {process.map((_, index) => <button type="button" role="tab" data-step={index} class:list={{ 'is-active': index === 0 }} aria-label={`Step ${index + 1}`} aria-selected={index === 0 ? 'true' : 'false'}>{String(index + 1).padStart(2, '0')}</button>)}
             </div>
             {process.map((step, index) => (
               <div class:list={['step-item', { 'is-active': index === 0 }]} data-step={index}>

@@ -32,7 +32,7 @@
 
     function ensureMedia(video) {
       if (video.dataset.mediaReady === 'true') return;
-      [[video.dataset.webm, 'video/webm'], [video.dataset.mp4, 'video/mp4']].forEach(([src, type]) => {
+      [[video.dataset.mp4, 'video/mp4'], [video.dataset.webm, 'video/webm']].forEach(([src, type]) => {
         if (!src) return;
         const source = document.createElement('source');
         source.src = src;
@@ -94,7 +94,7 @@
         const option = optionFor(card);
         card.classList.toggle('is-active', selected);
         if (option) {
-          option.setAttribute('aria-selected', String(selected));
+          option.setAttribute('aria-pressed', String(selected));
           option.tabIndex = selected ? 0 : -1;
         }
       });

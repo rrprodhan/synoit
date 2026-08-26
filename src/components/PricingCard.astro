@@ -86,8 +86,7 @@ const checkIcon = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5
     id={optionId}
     class="pricing-tier__select"
     type="button"
-    role="option"
-    aria-selected={active ? 'true' : 'false'}
+    aria-pressed={active ? 'true' : 'false'}
     aria-label={`Select the ${name} engagement tier, ${price}${cents}${suffix}`}
     tabindex={active ? 0 : -1}
     data-pricing-select
@@ -195,6 +194,7 @@ const checkIcon = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5
     width: 1000px;
     aspect-ratio: .925925;
     border-radius: inherit;
+    clip-path: inset(25% 31% 20.5% 24.5% round 32px);
     contain: layout paint style;
     transition: opacity .42s cubic-bezier(.42, 0, .09, 1);
   }
