@@ -1296,7 +1296,7 @@
   /* ───────── signature features: per-row reveal + floating phones ───────── */
   gsap.utils.toArray('.sig-row').forEach((row, idx) => {
     const copy = row.querySelector('.sig-copy');
-    const phone = row.querySelector('.sig-device');
+    const phone = row.querySelector('.sig-device, .capability-visual');
     const fromLeft = !row.classList.contains('sig-rev');
     // the whole row arrives sideways: copy from its edge, phone from the opposite edge
     gsap.set(copy, { x: fromLeft ? -110 : 110, opacity: 0 });

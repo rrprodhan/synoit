@@ -402,7 +402,12 @@
           // a section can itself be one of the reveal targets (the editorial CTA is)
           const targets = entry.target.matches(revealSelector) ? [entry.target] : [];
           entry.target.querySelectorAll(revealSelector).forEach(element => targets.push(element));
-          targets.forEach((element, index) => animateIn(element, Math.min(index, 5) * 55, 30));
+          targets.forEach((element, index) => {
+            animateIn(element, Math.min(index, 5) * 55, 30);
+            if (element.matches('.sig-row')) {
+              element.querySelector('.capability-visual')?.classList.add('is-content-floating');
+            }
+          });
           revealObserver.unobserve(entry.target);
         });
       }, { rootMargin: '0px 0px -8% 0px', threshold: .08 });
@@ -444,6 +449,7 @@
       const segment = Math.min(60, length * .18);
       path.style.strokeDasharray = `${segment} ${length}`;
       path.style.strokeDashoffset = String(segment);
+      path.style.opacity = '.95';
       path.style.setProperty('--pulse-to', `${-length}px`);
       path.style.animation = `tracePulse ${3.2 + (index % 4) * .45}s linear ${index * .12}s infinite`;
     };

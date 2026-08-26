@@ -1,6 +1,7 @@
 ---
 import HomeLayout from '@/layouts/HomeLayout.astro';
 import HomeConnector from '@/components/HomeConnector.astro';
+import CapabilityVisual from '@/components/CapabilityVisual.astro';
 import { categories, services } from '@/data/services';
 
 const process = [
@@ -14,24 +15,42 @@ const homeServices = ['web-design', 'web-development', 'mobile-app-development',
   .map((slug) => services.find((service) => service.slug === slug))
   .filter((service) => service !== undefined);
 
-const signatures = [
-  {
-    badge: '★ STRATEGY BEFORE EXECUTION',
-    title: 'Design that makes complex products feel clear.',
-    description: 'We turn product strategy, customer insight, and brand direction into interfaces that communicate value immediately and guide users toward action.',
-    points: ['Research and UX architecture before polished screens', 'Reusable UI systems built for consistent growth', 'Conversion, accessibility, and interaction considered together']
+const capabilityCopy = {
+  Design: {
+    badge: '01 · DESIGN',
+    titleLead: 'Design that turns ideas into',
+    titleAccent: 'clear, compelling experiences.',
+    description: 'Strategy, research, brand thinking, and interface craft come together in one design practice built to make products easier to understand and choose.',
+    visual: 'design' as const
   },
-  {
-    title: 'Engineering built for real-world scale.',
-    description: 'From websites and MVPs to mobile apps, cloud platforms, and internal systems, SynoIT builds maintainable products around performance, security, and long-term ownership.',
-    points: ['Architecture selected around your actual constraints', 'Structured delivery with visible QA and progress', 'Clean integrations, observability, and launch support']
+  Development: {
+    badge: '02 · DEVELOPMENT',
+    titleLead: 'Development engineered for',
+    titleAccent: 'speed, scale, and resilience.',
+    description: 'From focused MVPs to cloud platforms, we build maintainable digital products around performance, security, clean integration, and long-term ownership.',
+    visual: 'development' as const
   },
-  {
-    title: 'AI that works inside real operations.',
-    description: 'We design practical automation, agents, chatbots, and AI-enabled SaaS workflows that connect safely to the tools and data your teams already use.',
-    points: ['Use-case validation before implementation', 'Human oversight and practical guardrails', 'Measured around time saved, quality, and adoption']
+  'AI Services': {
+    badge: '03 · AI SERVICES',
+    titleLead: 'AI services built for',
+    titleAccent: 'useful, governed automation.',
+    description: 'We connect practical AI to real operations with defined use cases, secure data access, measurable quality, and human oversight where it matters.',
+    visual: 'ai' as const
+  },
+  'Digital Marketing': {
+    badge: '04 · DIGITAL MARKETING',
+    titleLead: 'Digital marketing that converts',
+    titleAccent: 'attention into durable growth.',
+    description: 'Search and social strategy work as one measurable growth system—building discoverability, trust, qualified demand, and continuous learning.',
+    visual: 'marketing' as const
   }
-];
+};
+
+const signatures = categories.map((category) => ({
+  category,
+  ...capabilityCopy[category],
+  services: services.filter((service) => service.category === category)
+}));
 
 const reasons = [
   ['120+', 'Specialists and trusted collaborators'],
@@ -91,7 +110,7 @@ const schema = {
 
     <HomeConnector flip />
 
-    <section class="signature" id="signature"><p class="section-kicker">CORE CAPABILITIES</p><h2 class="sig-title">What makes <span class="dim">SynoIT different</span></h2>{signatures.map((item, index) => <><div class:list={['sig-row', { 'sig-rev': index === 1 }]}><div class="sig-copy">{item.badge && <span class="sig-badge">{item.badge}</span>}<h3>{item.title.split(' ').slice(0, 3).join(' ')}<br /><span class="lav">{item.title.split(' ').slice(3).join(' ')}</span></h3><p>{item.description}</p><ul>{item.points.map((point) => <li>{point}</li>)}</ul></div><div class="sig-phone" aria-hidden="true"><div class="sig-device"><div class="device-screen"></div></div></div></div>{index < signatures.length - 1 && <div class="sig-connector" aria-hidden="true"><svg viewBox="0 0 100 100" preserveAspectRatio="none" fill="none"><path data-draw d={index === 0 ? 'M74,0 V26 Q74,40 62,40 H38 Q26,40 26,54 V100' : 'M26,0 V26 Q26,40 38,40 H62 Q74,40 74,54 V100'}/><path data-pulse d={index === 0 ? 'M74,0 V26 Q74,40 62,40 H38 Q26,40 26,54 V100' : 'M26,0 V26 Q26,40 38,40 H62 Q74,40 74,54 V100'}/></svg></div>}</>)}</section>
+    <section class="signature" id="signature"><p class="section-kicker">CORE CAPABILITIES</p><h2 class="sig-title">What makes <span class="dim">SynoIT different</span></h2>{signatures.map((item, index) => <><div class:list={['sig-row', { 'sig-rev': index % 2 === 1 }]}><div class="sig-copy"><span class="sig-badge">{item.badge}</span><h3>{item.titleLead}<br /><span class="lav">{item.titleAccent}</span></h3><p>{item.description}</p><div class="sig-services" aria-label={`${item.category} services`}>{item.services.map((service, serviceIndex) => <a href={`/services/${service.slug}/`}><span>{String(serviceIndex + 1).padStart(2, '0')}</span><strong>{service.shortTitle}</strong></a>)}</div></div><div class="sig-visual-wrap"><CapabilityVisual kind={item.visual} /></div></div>{index < signatures.length - 1 && <div class="sig-connector" aria-hidden="true"><svg viewBox="0 0 100 100" preserveAspectRatio="none" fill="none"><path data-draw d={index % 2 === 0 ? 'M74,0 V26 Q74,40 62,40 H38 Q26,40 26,54 V100' : 'M26,0 V26 Q26,40 38,40 H62 Q74,40 74,54 V100'}/><path data-pulse d={index % 2 === 0 ? 'M74,0 V26 Q74,40 62,40 H38 Q26,40 26,54 V100' : 'M26,0 V26 Q26,40 38,40 H62 Q74,40 74,54 V100'}/></svg></div>}</>)}</section>
 
     <HomeConnector flip />
 

@@ -1,0 +1,17 @@
+---
+interface Props {
+  kind: 'design' | 'development' | 'ai' | 'marketing';
+}
+
+const { kind } = Astro.props;
+const sources = {
+  design: '/media/capabilities/design.svg',
+  development: '/media/capabilities/development.svg',
+  ai: '/media/capabilities/ai-services.svg',
+  marketing: '/media/capabilities/digital-marketing.svg'
+};
+---
+
+<div class:list={['capability-visual', `capability-visual--${kind}`]} aria-hidden="true">
+  <img src={sources[kind]} width="640" height="520" loading="lazy" decoding="async" alt="" />
+</div>
