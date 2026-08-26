@@ -1,5 +1,7 @@
 ---
 import HomeLayout from '@/layouts/HomeLayout.astro';
+import HomeConnector from '@/components/HomeConnector.astro';
+import HeroNet from '@/components/HeroNet.astro';
 import BlogAuthor from '@/components/blog/BlogAuthor.astro';
 import { ArrowUpRight } from '@lucide/astro';
 import '@/styles/blog.css';
@@ -21,10 +23,18 @@ const postSrcset = '/images/blog/sanity-cms-structured-content-hero-768.webp 768
   description="Read practical SynoIT guidance on headless CMS architecture, product engineering, design systems, AI, SEO, and sustainable digital growth."
   canonical="/blog/"
   image={post.image}
-  effects="shell"
 >
   <main id="main" class="blog-page blog-index-page">
-    <h1 class="blog-sr-only">SynoIT insights</h1>
+    <section class="hero blog-hero" id="hero">
+      <div class="hero-content">
+        <p class="section-kicker">SYNOIT INSIGHTS</p>
+        <h1 class="hero-title"><span class="line" data-split>Practical product, CMS &amp;</span>{' '}<span class="line accent" data-split>engineering insights.</span></h1>
+        <p class="hero-sub reveal-line"><span>Field notes from the SynoIT studio on content architecture, product engineering, design systems, AI, and the decisions that keep digital products growing.</span></p>
+      </div>
+      <HeroNet />
+    </section>
+
+    <HomeConnector />
 
     <section class="blog-index-shell" aria-labelledby="featured-post-title">
       <article class="blog-feature-card">
@@ -53,7 +63,7 @@ const postSrcset = '/images/blog/sanity-cms-structured-content-hero-768.webp 768
           <img
             src={post.image}
             srcset={postSrcset}
-            sizes="(max-width: 767px) calc(100vw - 40px), 448px"
+            sizes="(max-width: 767px) calc(100vw - 84px), 414px"
             width="1672"
             height="941"
             alt="A structured content platform distributing modular content to websites, mobile applications, and commerce experiences"
@@ -69,9 +79,11 @@ const postSrcset = '/images/blog/sanity-cms-structured-content-hero-768.webp 768
       </nav>
     </section>
 
+    <HomeConnector flip />
+
     <section class="blog-editorial-cta" aria-labelledby="blog-cta-title">
       <div class="blog-editorial-cta__image" aria-hidden="true">
-        <img src={post.image} srcset={postSrcset} sizes="(max-width: 767px) calc(100vw - 40px), 604px" width="1672" height="941" alt="" loading="lazy" decoding="async" />
+        <img src={post.image} srcset={postSrcset} sizes="(max-width: 899px) calc(100vw - 40px), 604px" width="1672" height="941" alt="" loading="lazy" decoding="async" />
       </div>
       <div class="blog-editorial-cta__content">
         <p class="blog-eyebrow">SYNOIT EDITORIAL</p>

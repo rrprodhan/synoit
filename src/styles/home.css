@@ -175,12 +175,12 @@ section { position:relative; z-index:2; }
 .chip-face.back { transform:rotateY(180deg); filter:brightness(.82); }
 
 /* ─────────── canvas layers & progress ─────────── */
-#gl { position:fixed; inset:0; z-index:0; pointer-events:none; }
+#gl { position:fixed; inset:0; z-index:0; pointer-events:none; contain:layout paint; }
 .vignette {
   position:fixed; inset:0; z-index:1; pointer-events:none;
   background:radial-gradient(ellipse at center, transparent 55%, rgba(8,7,10,.75) 100%);
 }
-#grain { position:fixed; inset:0; z-index:60; pointer-events:none; opacity:.07; mix-blend-mode:overlay; }
+#grain { position:fixed; inset:0; z-index:60; pointer-events:none; opacity:.07; mix-blend-mode:overlay; contain:layout paint; }
 .scroll-progress {
   position:fixed; top:0; left:0; right:0; height:3px; z-index:70;
   background:linear-gradient(90deg, var(--violet), var(--pink));
@@ -224,23 +224,55 @@ section { position:relative; z-index:2; }
 }
 @media (max-width: 640px) { .whatsapp-float { right:16px; bottom:16px; width:48px; height:48px; } .whatsapp-float svg { width:26px; height:26px; } }
 
-/* ─────────── custom cursor (tech reticle, desktop only) ─────────── */
+/* ─────────── custom cursor (tech reticle, desktop only) ───────────
+   Two independently composited layers: the dot tracks the pointer 1:1 so aiming
+   never feels laggy, and the ring eases in behind it so the motion reads as
+   weight rather than delay. Both are drawn with border/box-shadow rather than an
+   SVG drop-shadow filter, which had to re-rasterize on every single move. */
 .cursor { display:none; }
 @media (pointer: fine) {
-  /* hide the native cursor everywhere, but only on pages that render the custom one;
+  /* the native cursor is hidden only once the custom one is genuinely live, and
+     via a class rather than `body:has(#cursor) *`, which invalidated style on
+     every element in the document;
      !important beats the scattered cursor:pointer rules (lang button, WhatsApp, FAQ, plans) */
-  body:has(#cursor), body:has(#cursor) * { cursor:none !important; }
-  .cursor {
-    display:block; position:fixed; left:0; top:0; z-index:210;
-    width:38px; height:38px; pointer-events:none;
-    will-change:transform;
+  body.has-custom-cursor, body.has-custom-cursor * { cursor:none !important; }
+  /* the reticle layer carries the z-index itself: `position: fixed` creates a
+     stacking context, so a z-index on the children alone would trap them under
+     the nav and the grain */
+  .cursor { display:block; position:fixed; inset:0; z-index:210; pointer-events:none; }
+  /* The two anchors only ever carry the JS translate, and their negative margins
+     centre them on the pointer. The visible shapes live on pseudo-elements so
+     their hover/press `scale` cannot compose with that translate — `scale`
+     applies before `transform`, so sharing one element would drag the reticle
+     toward the origin on every hover. */
+  .cursor-ring,
+  .cursor-dot {
+    position:absolute; left:0; top:0;
+    pointer-events:none; will-change:transform;
   }
-  .cursor svg {
-    position:absolute; inset:0; width:100%; height:100%;
-    filter:drop-shadow(0 0 8px rgba(154,138,251,.95));
-    transition:scale .3s ease;
+  .cursor-ring { width:34px; height:34px; margin:-17px 0 0 -17px; }
+  .cursor-dot { width:11px; height:11px; margin:-5.5px 0 0 -5.5px; }
+  .cursor-ring::before,
+  .cursor-dot::before {
+    content:''; position:absolute; inset:0; border-radius:50%; opacity:0;
+    transition:opacity .25s ease, scale .25s cubic-bezier(.22,1,.36,1), border-color .25s ease;
   }
-  .cursor.is-hover svg { scale:1.5; }
+  .cursor-ring::before {
+    border:1.6px solid rgba(180,166,255,.55);
+    box-shadow:0 0 12px rgba(154,138,251,.38), inset 0 0 10px rgba(154,138,251,.18);
+  }
+  .cursor-dot::before {
+    background:radial-gradient(circle at 50% 50%, #FFFFFF 0 34%, #CFC4FF 36%);
+    box-shadow:0 0 10px rgba(207,196,255,.9);
+  }
+  .cursor.is-live .cursor-ring::before,
+  .cursor.is-live .cursor-dot::before { opacity:1; }
+  .cursor.is-hover .cursor-ring::before { scale:1.55; border-color:rgba(207,196,255,.85); }
+  .cursor.is-hover .cursor-dot::before { scale:.7; }
+  .cursor.is-press .cursor-ring::before { scale:1.18; }
+  .cursor.is-press .cursor-dot::before { scale:1.35; }
+  .cursor.is-out .cursor-ring::before,
+  .cursor.is-out .cursor-dot::before { opacity:0; }
 }
 
 /* ─────────── circuit nets & connectors (BOLD) ─────────── */
@@ -1370,11 +1402,14 @@ body { top:0 !important; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  #gl, #grain { display:none; }
+  /* the net holds a single static frame instead of vanishing; only the
+     continuously repainted film grain is dropped */
+  #grain { display:none; }
 }
 
-@media (max-width: 899px) {
-  #gl, #grain { display:none; }
+@media (max-width: 900px) {
+  /* #gl stays: the Canvas2D net in net-field.js renders the same structure here */
+  #grain { display:none; }
   body[data-effects='full'] main > section:not(.hero) {
     content-visibility:auto;
     contain-intrinsic-size:auto 900px;

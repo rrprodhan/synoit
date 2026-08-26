@@ -414,7 +414,7 @@
         alpha: true,
         powerPreference: 'low-power',
       });
-    } catch (e) { glCanvas.style.display = 'none'; return; }
+    } catch (e) { return false; }
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1));
     renderer.setSize(window.innerWidth, window.innerHeight);
 
@@ -658,41 +658,47 @@
 
 
 
-    // pointer → direction on the orb (for magnetism + shockwaves)
+    // pointer → direction on the orb (for magnetism + shockwaves).
+    // Positions arrive from the shared bus in site-cursor.js and are sampled once
+    // per rendered frame: no second pointermove listener competing with the
+    // cursor, and no per-event Vector3 allocations feeding the collector.
+    const bus = window.__synoitPointer;
     const mouse = { x: 0, y: 0, tx: 0, ty: 0, speed: 0 };
     const rayDir = new THREE.Vector3(0, 0, 1);
     const rayTarget = new THREE.Vector3(0, 0, 1);
     const tmpV = new THREE.Vector3();
+    const tmpRay = new THREE.Vector3();
     const tmpQ = new THREE.Quaternion();
-    let lastPX = 0, lastPY = 0, lastPT = 0;
-    function pointerToOrbDir(e) {
+    let lastDist = bus ? bus.dist : 0;
+    function pointerToOrbDir(clientX, clientY) {
       // unproject the pointer into a world ray from the camera
-      tmpV.set((e.clientX / innerWidth) * 2 - 1, -(e.clientY / innerHeight) * 2 + 1, .5)
+      tmpV.set((clientX / innerWidth) * 2 - 1, -(clientY / innerHeight) * 2 + 1, .5)
         .unproject(camera).sub(camera.position).normalize();
       // closest point of the ray to the orb center → direction on the sphere
-      const oc = tmpV.clone().multiplyScalar(-camera.position.dot(tmpV)).add(camera.position);
-      oc.sub(points.position);
-      if (oc.lengthSq() < 1e-6) oc.set(0, 0, 1);
-      return oc.normalize();
+      tmpRay.copy(tmpV).multiplyScalar(-camera.position.dot(tmpV)).add(camera.position)
+        .sub(points.position);
+      if (tmpRay.lengthSq() < 1e-6) tmpRay.set(0, 0, 1);
+      return tmpRay.normalize();
     }
-    addEventListener('pointermove', e => {
-      mouse.tx = (e.clientX / innerWidth - .5) * 2;
-      mouse.ty = (e.clientY / innerHeight - .5) * 2;
-      const now = performance.now();
-      const dt = Math.max(16, now - lastPT);
-      const dist = Math.hypot(e.clientX - lastPX, e.clientY - lastPY);
-      mouse.speed = Math.min(1.2, mouse.speed + dist / dt * .18);
-      lastPX = e.clientX; lastPY = e.clientY; lastPT = now;
-      rayTarget.copy(pointerToOrbDir(e));
-    });
+    function samplePointer() {
+      if (!bus) return;
+      mouse.tx = bus.nx;
+      mouse.ty = bus.ny;
+      // the bus counts pixels travelled, so the delta is this frame's speed
+      const travelled = bus.dist - lastDist;
+      if (travelled <= 0) return;
+      lastDist = bus.dist;
+      mouse.speed = Math.min(1.2, mouse.speed + travelled * .012);
+      rayTarget.copy(pointerToOrbDir(bus.x, bus.y));
+    }
     // click / tap → shockwave through the sphere
     addEventListener('pointerdown', e => {
       mat.uniforms.uClickDir.value.copy(
-        pointerToOrbDir(e).applyQuaternion(tmpQ.copy(points.quaternion).invert())
+        pointerToOrbDir(e.clientX, e.clientY).applyQuaternion(tmpQ.copy(points.quaternion).invert())
       );
       mat.uniforms.uClickT.value = mat.uniforms.uTime.value;
       mouse.speed = Math.min(2.5, mouse.speed + 1.2);
-    });
+    }, { passive: true });
 
     addEventListener('resize', () => {
       camera.aspect = innerWidth / innerHeight;
@@ -702,12 +708,17 @@
     });
 
     const clock = new THREE.Clock();
+    // An ambient background can idle at 30fps on modest hardware, but where the
+    // parallax follows the pointer, half frames read as cursor stutter — so
+    // capable machines get the full rate.
+    const frameBudget = (navigator.hardwareConcurrency || 4) >= 8 ? 15 : 33;
     let lastRender = 0;
     (function tick(now = 0) {
       requestAnimationFrame(tick);
-      if (document.hidden || now - lastRender < 33) return;
+      if (document.hidden || now - lastRender < frameBudget) return;
       lastRender = now;
       const t = clock.getElapsedTime();
+      samplePointer();
       mat.uniforms.uTime.value = t;
       mat.uniforms.uAmp.value += (orbState.amp - mat.uniforms.uAmp.value) * .03;
       mat.uniforms.uAlpha.value += (orbState.alpha - mat.uniforms.uAlpha.value) * .03;
@@ -739,25 +750,22 @@
       points.scale.z += (s - points.scale.z) * .028;
       renderer.render(scene, camera);
     })();
+    return true;
   }
-  if (window.THREE && !matchMedia('(prefers-reduced-motion: reduce)').matches) initGL();
-  else glCanvas.style.display = 'none';
+  const glReady = window.THREE && !matchMedia('(prefers-reduced-motion: reduce)').matches
+    ? initGL()
+    : false;
+  if (!glReady) {
+    // No WebGL (or reduced motion): fall back to the Canvas2D net so the
+    // background structure is still there instead of a blank canvas.
+    const fallback = document.createElement('script');
+    fallback.src = '/scripts/net-field.js';
+    fallback.async = false;
+    document.body.appendChild(fallback);
+  }
 
-  /* ───────── custom cursor: visible dot + ring, zero catch-up lag ─────────
-     (design review: the thin line was hard to see and the trailing lerp made
-     the whole site feel sluggish — the cursor now tracks the pointer 1:1) */
-  const cursorEl = document.getElementById('cursor');
-  if (cursorEl && matchMedia('(pointer: fine)').matches) {
-    addEventListener('pointermove', e => {
-      cursorEl.style.transform = `translate(${e.clientX - 19}px, ${e.clientY - 19}px)`;
-    });
-    // grow over anything clickable
-    document.addEventListener('pointerover', e => {
-      cursorEl.classList.toggle('is-hover', !!e.target.closest('a, button, summary, .plan, .lang-btn, .step-item'));
-    });
-    document.addEventListener('pointerleave', () => { cursorEl.style.opacity = '0'; });
-    document.addEventListener('pointerenter', () => { cursorEl.style.opacity = '1'; });
-  }
+  /* The custom cursor lives in site-cursor.js: one pointermove listener for the
+     whole site, one transform write per layer per frame. */
 
   /* every play-once reveal registers here so anchor jumps can complete them
      instantly instead of letting the user watch blocks flicker in */
@@ -789,10 +797,18 @@
     },
   };
   const lenis = useLenis
-    ? new Lenis({ lerp: .095, smoothWheel: true, wheelMultiplier: 1 })
+    ? new Lenis({
+        lerp: .1,
+        smoothWheel: true,
+        wheelMultiplier: 1,
+        // the pricing carousel scrolls horizontally and must keep its own gesture
+        prevent: node => Boolean(node && node.closest && node.closest('[data-pricing-viewport]')),
+      })
     : nativeScroller;
   window.__lenis = useLenis ? lenis : null;
-  gsap.ticker.fps(30);
+  // No ticker cap. Capping GSAP also capped Lenis, which drives smooth scrolling
+  // and every scrubbed ScrollTrigger — 30fps there is what made the whole site
+  // feel sluggish. lagSmoothing still absorbs genuine stalls.
   gsap.ticker.lagSmoothing(500, 33);
   if (useLenis) {
     lenis.on('scroll', ScrollTrigger.update);
@@ -901,12 +917,20 @@
   }
   const heroTargets = isTranslated ? '.hero-title .line' : heroChars;
   const ctaTargets = isTranslated ? '.cta-title .line' : ctaChars;
+  // Editorial routes share this engine but have no hero or closing CTA. Tweening
+  // an empty target set is a GSAP warning, so every block checks first.
+  const hasHero = isTranslated
+    ? document.querySelectorAll('.hero-title .line').length > 0
+    : heroChars.length > 0;
+  const hasCta = (isTranslated
+    ? document.querySelectorAll('.cta-title .line').length > 0
+    : ctaChars.length > 0) && Boolean(document.querySelector('#cta'));
   const heroSubTargets = document.querySelectorAll('.hero-sub span');
   const heroBadgeTargets = document.querySelectorAll('.hero-badges .badges-wrap');
   const heroChip = document.getElementById('heroChip');
   const heroPhone = document.getElementById('heroPhone');
   const heroFromVars = isTranslated ? { y: 46, opacity: 0 } : { yPercent: 110 };
-  gsap.set(heroTargets, heroFromVars);
+  if (hasHero) gsap.set(heroTargets, heroFromVars);
   if (heroSubTargets.length) gsap.set(heroSubTargets, { yPercent: 120 });
   if (heroBadgeTargets.length) gsap.set(heroBadgeTargets, { yPercent: 120 });
   if (heroChip) gsap.set(heroChip, { scale: 0, opacity: 0 });
@@ -920,7 +944,7 @@
     const tl = gsap.timeline();
     // the phone lands first, headline rises up behind the hand
     if (heroPhone) tl.to(heroPhone, { opacity: 1, y: 0, rotation: 0, scale: 1, duration: 1.2, ease: 'power3.out' });
-    tl.to(heroTargets,
+    if (hasHero) tl.to(heroTargets,
       isTranslated
         ? { y: 0, opacity: 1, duration: 1, stagger: .14, ease: 'power4.out' }
         : { yPercent: 0, duration: 1.1, stagger: .022, ease: 'power4.out' }, heroPhone ? '-=.75' : 0);
@@ -963,10 +987,16 @@
   const isMobile = innerWidth < 900;
   function orbTo(vals, trigger) {
     if (!document.querySelector(trigger)) return;
+    // one choreography, both renderers: the WebGL orb reads orbState, the
+    // Canvas2D net takes the same values through its own setState
+    const apply = () => {
+      Object.assign(orbState, vals);
+      if (window.__netField) window.__netField.setState(vals);
+    };
     ScrollTrigger.create({
       trigger, start: 'top 60%', end: 'bottom 40%',
-      onEnter: () => Object.assign(orbState, vals),
-      onEnterBack: () => Object.assign(orbState, vals),
+      onEnter: apply,
+      onEnterBack: apply,
     });
   }
   Object.assign(orbState, { x: 0, y: 0, scale: 1, amp: .35, alpha: .55 });
@@ -1187,8 +1217,11 @@
     ScrollTrigger.create({ trigger: row, start: 'top 74%', once: true, onEnter: () => tl.play() });
   });
 
-  /* ───────── generic reveals ───────── */
-  gsap.utils.toArray('.section-kicker, .features-title, .pricing h2, .price-card, .steps-head, .exploded-head, .reviews-title, .review-card, .qr-box').forEach(el => {
+  /* ───────── generic reveals ─────────
+     The editorial routes ride the same engine, so their below-fold blocks join
+     the list. The blog feature card and article hero image stay out: they are the
+     LCP candidates and must not be held behind an opacity tween. */
+  gsap.utils.toArray('.section-kicker, .features-title, .pricing h2, .price-card, .steps-head, .exploded-head, .reviews-title, .review-card, .qr-box, .blog-categories, .blog-editorial-cta, .blog-related-card').forEach(el => {
     REVEALS.push(gsap.from(el, {
       y: 40, opacity: 0, duration: .9, ease: 'power3.out',
       scrollTrigger: { trigger: el, start: 'top 90%' },
@@ -1196,17 +1229,19 @@
   });
 
   /* ───────── CTA reveal ───────── */
-  gsap.set(ctaTargets, isTranslated ? { y: 46, opacity: 0 } : { yPercent: 110 });
-  const ctaTween = gsap.to(ctaTargets,
-    isTranslated
-      ? { y: 0, opacity: 1, duration: 1, stagger: .14, ease: 'power4.out', paused: true }
-      : { yPercent: 0, duration: 1, stagger: .015, ease: 'power4.out', paused: true });
-  REVEALS.push(ctaTween);
-  ScrollTrigger.create({
-    trigger: '#cta', start: 'top 65%',
-    onEnter: () => ctaTween.play(),
-    once: true,
-  });
+  if (hasCta) {
+    gsap.set(ctaTargets, isTranslated ? { y: 46, opacity: 0 } : { yPercent: 110 });
+    const ctaTween = gsap.to(ctaTargets,
+      isTranslated
+        ? { y: 0, opacity: 1, duration: 1, stagger: .14, ease: 'power4.out', paused: true }
+        : { yPercent: 0, duration: 1, stagger: .015, ease: 'power4.out', paused: true });
+    REVEALS.push(ctaTween);
+    ScrollTrigger.create({
+      trigger: '#cta', start: 'top 65%',
+      onEnter: () => ctaTween.play(),
+      once: true,
+    });
+  }
 
   /* ───────── pricing plan toggle (visual) ─────────
      yearly is the default (lowest rate) and the badge shows what the
@@ -1302,16 +1337,20 @@
         e.preventDefault();
         completeAllReveals();
         // re-measure before scrolling, then correct on arrival — completing
-        // the reveals shifts positions after the target was computed
-        ScrollTrigger.refresh();
-        lenis.scrollTo(id, {
-          offset: 0, duration: 1,
-          onComplete() {
-            const el = document.querySelector(id);
-            if (el && Math.abs(el.getBoundingClientRect().top) > 4) {
-              lenis.scrollTo(id, { offset: 0, duration: .35 });
-            }
-          },
+        // the reveals shifts positions after the target was computed. The
+        // refresh waits for the next frame so the click itself never has to
+        // pay for a synchronous layout pass.
+        requestAnimationFrame(() => {
+          ScrollTrigger.refresh();
+          lenis.scrollTo(id, {
+            offset: 0, duration: 1,
+            onComplete() {
+              const el = document.querySelector(id);
+              if (el && Math.abs(el.getBoundingClientRect().top) > 4) {
+                lenis.scrollTo(id, { offset: 0, duration: .35 });
+              }
+            },
+          });
         });
       } else {
         // placeholder links ("#") must never yank the page to the top

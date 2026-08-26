@@ -278,6 +278,26 @@
     });
   }
 
+  /* In-page anchors glide instead of snapping, matching the cinematic runtime.
+     The article page registers its own capture-phase handler for TOC links and
+     stops propagation, so it still wins where it needs to. */
+  const anchorMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  document.querySelectorAll('a[href^="#"]').forEach(link => {
+    link.addEventListener('click', event => {
+      const selector = link.getAttribute('href');
+      if (selector === '#') {
+        // a placeholder link must never yank the page to the top
+        event.preventDefault();
+        return;
+      }
+      const target = selector ? document.querySelector(selector) : null;
+      if (!target) return;
+      event.preventDefault();
+      target.scrollIntoView({ behavior: anchorMotion.matches ? 'auto' : 'smooth', block: 'start' });
+      history.replaceState(null, '', selector);
+    });
+  });
+
   const items = Array.from(document.querySelectorAll('.step-item'));
   const screens = Array.from(document.querySelectorAll('.step-video'));
   const dots = Array.from(document.querySelectorAll('.steps-dots button'));
@@ -308,6 +328,39 @@
     }, { threshold: .2 }).observe(steps);
   }
 
+  /* Same per-section background choreography the cinematic runtime applies, so the
+     net changes scale and energy as you scroll on touch layouts too. */
+  if (window.__netField && 'IntersectionObserver' in window) {
+    const scenes = new Map();
+    const netObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        const values = scenes.get(entry.target);
+        if (values) window.__netField.setState(values);
+      });
+      // matches the cinematic engine's `start: top 60%` / `end: bottom 40%` band
+    }, { rootMargin: '-40% 0px -40% 0px', threshold: 0 });
+    [
+      ['#hero', { scale: 1, amp: .35, alpha: .55 }],
+      ['#statement', { scale: 1.3, amp: .6, alpha: .5 }],
+      ['.languages', { scale: .85, amp: .3, alpha: .35 }],
+      ['#steps', { scale: .7, amp: .5, alpha: .4 }],
+      ['#inside', { scale: .7, amp: .4, alpha: .35 }],
+      ['#features', { scale: .75, amp: .3, alpha: .3 }],
+      ['#pricing', { scale: 1, amp: .45, alpha: .45 }],
+      ['.blog-index-shell', { scale: 1.15, amp: .35, alpha: .45 }],
+      ['.blog-article-layout', { scale: 1.1, amp: .28, alpha: .34 }],
+      ['.blog-related', { scale: .9, amp: .35, alpha: .4 }],
+      ['.blog-editorial-cta', { scale: 1.35, amp: .6, alpha: .6 }],
+      ['#cta', { scale: 1.6, amp: .85, alpha: .8 }],
+    ].forEach(([selector, values]) => {
+      document.querySelectorAll(selector).forEach(node => {
+        scenes.set(node, values);
+        netObserver.observe(node);
+      });
+    });
+  }
+
   /* Lightweight equivalents of the homepage's visible motion language. */
   if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     const animateIn = (element, delay = 0, distance = 34, fade = true) => {
@@ -333,18 +386,22 @@
       animateIn(element, 230 + index * 100, 28);
     });
 
+    /* The blog feature card and article hero image are LCP candidates, so they are
+       not in this list — fading them in would postpone the largest paint. */
     const revealSelector = [
       '.section-kicker', '.features-title', '.pricing h2', '.steps-head',
       '.exploded-head', '.reviews-title', '.review-card', '.qr-box',
-      '.f-card', '.sig-row', '.i-row', '.blog-editorial-cta',
+      '.f-card', '.sig-row', '.i-row',
+      '.blog-categories', '.blog-editorial-cta', '.blog-related-card',
     ].join(',');
     if ('IntersectionObserver' in window) {
       const revealObserver = new IntersectionObserver(entries => {
         entries.forEach(entry => {
           if (!entry.isIntersecting) return;
-          entry.target.querySelectorAll(revealSelector).forEach((element, index) => {
-            animateIn(element, Math.min(index, 5) * 55, 30);
-          });
+          // a section can itself be one of the reveal targets (the editorial CTA is)
+          const targets = entry.target.matches(revealSelector) ? [entry.target] : [];
+          entry.target.querySelectorAll(revealSelector).forEach(element => targets.push(element));
+          targets.forEach((element, index) => animateIn(element, Math.min(index, 5) * 55, 30));
           revealObserver.unobserve(entry.target);
         });
       }, { rootMargin: '0px 0px -8% 0px', threshold: .08 });
