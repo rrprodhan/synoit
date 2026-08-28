@@ -1,0 +1,108 @@
+---
+import { services } from '@/data/services';
+import '../styles/synova.css';
+---
+
+<div class="synova" data-synova-root data-knowledge-url="/synova-knowledge.json">
+  <button
+    class="synova__launcher"
+    type="button"
+    aria-label="Open Synova, the SynoIT website assistant"
+    aria-controls="synova-panel"
+    aria-expanded="false"
+    data-synova-launcher
+  >
+    <span class="synova__launcher-hint" aria-hidden="true"><strong>Ask Synova</strong><small>How can we help?</small></span>
+    <span class="synova__launcher-icon" aria-hidden="true">
+      <svg viewBox="0 0 32 32" fill="none"><path d="M8.2 7.2h15.6a4 4 0 0 1 4 4v8.5a4 4 0 0 1-4 4h-8.3L9.3 28v-4.3H8.2a4 4 0 0 1-4-4v-8.5a4 4 0 0 1 4-4Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="m18.8 10.2.7 2.1 2.1.7-2.1.7-.7 2.1-.7-2.1-2.1-.7 2.1-.7.7-2.1Z" fill="currentColor"/><path d="M10 18.8h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      <span></span>
+    </span>
+  </button>
+
+  <section
+    class="synova__panel"
+    id="synova-panel"
+    role="dialog"
+    aria-modal="false"
+    aria-labelledby="synova-title"
+    aria-describedby="synova-description"
+    tabindex="-1"
+    hidden
+    data-synova-panel
+  >
+    <header class="synova__header">
+      <div class="synova__identity">
+        <span class="synova__avatar" aria-hidden="true"><img src="/media/brand/synoit-logo-64.webp" width="42" height="42" alt="" decoding="async" /></span>
+        <span><strong id="synova-title">Synova</strong><small><i aria-hidden="true"></i> SynoIT website assistant</small></span>
+      </div>
+      <div class="synova__header-actions">
+        <button type="button" class="synova__icon-button" aria-label="Turn Synova voice off" aria-pressed="false" data-synova-voice>
+          <svg class="synova__voice-on" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M11 5 6.8 8.5H3.5v7h3.3L11 19V5Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M15 9a4.3 4.3 0 0 1 0 6M17.8 6.5a7.7 7.7 0 0 1 0 11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          <svg class="synova__voice-off" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M11 5 6.8 8.5H3.5v7h3.3L11 19V5Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="m16 10 5 5m0-5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </button>
+        <button type="button" class="synova__icon-button" aria-label="Close Synova" data-synova-close>
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 12h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <p class="synova__sr-only" id="synova-description">Ask about SynoIT services, technologies, industries, pricing, delivery, or contact options.</p>
+
+    <div class="synova__conversation" data-synova-conversation>
+      <div class="synova__messages" role="log" aria-live="polite" aria-relevant="additions" data-synova-messages>
+        <article class="synova__message synova__message--assistant">
+          <span class="synova__message-avatar" aria-hidden="true">S</span>
+          <div><p>Hi, I’m Synova. I can help you explore SynoIT’s services, technologies, industry experience, pricing, and the best next step for your idea. What are you planning?</p></div>
+        </article>
+      </div>
+
+      <div class="synova__starters" data-synova-starters>
+        <p>Popular questions</p>
+        <div>
+          <button type="button" data-synova-query="What services do you offer?">Explore services</button>
+          <button type="button" data-synova-query="Which technologies do you use?">Technology stack</button>
+          <button type="button" data-synova-query="Which industries do you support?">Industry experience</button>
+          <button type="button" data-synova-query="How much does a project cost?">Pricing &amp; estimates</button>
+        </div>
+      </div>
+
+      <button class="synova__contact-cta" type="button" data-synova-show-contact>
+        <span><strong>Need a tailored answer?</strong><small>Send the team a short project brief.</small></span>
+        <span aria-hidden="true">↗</span>
+      </button>
+    </div>
+
+    <div class="synova__contact" data-synova-contact hidden>
+      <button class="synova__back" type="button" data-synova-contact-back><span aria-hidden="true">←</span> Back to chat</button>
+      <div class="synova__contact-heading">
+        <span>CONTACT A SPECIALIST</span>
+        <h2>Tell us what you’re planning.</h2>
+        <p>Your details stay in this browser. Submitting prepares a message in your email app.</p>
+      </div>
+      <form data-synova-contact-form>
+        <div class="synova__field-row">
+          <label><span>Name</span><input name="name" autocomplete="name" maxlength="80" required placeholder="Your name" /></label>
+          <label><span>Work email</span><input name="email" type="email" autocomplete="email" inputmode="email" maxlength="120" required placeholder="you@company.com" /></label>
+        </div>
+        <label><span>Company <em>(optional)</em></span><input name="company" autocomplete="organization" maxlength="100" placeholder="Company name" /></label>
+        <label><span>Service interest</span><select name="service"><option value="Not sure yet">Not sure yet</option>{services.map((service) => <option value={service.shortTitle}>{service.shortTitle}</option>)}</select></label>
+        <label><span>Project or question</span><textarea name="message" rows="4" minlength="10" maxlength="1200" required placeholder="Goal, current situation, timeline, and anything we should know..."></textarea></label>
+        <button class="synova__submit" type="submit"><span>Prepare email</span><span aria-hidden="true">↗</span></button>
+        <a class="synova__whatsapp" href="https://wa.me/6582034346?text=Hi%20SynoIT%2C%20I%27d%20like%20to%20discuss%20a%20project." target="_blank" rel="noopener">Prefer WhatsApp? Message the team</a>
+      </form>
+    </div>
+
+    <form class="synova__composer" data-synova-composer>
+      <label class="synova__sr-only" for="synova-input">Ask Synova a question</label>
+      <input id="synova-input" name="query" type="text" enterkeyhint="send" autocomplete="off" maxlength="360" placeholder="Ask about a service or idea…" data-synova-input />
+      <button type="submit" aria-label="Send question">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m4 4 16 8-16 8 3-8-3-8Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M7 12h13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </form>
+    <p class="synova__note">Website-based guidance · Project details are confirmed by a SynoIT specialist.</p>
+  </section>
+</div>
+
+<script>
+  import '../scripts/synova-chat';
+</script>
