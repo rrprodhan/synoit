@@ -781,6 +781,13 @@ section { position:relative; z-index:2; }
   opacity:0; transition:opacity .6s;
 }
 .step-video.is-active { opacity:1; }
+.steps:not(.service-steps) .step-video {
+  inset:0;
+  width:100%; height:100%;
+  left:0; top:0;
+  object-fit:cover;
+  transform:scale(1.01);
+}
 
 /* ─────────── inside: connected engineering rows ───────────
    compact, viewport-scaled sizing so the whole section (head + all 4 rows,

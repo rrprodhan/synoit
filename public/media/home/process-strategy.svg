@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 490 1010" role="img" aria-labelledby="title desc">
+  <title id="title">Strategy and scope roadmap</title>
+  <desc id="desc">A mobile roadmap showing architecture, priorities, and sprint scope flowing toward delivery.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="490" y2="1010" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#111827"/>
+      <stop offset=".46" stop-color="#130f1d"/>
+      <stop offset="1" stop-color="#0b1218"/>
+    </linearGradient>
+    <linearGradient id="line" x1="108" y1="214" x2="382" y2="795" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ff8a22"/>
+      <stop offset=".5" stop-color="#9a8afb"/>
+      <stop offset="1" stop-color="#26d9d0"/>
+    </linearGradient>
+    <filter id="glow" x="-35%" y="-35%" width="170%" height="170%">
+      <feGaussianBlur stdDeviation="7" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <rect width="490" height="1010" rx="78" fill="url(#bg)"/>
+  <g font-family="Inter,Segoe UI,Arial,sans-serif" fill="#fff">
+    <text x="72" y="130" font-size="22" font-weight="700" letter-spacing="4" opacity=".58">STRATEGY</text>
+    <text x="72" y="168" font-size="34" font-weight="700">Roadmap</text>
+  </g>
+  <path d="M245 230v550" fill="none" stroke="url(#line)" stroke-width="8" stroke-linecap="round" filter="url(#glow)"/>
+  <g>
+    <circle cx="245" cy="250" r="24" fill="#ff8a22"/>
+    <circle cx="245" cy="430" r="24" fill="#9a8afb"/>
+    <circle cx="245" cy="610" r="24" fill="#26d9d0"/>
+    <circle cx="245" cy="790" r="24" fill="#ff4fd8"/>
+  </g>
+  <g fill="#fff" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="18" font-weight="650">
+    <text x="92" y="256">Scope</text>
+    <text x="292" y="436">Architecture</text>
+    <text x="105" y="616">Sprint plan</text>
+    <text x="292" y="796">Launch path</text>
+  </g>
+  <g fill="none" stroke="#fff" stroke-opacity=".12">
+    <rect x="58" y="214" width="148" height="72" rx="22"/>
+    <rect x="284" y="394" width="148" height="72" rx="22"/>
+    <rect x="58" y="574" width="148" height="72" rx="22"/>
+    <rect x="284" y="754" width="148" height="72" rx="22"/>
+  </g>
+  <g fill="#fff" opacity=".18">
+    <rect x="82" y="878" width="326" height="12" rx="6"/>
+    <rect x="82" y="912" width="250" height="12" rx="6"/>
+    <rect x="82" y="946" width="286" height="12" rx="6"/>
+  </g>
+</svg>
