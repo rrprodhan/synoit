@@ -8,7 +8,7 @@ const { compact = false, showRole = false } = Astro.props;
 ---
 
 <div class:list={["blog-author", { "blog-author--compact": compact }]}>
-  <img src="/favicon.svg" width="52" height="52" alt="" aria-hidden="true" />
+  <img src="/media/brand/synoit-logo-64.webp" width="52" height="52" alt="" aria-hidden="true" loading="lazy" decoding="async" />
   <span>
     <strong>SynoIT Editorial Team</strong>
     {showRole && <small>Digital product engineering</small>}

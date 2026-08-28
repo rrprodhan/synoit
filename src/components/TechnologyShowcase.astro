@@ -1,6 +1,7 @@
 ---
 import { technologyShowcase, technologyTabs } from '@/data/technologyShowcase';
 
+const logoFor = (name: string) => `/media/technologies/${name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}.svg`;
 const panels = technologyTabs.map((tab) => ({
   tab,
   id: `tech-tab-${tab.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`,
@@ -38,7 +39,7 @@ const panels = technologyTabs.map((tab) => ({
             <div class="tech-showcase__track">
               {[...firstRow, ...firstRow].map((item, index) => (
                 <article class="tech-card" aria-hidden={index >= firstRow.length ? 'true' : undefined}>
-                  <span class="tech-card__icon" style={`--tech-color:${item.color}`}>{item.glyph}</span>
+                  <span class="tech-card__icon" style={`--tech-color:${item.color}`}><img src={logoFor(item.name)} width="56" height="56" alt="" decoding="async" /></span>
                   <h3>{item.name}</h3>
                 </article>
               ))}
@@ -48,7 +49,7 @@ const panels = technologyTabs.map((tab) => ({
             <div class="tech-showcase__track">
               {[...fallbackSecondRow, ...fallbackSecondRow].map((item, index) => (
                 <article class="tech-card" aria-hidden={index >= fallbackSecondRow.length ? 'true' : undefined}>
-                  <span class="tech-card__icon" style={`--tech-color:${item.color}`}>{item.glyph}</span>
+                  <span class="tech-card__icon" style={`--tech-color:${item.color}`}><img src={logoFor(item.name)} width="56" height="56" alt="" decoding="async" /></span>
                   <h3>{item.name}</h3>
                 </article>
               ))}

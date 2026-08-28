@@ -107,22 +107,20 @@ const serviceIcons: Record<string, typeof Monitor> = {
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={imageUrl} />
-    <link rel="icon" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     {schema && <script type="application/ld+json" set:html={JSON.stringify(schema)} />}
     <style is:global>
       /* Only image-dependent pieces are replaced. The design rules above are
          loaded verbatim from the supplied reference stylesheet. */
       .brand-mark,
       .visual-mark {
-        display:grid;
-        place-items:center;
-        color:#fff;
-        font-weight:700;
-        background:linear-gradient(145deg,#bca9ff 0%,#8f7bf7 45%,#6a4ee8 100%);
+        display:block;
+        object-fit:cover;
       }
       .nav-logo .brand-mark { width:30px; height:30px; border-radius:9px; box-shadow:0 0 22px rgba(154,138,251,.45); }
       .brand-mark { animation:markBreath 3.6s ease-in-out infinite; }
-      .app-chip .visual-mark { width:52%; aspect-ratio:1; background:none; font-size:clamp(25px,4vw,52px); animation:logoBreath 3.6s ease-in-out infinite; }
       .hero-phone { width:clamp(175px,24vh,240px); aspect-ratio:.72; margin:-28px auto -30px; }
       .hero-device {
         width:100%; height:100%; padding:11px; border-radius:46px;
@@ -192,7 +190,7 @@ const serviceIcons: Record<string, typeof Monitor> = {
     <div class="cursor" id="cursor" aria-hidden="true"><span class="cursor-ring"></span><span class="cursor-dot"></span></div>
 
     <nav class="nav" id="nav" aria-label="Primary navigation">
-      <a href="/" class="nav-logo" aria-label="SynoIT home"><span class="brand-mark" aria-hidden="true">S</span><span>SynoIT</span></a>
+      <a href="/" class="nav-logo" aria-label="SynoIT home"><img class="brand-mark" src="/media/brand/synoit-logo-64.webp" width="30" height="30" alt="" aria-hidden="true" decoding="async" /><span>SynoIT</span></a>
       {effects === 'lean' ? (
         <div class="nav-right">
           <a href="/" class="nav-link">Home</a>
