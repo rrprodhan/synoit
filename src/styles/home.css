@@ -984,6 +984,16 @@ section { position:relative; z-index:2; }
   background:rgba(234,234,240,.05); color:var(--text);
   padding:14px 15px; outline:none; transition:border-color .25s, background .25s, box-shadow .25s;
 }
+.field select {
+  color-scheme:dark;
+  appearance:none;
+  padding-right:46px;
+  background-color:rgba(24,22,31,.92);
+  background-image:linear-gradient(45deg,transparent 50%,#cfc8ff 50%),linear-gradient(135deg,#cfc8ff 50%,transparent 50%),linear-gradient(135deg,rgba(154,138,251,.18),rgba(204,51,102,.08));
+  background-position:calc(100% - 24px) 50%,calc(100% - 17px) 50%,0 0;
+  background-size:7px 7px,7px 7px,100% 100%;
+  background-repeat:no-repeat;
+}
 .field textarea { resize:vertical; min-height:150px; }
 .field input:focus,
 .field select:focus,
@@ -993,7 +1003,11 @@ section { position:relative; z-index:2; }
   box-shadow:0 0 0 4px rgba(154,138,251,.12);
 }
 .field ::placeholder { color:rgba(194,188,210,.55); }
-.field option { color:#110f14; }
+.field option,
+.field optgroup {
+  color:#f4f2f8;
+  background:#18161f;
+}
 .contact-form .btn-primary { border:0; cursor:pointer; }
 .contact-cards {
   grid-template-columns:1fr;
