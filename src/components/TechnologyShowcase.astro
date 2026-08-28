@@ -1,0 +1,61 @@
+---
+import { technologyShowcase, technologyTabs } from '@/data/technologyShowcase';
+
+const panels = technologyTabs.map((tab) => ({
+  tab,
+  id: `tech-tab-${tab.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`,
+  items: tab === 'All' ? technologyShowcase : technologyShowcase.filter((item) => item.category === tab)
+}));
+---
+
+<section class="tech-showcase" id="technologies" aria-labelledby="tech-showcase-title">
+  <div class="tech-showcase__head">
+    <div>
+      <p class="section-kicker tech-showcase__kicker">TECHNOLOGIES</p>
+      <h2 id="tech-showcase-title">Technologies <span>We Trust and Use</span></h2>
+    </div>
+    <p>Leveraging modern frameworks, cloud platforms, and AI technologies to build secure, scalable, and future-ready digital products.</p>
+  </div>
+
+  <div class="tech-showcase__tabs" aria-label="Technology categories">
+    {panels.map((panel, index) => (
+      <>
+        <input id={panel.id} type="radio" name="tech-filter" checked={index === 0} />
+        <label for={panel.id}>{panel.tab}</label>
+      </>
+    ))}
+  </div>
+
+  <div class="tech-showcase__panels">
+    {panels.map((panel) => {
+      const midpoint = Math.ceil(panel.items.length / 2);
+      const firstRow = panel.items.slice(0, midpoint);
+      const secondRow = panel.items.slice(midpoint);
+      const fallbackSecondRow = secondRow.length ? secondRow : firstRow;
+      return (
+        <div class="tech-showcase__panel" data-panel={panel.id}>
+          <div class="tech-showcase__marquee" aria-label={`${panel.tab} technologies moving right to left`}>
+            <div class="tech-showcase__track">
+              {[...firstRow, ...firstRow].map((item, index) => (
+                <article class="tech-card" aria-hidden={index >= firstRow.length ? 'true' : undefined}>
+                  <span class="tech-card__icon" style={`--tech-color:${item.color}`}>{item.glyph}</span>
+                  <h3>{item.name}</h3>
+                </article>
+              ))}
+            </div>
+          </div>
+          <div class="tech-showcase__marquee tech-showcase__marquee--reverse" aria-label={`${panel.tab} technologies moving left to right`}>
+            <div class="tech-showcase__track">
+              {[...fallbackSecondRow, ...fallbackSecondRow].map((item, index) => (
+                <article class="tech-card" aria-hidden={index >= fallbackSecondRow.length ? 'true' : undefined}>
+                  <span class="tech-card__icon" style={`--tech-color:${item.color}`}>{item.glyph}</span>
+                  <h3>{item.name}</h3>
+                </article>
+              ))}
+            </div>
+          </div>
+        </div>
+      );
+    })}
+  </div>
+</section>
