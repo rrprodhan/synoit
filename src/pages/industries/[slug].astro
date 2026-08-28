@@ -1,0 +1,28 @@
+---
+import HomeLayout from '@/layouts/HomeLayout.astro';
+import DirectoryDetail from '@/components/DirectoryDetail.astro';
+import { industries } from '@/data/directories';
+
+export function getStaticPaths() {
+  return industries.map((item) => ({
+    params: { slug: item.slug },
+    props: { item }
+  }));
+}
+
+const { item } = Astro.props;
+const related = industries.filter((entry) => entry.slug !== item.slug);
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: item.shortTitle,
+  provider: { '@type': 'Organization', name: 'SynoIT', url: 'https://synoit.com/' },
+  areaServed: item.category,
+  description: item.description,
+  url: `https://synoit.com/industries/${item.slug}/`
+};
+---
+
+<HomeLayout title={`${item.shortTitle} | SynoIT Industries`} description={item.description} canonical={`/industries/${item.slug}/`} schema={schema}>
+  <DirectoryDetail item={item} eyebrow="INDUSTRY" indexHref="/industries/" indexLabel="Industries" related={related} />
+</HomeLayout>

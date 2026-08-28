@@ -1,0 +1,14 @@
+---
+import HomeLayout from '@/layouts/HomeLayout.astro';
+import StudioPage from '@/components/StudioPage.astro';
+
+const points = [
+  { title: 'Qualified introductions', text: 'Introduce founders, teams, or businesses that need design, development, AI, SEO, or dedicated delivery support.' },
+  { title: 'Clear communication', text: 'We confirm fit, scope, timing, and next steps transparently so everyone understands the opportunity.' },
+  { title: 'Long-term relationships', text: 'Our referral approach is built around trust, useful outcomes, and partnerships that can grow over time.' }
+];
+---
+
+<HomeLayout title="Referral Program | SynoIT" description="Refer teams to SynoIT for design, development, AI automation, SEO, branding, and dedicated delivery support." canonical="/referral-program/">
+  <StudioPage eyebrow="REFERRAL PROGRAM" title="Refer a team that needs reliable digital delivery." description="If you know a business planning a website, app, automation workflow, brand refresh, or growth program, SynoIT can help them shape the right next step." points={points} cta="Send a referral" />
+</HomeLayout>

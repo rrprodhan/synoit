@@ -1,0 +1,95 @@
+---
+import HomeConnector from '@/components/HomeConnector.astro';
+import HeroNet from '@/components/HeroNet.astro';
+import type { DirectoryItem } from '@/data/directories';
+
+interface Props {
+  item: DirectoryItem;
+  eyebrow: string;
+  indexHref: string;
+  indexLabel: string;
+  related: DirectoryItem[];
+}
+
+const { item, eyebrow, indexHref, indexLabel, related } = Astro.props;
+const steps = [
+  ['Discover', 'Map the business goal, users, risks, and operational constraints.'],
+  ['Design', 'Shape the user journey, content hierarchy, and interface system.'],
+  ['Build', 'Implement the experience with clean code, QA, and integration support.'],
+  ['Improve', 'Measure performance, learn from usage, and evolve the roadmap.']
+];
+---
+
+<main id="main" class="service-page">
+  <section class="hero service-hero" id="hero">
+    <div class="hero-content">
+      <p class="section-kicker service-kicker">{eyebrow}</p>
+      <h1 class="hero-title"><span class="line" data-split>{item.title}</span></h1>
+      <p class="hero-sub reveal-line"><span>{item.description}</span></p>
+      <div class="hero-badges reveal-line">
+        <span class="badges-wrap">
+          <a href="/contact/" class="store-btn"><span class="service-icon">↗</span><span><small>START A PROJECT</small><b>Talk to SynoIT</b></span></a>
+          <a href={indexHref} class="store-btn"><span class="service-icon">✦</span><span><small>EXPLORE MORE</small><b>{indexLabel}</b></span></a>
+        </span>
+      </div>
+    </div>
+    <HeroNet />
+  </section>
+
+  <HomeConnector />
+
+  <section class="statement service-statement" id="statement">
+    <div class="statement-pin" id="statementPin">
+      <svg class="net statement-net" viewBox="0 0 100 100" preserveAspectRatio="none" fill="none"><path class="spine" data-sdraw d="M50,0 V16" /><path data-sdraw d="M50,16 H84 Q90,16 90,22 V78 Q90,84 84,84 H16 Q10,84 10,78 V22 Q10,16 16,16 H50" /><path class="spine" data-sdraw d="M50,84 V100" /><path class="s-pulse" d="M50,16 H84 Q90,16 90,22 V78 Q90,84 84,84 H16 Q10,84 10,78 V22 Q10,16 16,16 H50" /><path class="s-pulse" d="M50,16 H84 Q90,16 90,22 V78 Q90,84 84,84 H16 Q10,84 10,78 V22 Q10,16 16,16 H50" /></svg>
+      <p class="statement-text" id="statementText">{item.proof}</p>
+    </div>
+  </section>
+
+  <HomeConnector flip />
+
+  <section class="features service-deliverables" id="features">
+    <div class="edge-glow left"></div><div class="edge-glow right"></div>
+    <h2 class="features-title">What SynoIT can deliver <span class="dim">for {item.shortTitle}</span></h2>
+    <div class="service-grid">
+      {item.deliverables.map((deliverable, index) => (
+        <article class="f-card service-card">
+          <span class="service-icon">{String(index + 1).padStart(2, '0')}</span>
+          <div><h3>{deliverable}</h3><p>Planned, designed, implemented, and checked as part of a connected delivery workflow.</p></div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <HomeConnector />
+
+  <section class="steps service-steps" id="steps">
+    <div class="steps-pin" id="stepsPin">
+      <div class="steps-head"><p class="section-kicker">DELIVERY MODEL</p><h2>One connected process<br />from idea to launch</h2></div>
+      <div class="steps-body"><div class="steps-text"><div class="steps-rail"><div class="steps-rail-fill" id="stepsRailFill"></div><div class="steps-rail-dot" id="stepsRailDot"></div></div><div class="steps-counter"><span id="stepsCounterNum">01</span><span class="steps-counter-total"> / 04</span></div><div class="steps-dots" role="tablist" aria-label={`${item.shortTitle} delivery steps`}>{steps.map((_, index) => <button type="button" role="tab" class:list={{ 'is-active': index === 0 }} aria-label={`Step ${index + 1}`} aria-selected={index === 0 ? 'true' : 'false'}>{String(index + 1).padStart(2, '0')}</button>)}</div>{steps.map(([title, text], index) => <div class:list={['step-item', { 'is-active': index === 0 }]}><div class="step-num">{String(index + 1).padStart(2, '0')}</div><h3>{title}</h3><p>{text}</p><div class="step-line"><div class="step-line-fill"></div></div></div>)}</div><div class="steps-phone"><div class="phone-glow"></div><div class="phone-frame">{steps.map(([title], index) => <div class:list={['step-video', { 'is-active': index === 0 }]}><strong>{item.category}</strong><b>{title}</b><span></span><span></span><span></span></div>)}</div></div></div>
+    </div>
+  </section>
+
+  <HomeConnector flip />
+
+  <section class="signature service-outcomes" id="inside">
+    <p class="section-kicker">OUTCOMES</p>
+    <h2 class="sig-title">Built for <span class="dim">measurable progress</span></h2>
+    <div class="service-grid compact">
+      {item.outcomes.map((outcome, index) => <article class="review-card"><span class="review-stars">{String(index + 1).padStart(2, '0')}</span><blockquote>{outcome}</blockquote><figcaption>{item.shortTitle}</figcaption></article>)}
+    </div>
+  </section>
+
+  <HomeConnector />
+
+  <section class="languages" aria-label={`Related ${indexLabel}`}>
+    <p class="section-kicker">RELATED {indexLabel.toUpperCase()}</p>
+    <div class="marquee"><div class="service-marquee-track">{related.map((entry) => <a class="lang-chip" href={`${indexHref}${entry.slug}/`}>{entry.shortTitle}</a>)}{related.map((entry) => <a class="lang-chip" href={`${indexHref}${entry.slug}/`} aria-hidden="true" tabindex="-1">{entry.shortTitle}</a>)}</div></div>
+  </section>
+
+  <HomeConnector />
+
+  <section class="cta" id="cta">
+    <h2 class="cta-title"><span class="line" data-split>Have a {item.shortTitle} project?</span>{' '}<span class="line accent" data-split>Let’s shape the right plan.</span></h2>
+    <div class="hero-badges"><span class="badges-wrap"><a href="/contact/" class="store-btn"><span class="service-icon">↗</span><span><small>REQUEST SCOPE</small><b>Get a free quote</b></span></a><a href="https://wa.me/6582034346" target="_blank" rel="noopener" class="store-btn"><span class="service-icon">✦</span><span><small>TALK NOW</small><b>Chat with our team</b></span></a></span></div>
+  </section>
+</main>

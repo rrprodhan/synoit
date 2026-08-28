@@ -1,5 +1,6 @@
 ---
 import { categories, services } from '@/data/services';
+import { industryGroups, technologyGroups } from '@/data/directories';
 const year = new Date().getFullYear();
 const byCategory = categories.map((category) => ({
   category,
@@ -34,6 +35,13 @@ const byCategory = categories.map((category) => ({
 
       <nav class="site-footer__nav" aria-label="Footer navigation">
         <div>
+          <h3>Our Services</h3>
+          <a href="/services/web-design/">Design</a>
+          <a href="/services/web-development/">Development</a>
+          <a href="/services/ai-automation/">AI Services</a>
+          <a href="/services/seo/">Digital Marketing</a>
+        </div>
+        <div>
           <h3>Explore</h3>
           <a href="/">Home</a>
           <a href="/projects/">Projects</a>
@@ -43,20 +51,16 @@ const byCategory = categories.map((category) => ({
         <div>
           <h3>Resources</h3>
           <a href="/blog/">Blog</a>
+          <a href="/open-source/">Open Source</a>
+          <a href="/referral-program/">Referral Program</a>
           <a href="/templates/">Templates</a>
           <a href="/contact/">Contact</a>
-        </div>
-        <div>
-          <h3>Capabilities</h3>
-          {byCategory.map((group) => (
-            <a href={`/services/${group.items[0]?.slug}/`}>{group.category}</a>
-          ))}
         </div>
       </nav>
     </div>
 
     <details class="site-footer__directory">
-      <summary><span>Explore all services</span><span aria-hidden="true">+</span></summary>
+      <summary><span>Show all services</span><span aria-hidden="true">+</span></summary>
       <div class="site-footer__services">
         {byCategory.map((group) => (
           <div>
@@ -67,9 +71,34 @@ const byCategory = categories.map((category) => ({
       </div>
     </details>
 
+    <details class="site-footer__directory">
+      <summary><span>Show all technologies</span><span aria-hidden="true">+</span></summary>
+      <div class="site-footer__services">
+        {technologyGroups.map((group) => (
+          <div>
+            <h3>{group.category}</h3>
+            {group.items.map((item) => <a href={`/technologies/${item.slug}/`}>{item.shortTitle}</a>)}
+          </div>
+        ))}
+      </div>
+    </details>
+
+    <details class="site-footer__directory">
+      <summary><span>Show all industries</span><span aria-hidden="true">+</span></summary>
+      <div class="site-footer__services">
+        {industryGroups.map((group) => (
+          <div>
+            <h3>{group.category}</h3>
+            {group.items.map((item) => <a href={`/industries/${item.slug}/`}>{item.shortTitle}</a>)}
+          </div>
+        ))}
+      </div>
+    </details>
+
     <div class="site-footer__bottom">
       <span>© {year} SynoIT. All rights reserved.</span>
       <span>Singapore HQ · Bangladesh Hub · Global delivery</span>
+      <span class="site-footer__legal"><a href="/terms-and-conditions/">Terms and Conditions</a><a href="/privacy-policy/">Privacy Policy</a></span>
       <a href="#main">Back to top <span aria-hidden="true">↑</span></a>
     </div>
   </div>
@@ -241,6 +270,7 @@ const byCategory = categories.map((category) => ({
   }
   .site-footer__bottom a { display:inline-flex; align-items:center; gap:8px; color:#bdb7c8; text-decoration:none; }
   .site-footer__bottom a:hover { color:#fff; }
+  .site-footer__legal { display:inline-flex; flex-wrap:wrap; gap:14px; }
   @media (max-width:900px) {
     .site-footer__cta { align-items:flex-start; flex-direction:column; }
     .site-footer__main { grid-template-columns:1fr; }
@@ -259,5 +289,6 @@ const byCategory = categories.map((category) => ({
     .site-footer__proof span { min-height:58px; }
     .site-footer__services { grid-template-columns:1fr; }
     .site-footer__bottom { align-items:flex-start; flex-direction:column; }
+    .site-footer__legal { gap:10px 14px; }
   }
 </style>

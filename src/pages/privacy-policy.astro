@@ -1,0 +1,15 @@
+---
+import HomeLayout from '@/layouts/HomeLayout.astro';
+import StudioPage from '@/components/StudioPage.astro';
+
+const points = [
+  { title: 'Information we receive', text: 'We may receive contact details, project notes, business information, and communication history when you submit a form, email us, or discuss a project.' },
+  { title: 'How we use it', text: 'We use information to respond to enquiries, scope work, deliver services, improve communication, and maintain secure business operations.' },
+  { title: 'Your choices', text: 'You can contact SynoIT to request updates, corrections, or deletion of personal information where applicable.' },
+  { title: 'Data care', text: 'We apply reasonable security practices and limit access to people who need the information for project or business purposes.' }
+];
+---
+
+<HomeLayout title="Privacy Policy | SynoIT" description="Read how SynoIT handles project enquiries, contact information, and business communication data." canonical="/privacy-policy/">
+  <StudioPage eyebrow="PRIVACY POLICY" title="Privacy handled with care and clarity." description="This page summarizes how SynoIT treats information shared through enquiries, project conversations, and service delivery. For formal legal review, contact our team." points={points} />
+</HomeLayout>

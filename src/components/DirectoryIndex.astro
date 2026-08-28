@@ -1,0 +1,93 @@
+---
+import HomeConnector from '@/components/HomeConnector.astro';
+import HeroNet from '@/components/HeroNet.astro';
+import type { DirectoryItem } from '@/data/directories';
+
+interface Props {
+  title: string;
+  eyebrow: string;
+  description: string;
+  groups: { category: string; items: DirectoryItem[] }[];
+  basePath: string;
+  kind: string;
+}
+
+const { title, eyebrow, description, groups, basePath, kind } = Astro.props;
+const allItems = groups.flatMap((group) => group.items);
+const focusLabel = kind === 'technologies' ? 'technology' : 'industry';
+---
+
+<main id="main" class="service-page">
+  <section class="hero service-hero" id="hero">
+    <div class="hero-content">
+      <p class="section-kicker service-kicker">{eyebrow}</p>
+      <h1 class="hero-title"><span class="line" data-split>{title}</span></h1>
+      <p class="hero-sub reveal-line"><span>{description}</span></p>
+      <div class="hero-badges reveal-line">
+        <span class="badges-wrap">
+          <a href="/contact/" class="store-btn"><span class="service-icon">↗</span><span><small>PLAN A PROJECT</small><b>Talk to SynoIT</b></span></a>
+          <a href="/pricing/" class="store-btn"><span class="service-icon">✦</span><span><small>SEE ENGAGEMENTS</small><b>View pricing</b></span></a>
+        </span>
+      </div>
+    </div>
+    <HeroNet />
+  </section>
+
+  <HomeConnector />
+
+  <section class="features service-deliverables" id="features">
+    <div class="edge-glow left"></div><div class="edge-glow right"></div>
+    <h2 class="features-title">Explore SynoIT {kind} <span class="dim">by category</span></h2>
+    <div class="service-grid">
+      {groups.map((group, index) => (
+        <article class="f-card service-card">
+          <span class="service-icon">{String(index + 1).padStart(2, '0')}</span>
+          <div>
+            <h3>{group.category}</h3>
+            <p>{group.items.map((item) => item.shortTitle).slice(0, 4).join(' · ')}</p>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <HomeConnector />
+
+  <section class="signature service-outcomes" id="inside">
+    <p class="section-kicker">FULL DIRECTORY</p>
+    <h2 class="sig-title">Pages for every <span class="dim">{focusLabel} focus</span></h2>
+    {groups.map((group) => (
+      <div class="directory-cluster">
+        <h3>{group.category}</h3>
+        <div class="sig-services" aria-label={`${group.category} ${kind}`}>
+          {group.items.map((item, index) => <a href={`${basePath}${item.slug}/`}><span>{String(index + 1).padStart(2, '0')}</span><strong>{item.shortTitle}</strong></a>)}
+        </div>
+      </div>
+    ))}
+  </section>
+
+  <HomeConnector />
+
+  <section class="languages" aria-label={`All SynoIT ${kind}`}>
+    <p class="section-kicker">{allItems.length} {kind.toUpperCase()} · ONE DELIVERY TEAM</p>
+    <div class="marquee"><div class="service-marquee-track">{allItems.map((item) => <a class="lang-chip" href={`${basePath}${item.slug}/`}>{item.shortTitle}</a>)}{allItems.map((item) => <a class="lang-chip" href={`${basePath}${item.slug}/`} aria-hidden="true" tabindex="-1">{item.shortTitle}</a>)}</div></div>
+  </section>
+
+  <HomeConnector />
+
+  <section class="cta" id="cta">
+    <h2 class="cta-title"><span class="line" data-split>Need a mix of {kind}?</span>{' '}<span class="line accent" data-split>We’ll connect the right team.</span></h2>
+    <div class="hero-badges"><span class="badges-wrap"><a href="/contact/" class="store-btn"><span class="service-icon">↗</span><span><small>START PLANNING</small><b>Get a free quote</b></span></a><a href="/dedicated-team/" class="store-btn"><span class="service-icon">✦</span><span><small>EXTEND YOUR TEAM</small><b>Dedicated specialists</b></span></a></span></div>
+  </section>
+</main>
+
+<style>
+  .directory-cluster { margin-top:clamp(34px,5vw,64px); }
+  .directory-cluster h3 {
+    margin:0 0 18px;
+    color:var(--muted);
+    font-size:clamp(20px,3vw,34px);
+    font-weight:600;
+    letter-spacing:-.03em;
+  }
+</style>

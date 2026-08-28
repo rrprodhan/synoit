@@ -1,0 +1,28 @@
+---
+import HomeLayout from '@/layouts/HomeLayout.astro';
+import DirectoryIndex from '@/components/DirectoryIndex.astro';
+import { technologies, technologyGroups } from '@/data/directories';
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: 'SynoIT technologies',
+  url: 'https://synoit.com/technologies/',
+  hasPart: technologies.map((item) => ({
+    '@type': 'WebPage',
+    name: item.shortTitle,
+    url: `https://synoit.com/technologies/${item.slug}/`
+  }))
+};
+---
+
+<HomeLayout title="Technologies | SynoIT" description="Explore the technologies SynoIT uses to design, build, launch, and scale websites, apps, CMS platforms, cloud systems, and mobile products." canonical="/technologies/" schema={schema}>
+  <DirectoryIndex
+    title="Technologies SynoIT builds with."
+    eyebrow="TECHNOLOGIES"
+    description="A practical stack for fast websites, scalable applications, content systems, cloud infrastructure, and cross-platform mobile products."
+    groups={technologyGroups}
+    basePath="/technologies/"
+    kind="technologies"
+  />
+</HomeLayout>

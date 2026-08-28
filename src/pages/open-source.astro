@@ -1,0 +1,14 @@
+---
+import HomeLayout from '@/layouts/HomeLayout.astro';
+import StudioPage from '@/components/StudioPage.astro';
+
+const points = [
+  { title: 'Reusable foundations', text: 'We favor maintainable patterns, documented components, and practical internal tooling that can be reused across projects.' },
+  { title: 'Transparent engineering', text: 'When a project benefits from open tooling, we help shape repositories, documentation, contribution flows, and release hygiene.' },
+  { title: 'Client ownership', text: 'SynoIT delivery is built so your team can understand, extend, and operate the systems after launch.' }
+];
+---
+
+<HomeLayout title="Open Source | SynoIT" description="SynoIT uses open, maintainable engineering practices to help teams build reusable, documented, and extensible digital products." canonical="/open-source/">
+  <StudioPage eyebrow="OPEN SOURCE" title="Open engineering that teams can build on." description="Our work is grounded in maintainable systems, clear documentation, reusable components, and practical handoff so digital products stay useful after launch." points={points} />
+</HomeLayout>

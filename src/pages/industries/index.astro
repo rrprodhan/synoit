@@ -1,0 +1,28 @@
+---
+import HomeLayout from '@/layouts/HomeLayout.astro';
+import DirectoryIndex from '@/components/DirectoryIndex.astro';
+import { industries, industryGroups } from '@/data/directories';
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: 'SynoIT industries',
+  url: 'https://synoit.com/industries/',
+  hasPart: industries.map((item) => ({
+    '@type': 'WebPage',
+    name: item.shortTitle,
+    url: `https://synoit.com/industries/${item.slug}/`
+  }))
+};
+---
+
+<HomeLayout title="Industries | SynoIT" description="Explore how SynoIT supports healthcare, education, finance, logistics, and AI-focused organizations with design, development, automation, and growth services." canonical="/industries/" schema={schema}>
+  <DirectoryIndex
+    title="Industries SynoIT helps move forward."
+    eyebrow="INDUSTRIES"
+    description="Focused design, development, AI, and growth support for healthcare, education, finance, logistics, and automation-heavy teams."
+    groups={industryGroups}
+    basePath="/industries/"
+    kind="industries"
+  />
+</HomeLayout>

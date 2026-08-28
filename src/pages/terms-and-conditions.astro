@@ -1,0 +1,15 @@
+---
+import HomeLayout from '@/layouts/HomeLayout.astro';
+import StudioPage from '@/components/StudioPage.astro';
+
+const points = [
+  { title: 'Project scope', text: 'Each engagement is defined by agreed goals, deliverables, timelines, responsibilities, and commercial terms before production work begins.' },
+  { title: 'Collaboration', text: 'Clients provide timely feedback, access, content, approvals, and business context so SynoIT can deliver work efficiently.' },
+  { title: 'Ownership', text: 'Final ownership, licensing, and usage rights are confirmed in the project proposal or agreement for each engagement.' },
+  { title: 'Service changes', text: 'If project needs change, SynoIT will review impact on scope, budget, timeline, and delivery priorities before proceeding.' }
+];
+---
+
+<HomeLayout title="Terms and Conditions | SynoIT" description="Review SynoIT engagement terms for scope, collaboration, ownership, and service changes." canonical="/terms-and-conditions/">
+  <StudioPage eyebrow="TERMS" title="Clear terms for focused collaboration." description="This page gives a plain-language overview of how SynoIT structures engagements. Formal terms are confirmed in each project proposal or agreement." points={points} />
+</HomeLayout>

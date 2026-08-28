@@ -1,0 +1,48 @@
+---
+import HomeConnector from '@/components/HomeConnector.astro';
+import HeroNet from '@/components/HeroNet.astro';
+
+interface Props {
+  eyebrow: string;
+  title: string;
+  description: string;
+  points: { title: string; text: string }[];
+  cta?: string;
+}
+
+const { eyebrow, title, description, points, cta = 'Talk to SynoIT' } = Astro.props;
+---
+
+<main id="main" class="service-page">
+  <section class="hero service-hero" id="hero">
+    <div class="hero-content">
+      <p class="section-kicker service-kicker">{eyebrow}</p>
+      <h1 class="hero-title"><span class="line" data-split>{title}</span></h1>
+      <p class="hero-sub reveal-line"><span>{description}</span></p>
+      <div class="hero-badges reveal-line"><span class="badges-wrap"><a href="/contact/" class="store-btn"><span class="service-icon">↗</span><span><small>CONTACT US</small><b>{cta}</b></span></a><a href="/services/web-development/" class="store-btn"><span class="service-icon">✦</span><span><small>EXPLORE SERVICES</small><b>See our work model</b></span></a></span></div>
+    </div>
+    <HeroNet />
+  </section>
+
+  <HomeConnector />
+
+  <section class="features service-deliverables" id="features">
+    <div class="edge-glow left"></div><div class="edge-glow right"></div>
+    <h2 class="features-title">{title} <span class="dim">at SynoIT</span></h2>
+    <div class="service-grid">
+      {points.map((point, index) => (
+        <article class="f-card service-card">
+          <span class="service-icon">{String(index + 1).padStart(2, '0')}</span>
+          <div><h3>{point.title}</h3><p>{point.text}</p></div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <HomeConnector />
+
+  <section class="cta" id="cta">
+    <h2 class="cta-title"><span class="line" data-split>Need a clear next step?</span>{' '}<span class="line accent" data-split>We’ll help you shape it.</span></h2>
+    <div class="hero-badges"><span class="badges-wrap"><a href="/contact/" class="store-btn"><span class="service-icon">↗</span><span><small>START NOW</small><b>Get a free quote</b></span></a><a href="https://wa.me/6582034346" target="_blank" rel="noopener" class="store-btn"><span class="service-icon">✦</span><span><small>CHAT WITH US</small><b>WhatsApp SynoIT</b></span></a></span></div>
+  </section>
+</main>
