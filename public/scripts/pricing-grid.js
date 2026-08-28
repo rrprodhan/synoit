@@ -11,8 +11,10 @@
 
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
     const hoverInput = window.matchMedia('(hover: hover) and (pointer: fine)');
+    const mobileViewport = window.matchMedia('(max-width: 767px)');
     let activeIndex = Math.max(0, cards.findIndex(card => card.classList.contains('is-active')));
     let gridInView = false;
+    let mobileScrollFrame = 0;
     const optionFor = card => card.querySelector('[data-pricing-select]');
 
     function closeTooltips(except) {
@@ -73,6 +75,43 @@
       if (focus) optionFor(cards[index])?.focus({ preventScroll: true });
     }
 
+    function activateFocusedMobileCard() {
+      mobileScrollFrame = 0;
+      if (!mobileViewport.matches || !gridInView) return;
+
+      const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+      const viewportCenter = viewportHeight / 2;
+      let closestIndex = activeIndex;
+      let closestDistance = Number.POSITIVE_INFINITY;
+
+      cards.forEach((card, index) => {
+        const rect = card.getBoundingClientRect();
+        const visibleTop = Math.max(0, rect.top);
+        const visibleBottom = Math.min(viewportHeight, rect.bottom);
+        const visibleHeight = Math.max(0, visibleBottom - visibleTop);
+        if (visibleHeight <= 0) return;
+
+        const cardCenter = rect.top + rect.height / 2;
+        const distance = Math.abs(cardCenter - viewportCenter);
+        if (distance < closestDistance) {
+          closestDistance = distance;
+          closestIndex = index;
+        }
+      });
+
+      if (closestIndex !== activeIndex) {
+        closeTooltips();
+        commitActive(closestIndex);
+      } else {
+        syncMedia();
+      }
+    }
+
+    function scheduleMobileFocusCheck() {
+      if (mobileScrollFrame) return;
+      mobileScrollFrame = window.requestAnimationFrame(activateFocusedMobileCard);
+    }
+
     cards.forEach((card, index) => {
       const option = optionFor(card);
 
@@ -122,7 +161,11 @@
       });
     });
 
-    window.addEventListener('resize', closeTooltips, { passive: true });
+    window.addEventListener('scroll', scheduleMobileFocusCheck, { passive: true });
+    window.addEventListener('resize', () => {
+      closeTooltips();
+      scheduleMobileFocusCheck();
+    }, { passive: true });
     document.addEventListener('click', event => {
       if (!grid.contains(event.target)) closeTooltips();
     });
@@ -136,6 +179,7 @@
         gridInView = entries.some(entry => entry.isIntersecting);
         if (gridInView) ensureSurfaces();
         syncMedia();
+        scheduleMobileFocusCheck();
       }, { rootMargin: '240px 0px' }).observe(grid);
 
       const fontObserver = new IntersectionObserver(entries => {
@@ -148,9 +192,12 @@
       gridInView = true;
       ensureSurfaces();
       grid.classList.add('is-font-ready');
+      scheduleMobileFocusCheck();
     }
 
+    mobileViewport.addEventListener?.('change', scheduleMobileFocusCheck);
     commitActive(activeIndex);
+    scheduleMobileFocusCheck();
   }
 
   const grids = Array.from(document.querySelectorAll('[data-pricing-grid]'));
