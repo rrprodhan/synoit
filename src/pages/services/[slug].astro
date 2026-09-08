@@ -1,4 +1,5 @@
 ---
+import StepsPhone from '@/components/StepsPhone.astro';
 import HomeLayout from '@/layouts/HomeLayout.astro';
 import HomeConnector from '@/components/HomeConnector.astro';
 import HeroNet from '@/components/HeroNet.astro';
@@ -19,10 +20,10 @@ const schema = {
   '@type': 'Service',
   name: `${service.shortTitle} by SynoIT`,
   description: service.description,
-  provider: { '@type': 'Organization', name: 'SynoIT', url: 'https://synoit.com/' },
+  provider: { '@type': 'Organization', name: 'SynoIT', url: 'https://www.synoit.com/' },
   areaServed: 'Worldwide',
-  serviceType: service.category,
-  url: `https://synoit.com/services/${service.slug}/`
+  serviceType: service.shortTitle,
+  url: `https://www.synoit.com/services/${service.slug}/`
 };
 ---
 
@@ -35,7 +36,7 @@ const schema = {
         <p class="hero-sub reveal-line"><span>{service.description}</span></p>
         <div class="hero-badges reveal-line">
           <span class="badges-wrap">
-            <a href="mailto:support@synoit.com" class="store-btn"><span class="service-icon">↗</span><span><small>START THIS SERVICE</small><b>Get a free quote</b></span></a>
+            <a href={`/contact/?service=${encodeURIComponent(service.shortTitle)}#features`} class="store-btn"><span class="service-icon">↗</span><span><small>START THIS SERVICE</small><b>Get a free quote</b></span></a>
             <a href="/pricing/" class="store-btn"><span class="service-icon">✦</span><span><small>PLAN THE SCOPE</small><b>View engagement tiers</b></span></a>
           </span>
         </div>
@@ -79,6 +80,12 @@ const schema = {
 
     <HomeConnector />
 
+    {service.details && <section class="signature service-outcomes" aria-labelledby="service-details-title">
+      <p class="section-kicker">SCOPE AND USE CASES</p>
+      <h2 class="sig-title" id="service-details-title">What can {service.shortTitle.toLowerCase()} include?</h2>
+      <div class="service-grid compact">{service.details.map((detail) => <article class="review-card"><h3>{detail.title}</h3><p>{detail.text}</p></article>)}</div>
+    </section>}
+
     <section class="steps service-steps" id="steps">
       <div class="steps-pin" id="stepsPin">
         <div class="steps-head">
@@ -90,7 +97,7 @@ const schema = {
             <div class="steps-rail"><div class="steps-rail-fill" id="stepsRailFill"></div><div class="steps-rail-dot" id="stepsRailDot"></div></div>
             <div class="steps-counter"><span id="stepsCounterNum">01</span><span class="steps-counter-total"> / 04</span></div>
             <div class="steps-dots" id="stepsDots" role="tablist" aria-label={`${service.shortTitle} process steps`}>
-              {process.map((_, index) => <button type="button" role="tab" data-step={index} class:list={{ 'is-active': index === 0 }} aria-label={`Step ${index + 1}`} aria-selected={index === 0 ? 'true' : 'false'}>{String(index + 1).padStart(2, '0')}</button>)}
+              {process.map((_, index) => <button type="button" role="tab" data-step={index} class:list={{ 'is-active': index === 0 }} aria-label={`${String(index + 1).padStart(2, '0')} — Step ${index + 1}`} aria-selected={index === 0 ? 'true' : 'false'}>{String(index + 1).padStart(2, '0')}</button>)}
             </div>
             {process.map((step, index) => (
               <div class:list={['step-item', { 'is-active': index === 0 }]} data-step={index}>
@@ -101,18 +108,7 @@ const schema = {
               </div>
             ))}
           </div>
-          <div class="steps-phone">
-            <div class="phone-glow"></div>
-            <div class="phone-frame">
-              {process.map((step, index) => (
-                <div class:list={['step-video', { 'is-active': index === 0 }]} aria-label={`${service.shortTitle} step ${index + 1}`}>
-                  <strong>SYNOIT SERVICE</strong>
-                  <b>{step.title}</b>
-                  <span></span><span></span><span></span>
-                </div>
-              ))}
-            </div>
-          </div>
+          <StepsPhone steps={process} label={service.shortTitle} />
         </div>
       </div>
     </section>
@@ -166,7 +162,7 @@ const schema = {
       <h2 class="cta-title"><span class="line" data-split>Ready to move on {service.shortTitle}?</span>{' '}<span class="line accent" data-split>SynoIT can take it from strategy to launch.</span></h2>
       <div class="hero-badges">
         <span class="badges-wrap">
-          <a href="mailto:support@synoit.com" class="store-btn"><span class="service-icon">↗</span><span><small>START A PROJECT</small><b>Get a free quote</b></span></a>
+          <a href={`/contact/?service=${encodeURIComponent(service.shortTitle)}#features`} class="store-btn"><span class="service-icon">↗</span><span><small>START A PROJECT</small><b>Get a free quote</b></span></a>
           <a href="https://wa.me/6582034346" target="_blank" rel="noopener" class="store-btn"><span class="service-icon">✦</span><span><small>TALK THROUGH YOUR IDEA</small><b>Chat with our team</b></span></a>
         </span>
       </div>

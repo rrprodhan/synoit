@@ -1,0 +1,457 @@
+[
+  {
+    "file": "dist/index.html",
+    "h1Count": 1,
+    "title": "Landing Pages, Portfolio Websites &amp; AI Automation | SynoIT",
+    "description": "SynoIT builds landing pages, portfolio websites and AI automations for small businesses. Launch your website or simplify repetitive work. Request a quote.",
+    "canonical": "https://www.synoit.com/"
+  },
+  {
+    "file": "dist/contact/index.html",
+    "h1Count": 1,
+    "title": "Contact SynoIT | Start Your Digital Project",
+    "description": "Request a quote for landing page development, a portfolio website or AI business automation. Share your requirements with SynoIT by email or WhatsApp.",
+    "canonical": "https://www.synoit.com/contact/"
+  },
+  {
+    "file": "dist/dedicated-team/index.html",
+    "h1Count": 1,
+    "title": "Dedicated Team | SynoIT Managed Product and Engineering Teams",
+    "description": "Scale development capacity with a hand-picked, fully managed SynoIT dedicated team for design, engineering, QA, AI, DevOps, and product delivery.",
+    "canonical": "https://www.synoit.com/dedicated-team/"
+  },
+  {
+    "file": "dist/templates/index.html",
+    "h1Count": 1,
+    "title": "Templates | SynoIT Digital Project Planning Resources",
+    "description": "Use SynoIT templates for project briefs, website launches, AI automation planning, SEO content strategy, UX audits, and digital product delivery.",
+    "canonical": "https://www.synoit.com/templates/"
+  },
+  {
+    "file": "dist/blog/index.html",
+    "h1Count": 1,
+    "title": "SynoIT Blog | Practical Product, CMS and Engineering Insights",
+    "description": "Read practical SynoIT guidance on headless CMS architecture, product engineering, design systems, AI, SEO, and sustainable digital growth.",
+    "canonical": "https://www.synoit.com/blog/"
+  },
+  {
+    "file": "dist/projects/index.html",
+    "h1Count": 1,
+    "title": "Projects | SynoIT Digital Product Portfolio",
+    "description": "Explore SynoIT projects across web development, design, mobile apps, ecommerce, AI automation, SEO, and digital growth.",
+    "canonical": "https://www.synoit.com/projects/"
+  },
+  {
+    "file": "dist/technologies/index.html",
+    "h1Count": 1,
+    "title": "Technologies | SynoIT",
+    "description": "Explore the technologies SynoIT uses to design, build, launch, and scale websites, apps, CMS platforms, cloud systems, and mobile products.",
+    "canonical": "https://www.synoit.com/technologies/"
+  },
+  {
+    "file": "dist/privacy-policy/index.html",
+    "h1Count": 1,
+    "title": "Privacy Policy | SynoIT",
+    "description": "Read how SynoIT handles project enquiries, contact information, and business communication data.",
+    "canonical": "https://www.synoit.com/privacy-policy/"
+  },
+  {
+    "file": "dist/referral-program/index.html",
+    "h1Count": 1,
+    "title": "Referral Program | SynoIT",
+    "description": "Refer teams to SynoIT for design, development, AI automation, SEO, branding, and dedicated delivery support.",
+    "canonical": "https://www.synoit.com/referral-program/"
+  },
+  {
+    "file": "dist/open-source/index.html",
+    "h1Count": 1,
+    "title": "Open Source | SynoIT",
+    "description": "SynoIT uses open, maintainable engineering practices to help teams build reusable, documented, and extensible digital products.",
+    "canonical": "https://www.synoit.com/open-source/"
+  },
+  {
+    "file": "dist/pricing/index.html",
+    "h1Count": 1,
+    "title": "Pricing | SynoIT Project Estimator",
+    "description": "Estimate SynoIT project timelines and engagement tiers for websites, apps, AI systems, SEO, branding, and dedicated teams.",
+    "canonical": "https://www.synoit.com/pricing/"
+  },
+  {
+    "file": "dist/terms-and-conditions/index.html",
+    "h1Count": 1,
+    "title": "Terms and Conditions | SynoIT",
+    "description": "Review SynoIT engagement terms for scope, collaboration, ownership, and service changes.",
+    "canonical": "https://www.synoit.com/terms-and-conditions/"
+  },
+  {
+    "file": "dist/industries/index.html",
+    "h1Count": 1,
+    "title": "Industries | SynoIT",
+    "description": "Explore how SynoIT supports healthcare, education, finance, logistics, and AI-focused organizations with design, development, automation, and growth services.",
+    "canonical": "https://www.synoit.com/industries/"
+  },
+  {
+    "file": "dist/services/ai-saas/index.html",
+    "h1Count": 1,
+    "title": "AI SaaS | SynoIT",
+    "description": "We help founders and businesses design, develop, and scale AI-powered SaaS products with strong UX, secure architecture, and growth-ready foundations.",
+    "canonical": "https://www.synoit.com/services/ai-saas/"
+  },
+  {
+    "file": "dist/services/social-media-marketing/index.html",
+    "h1Count": 1,
+    "title": "Social Media Marketing | SynoIT",
+    "description": "SynoIT creates story-led social media strategies that grow your visibility, strengthen community trust, and generate measurable business outcomes across the platforms your audience uses every day.",
+    "canonical": "https://www.synoit.com/services/social-media-marketing/"
+  },
+  {
+    "file": "dist/services/mvp-development/index.html",
+    "h1Count": 1,
+    "title": "MVP Development | SynoIT",
+    "description": "SynoIT helps startups and product teams build MVPs that prove demand quickly. We focus on core functionality, rapid delivery, and real user feedback to reduce risk before scaling.",
+    "canonical": "https://www.synoit.com/services/mvp-development/"
+  },
+  {
+    "file": "dist/services/cms-development/index.html",
+    "h1Count": 1,
+    "title": "CMS Development | SynoIT",
+    "description": "SynoIT builds custom CMS solutions for growing businesses that need speed, flexibility, and control. We design editor-friendly workflows so marketing and content teams can publish without engineering bottlenecks.",
+    "canonical": "https://www.synoit.com/services/cms-development/"
+  },
+  {
+    "file": "dist/services/software-development/index.html",
+    "h1Count": 1,
+    "title": "Software Development | SynoIT",
+    "description": "SynoIT designs and develops custom software products that solve operational challenges, improve team productivity, and accelerate business growth. We cover product strategy, engineering, integration, and long-term support.",
+    "canonical": "https://www.synoit.com/services/software-development/"
+  },
+  {
+    "file": "dist/services/mobile-app-design/index.html",
+    "h1Count": 1,
+    "title": "Mobile App Design | SynoIT",
+    "description": "SynoIT designs high-impact mobile interfaces for iOS and Android products. We focus on usability, visual clarity, and behavior-driven UX so your app feels intuitive from first tap.",
+    "canonical": "https://www.synoit.com/services/mobile-app-design/"
+  },
+  {
+    "file": "dist/services/landing-page-design/index.html",
+    "h1Count": 1,
+    "title": "Landing Page Design &amp; Development | SynoIT",
+    "description": "Custom landing page design and development for small businesses: mobile-friendly pages, clear offers, enquiry forms, analytics and launch support.",
+    "canonical": "https://www.synoit.com/services/landing-page-design/"
+  },
+  {
+    "file": "dist/services/seo/index.html",
+    "h1Count": 1,
+    "title": "Search Engine Optimization | SynoIT",
+    "description": "SynoIT delivers growth-focused SEO strategies for businesses and agencies. We combine technical SEO, content optimization, authority building, and AI-search visibility to increase qualified traffic, leads, and sales.",
+    "canonical": "https://www.synoit.com/services/seo/"
+  },
+  {
+    "file": "dist/services/product-audit/index.html",
+    "h1Count": 1,
+    "title": "Product Audit | SynoIT",
+    "description": "SynoIT runs structured UX and product audits to uncover usability blockers, conversion leaks, and technical friction. We translate findings into a practical improvement roadmap your team can execute.",
+    "canonical": "https://www.synoit.com/services/product-audit/"
+  },
+  {
+    "file": "dist/services/cloud-app-development/index.html",
+    "h1Count": 1,
+    "title": "Cloud App Development | SynoIT",
+    "description": "SynoIT engineers cloud-native applications that are secure, scalable, and ready for real-world traffic. We combine modern architecture, automation, and observability to help teams ship faster with confidence.",
+    "canonical": "https://www.synoit.com/services/cloud-app-development/"
+  },
+  {
+    "file": "dist/services/mobile-app-development/index.html",
+    "h1Count": 1,
+    "title": "Mobile App Development | SynoIT",
+    "description": "SynoIT builds high-performance mobile products for startups and enterprises. From MVP launches to large-scale platforms, we deliver smooth UX, reliable architecture, and scalable backend connectivity.",
+    "canonical": "https://www.synoit.com/services/mobile-app-development/"
+  },
+  {
+    "file": "dist/services/chatbot-development/index.html",
+    "h1Count": 1,
+    "title": "Chatbot Development | SynoIT",
+    "description": "SynoIT builds conversational AI solutions for customer support, lead qualification, and workflow automation. We design bot journeys that feel natural while delivering measurable business outcomes.",
+    "canonical": "https://www.synoit.com/services/chatbot-development/"
+  },
+  {
+    "file": "dist/services/webflow-development/index.html",
+    "h1Count": 1,
+    "title": "Webflow Development | SynoIT",
+    "description": "SynoIT helps brands move from static pages to dynamic Webflow experiences. We combine conversion-focused design, clean CMS structure, and performance-ready builds for marketing and growth teams.",
+    "canonical": "https://www.synoit.com/services/webflow-development/"
+  },
+  {
+    "file": "dist/services/web-design/index.html",
+    "h1Count": 1,
+    "title": "Web Design | SynoIT",
+    "description": "At SynoIT, we design strategic, conversion-focused websites for startups, SMEs, and growing brands. Every page is built to strengthen trust, communicate value clearly, and move visitors toward action.",
+    "canonical": "https://www.synoit.com/services/web-design/"
+  },
+  {
+    "file": "dist/services/rebranding/index.html",
+    "h1Count": 1,
+    "title": "Rebranding | SynoIT",
+    "description": "SynoIT helps growing companies refresh brand identity without losing core equity. We align positioning, messaging, and visual language so your brand matches where your business is going next.",
+    "canonical": "https://www.synoit.com/services/rebranding/"
+  },
+  {
+    "file": "dist/services/ai-agent/index.html",
+    "h1Count": 1,
+    "title": "AI Agent Development | SynoIT",
+    "description": "We build intelligent AI agents for sales, support, operations, and internal productivity with secure data handling and human-in-the-loop control.",
+    "canonical": "https://www.synoit.com/services/ai-agent/"
+  },
+  {
+    "file": "dist/services/pitch-deck-design/index.html",
+    "h1Count": 1,
+    "title": "Pitch Deck Design | SynoIT",
+    "description": "SynoIT designs pitch decks that transform complex ideas into clear, compelling narratives. We help startups and growth-stage teams present traction, vision, and business potential with confidence.",
+    "canonical": "https://www.synoit.com/services/pitch-deck-design/"
+  },
+  {
+    "file": "dist/services/ai-automation/index.html",
+    "h1Count": 1,
+    "title": "AI Automation | SynoIT",
+    "description": "AI automation for small businesses: connect your tools, route enquiries, draft replies and reduce repetitive admin with approval steps and monitoring.",
+    "canonical": "https://www.synoit.com/services/ai-automation/"
+  },
+  {
+    "file": "dist/services/ai-integration/index.html",
+    "h1Count": 1,
+    "title": "AI Integration | SynoIT",
+    "description": "We integrate AI capabilities into your applications, internal tools, and workflows without disrupting your current architecture.",
+    "canonical": "https://www.synoit.com/services/ai-integration/"
+  },
+  {
+    "file": "dist/services/web-development/index.html",
+    "h1Count": 1,
+    "title": "Web Development | SynoIT",
+    "description": "We design and build high-performance digital products for startups, SMBs, and enterprises. From business websites to complex platforms, SynoIT delivers secure, maintainable, and conversion-focused development.",
+    "canonical": "https://www.synoit.com/services/web-development/"
+  },
+  {
+    "file": "dist/services/portfolio-website-development/index.html",
+    "h1Count": 1,
+    "title": "Portfolio Website Development | SynoIT",
+    "description": "Custom portfolio websites for freelancers, consultants and creatives. Showcase your work with responsive design, case studies, enquiry links and SEO foundations.",
+    "canonical": "https://www.synoit.com/services/portfolio-website-development/"
+  },
+  {
+    "file": "dist/services/branding/index.html",
+    "h1Count": 1,
+    "title": "Branding | SynoIT",
+    "description": "SynoIT helps businesses define positioning, clarify messaging, and create visual systems that scale. We turn fragmented brand assets into a cohesive identity that supports growth.",
+    "canonical": "https://www.synoit.com/services/branding/"
+  },
+  {
+    "file": "dist/services/ui-ux-design/index.html",
+    "h1Count": 1,
+    "title": "UI/UX Design | SynoIT",
+    "description": "We craft intuitive digital experiences for web and mobile products. SynoIT combines UX strategy, modern interface design, and product thinking to help teams reduce friction and improve conversion.",
+    "canonical": "https://www.synoit.com/services/ui-ux-design/"
+  },
+  {
+    "file": "dist/blog/when-to-choose-sanity-cms/index.html",
+    "h1Count": 1,
+    "title": "When to Choose Sanity CMS: Use Cases &amp; Trade-offs | SynoIT",
+    "description": "Learn when to choose Sanity CMS, where it excels, its key trade-offs, and how to evaluate it with a practical decision framework from SynoIT.",
+    "canonical": "https://www.synoit.com/blog/when-to-choose-sanity-cms/"
+  },
+  {
+    "file": "dist/blog/software-development-models/index.html",
+    "h1Count": 1,
+    "title": "Top 5 Essential Software Development Models | SynoIT",
+    "description": "Compare the top 5 essential software development models, from Waterfall and V-model to Iterative, Incremental, and Agile delivery.",
+    "canonical": "https://www.synoit.com/blog/software-development-models/"
+  },
+  {
+    "file": "dist/technologies/vue-js/index.html",
+    "h1Count": 1,
+    "title": "Vue JS | SynoIT Technologies",
+    "description": "We use Vue.js for approachable, polished interfaces where fast iteration, maintainability, and clear component structure matter.",
+    "canonical": "https://www.synoit.com/technologies/vue-js/"
+  },
+  {
+    "file": "dist/technologies/react-native/index.html",
+    "h1Count": 1,
+    "title": "React Native | SynoIT Technologies",
+    "description": "SynoIT builds React Native apps when teams need strong mobile UX, shared delivery across iOS and Android, and backend-connected product features.",
+    "canonical": "https://www.synoit.com/technologies/react-native/"
+  },
+  {
+    "file": "dist/technologies/sanity/index.html",
+    "h1Count": 1,
+    "title": "Sanity | SynoIT Technologies",
+    "description": "SynoIT uses Sanity to build structured content studios for websites, blogs, landing pages, and product content operations.",
+    "canonical": "https://www.synoit.com/technologies/sanity/"
+  },
+  {
+    "file": "dist/technologies/node-js/index.html",
+    "h1Count": 1,
+    "title": "Node.js | SynoIT Technologies",
+    "description": "SynoIT uses Node.js to build APIs, dashboards, integrations, and real-time product features that need speed, flexibility, and maintainable architecture.",
+    "canonical": "https://www.synoit.com/technologies/node-js/"
+  },
+  {
+    "file": "dist/technologies/flutter/index.html",
+    "h1Count": 1,
+    "title": "Flutter | SynoIT Technologies",
+    "description": "We use Flutter for visually consistent mobile apps, prototypes, and cross-platform products that need smooth UI and controlled delivery.",
+    "canonical": "https://www.synoit.com/technologies/flutter/"
+  },
+  {
+    "file": "dist/technologies/react-js/index.html",
+    "h1Count": 1,
+    "title": "React JS | SynoIT Technologies",
+    "description": "We build React applications with reusable components, predictable state, accessible UI, and performance-minded delivery.",
+    "canonical": "https://www.synoit.com/technologies/react-js/"
+  },
+  {
+    "file": "dist/technologies/microsoft-azure/index.html",
+    "h1Count": 1,
+    "title": "Microsoft Azure | SynoIT Technologies",
+    "description": "We help teams use Azure for application hosting, integrations, identity-aware systems, and cloud modernization.",
+    "canonical": "https://www.synoit.com/technologies/microsoft-azure/"
+  },
+  {
+    "file": "dist/technologies/webflow/index.html",
+    "h1Count": 1,
+    "title": "Webflow | SynoIT Technologies",
+    "description": "We build Webflow websites with clean CMS structures, responsive layouts, thoughtful interactions, and launch-ready performance checks.",
+    "canonical": "https://www.synoit.com/technologies/webflow/"
+  },
+  {
+    "file": "dist/technologies/astro/index.html",
+    "h1Count": 1,
+    "title": "Astro | SynoIT Technologies",
+    "description": "SynoIT builds Astro sites for brands that need rich visuals, excellent Lighthouse scores, and content that loads quickly across devices.",
+    "canonical": "https://www.synoit.com/technologies/astro/"
+  },
+  {
+    "file": "dist/technologies/next-js/index.html",
+    "h1Count": 1,
+    "title": "Next JS | SynoIT Technologies",
+    "description": "SynoIT uses Next.js for fast, search-friendly websites, app frontends, landing systems, and hybrid products that need strong content and product performance.",
+    "canonical": "https://www.synoit.com/technologies/next-js/"
+  },
+  {
+    "file": "dist/technologies/aws/index.html",
+    "h1Count": 1,
+    "title": "AWS | SynoIT Technologies",
+    "description": "SynoIT designs and supports AWS-backed applications with deployment automation, observability, security controls, and cost-aware architecture.",
+    "canonical": "https://www.synoit.com/technologies/aws/"
+  },
+  {
+    "file": "dist/technologies/prismic/index.html",
+    "h1Count": 1,
+    "title": "Prismic | SynoIT Technologies",
+    "description": "We shape Prismic content models so marketing teams can publish pages, sections, and campaigns without breaking the design system.",
+    "canonical": "https://www.synoit.com/technologies/prismic/"
+  },
+  {
+    "file": "dist/industries/school-management-software/index.html",
+    "h1Count": 1,
+    "title": "School Management Software | SynoIT Industries",
+    "description": "We create school portals and management tools for admissions, attendance, communications, payments, reporting, and staff workflows.",
+    "canonical": "https://www.synoit.com/industries/school-management-software/"
+  },
+  {
+    "file": "dist/industries/lms-development-services/index.html",
+    "h1Count": 1,
+    "title": "LMS Development Services | SynoIT Industries",
+    "description": "SynoIT builds LMS experiences for courses, cohorts, assessments, certifications, reporting, and internal training programs.",
+    "canonical": "https://www.synoit.com/industries/lms-development-services/"
+  },
+  {
+    "file": "dist/industries/ai-development-services/index.html",
+    "h1Count": 1,
+    "title": "AI Development Services | SynoIT Industries",
+    "description": "We build AI-enabled workflows, assistants, data tools, and product features that help teams move faster while preserving quality control.",
+    "canonical": "https://www.synoit.com/industries/ai-development-services/"
+  },
+  {
+    "file": "dist/industries/payment-integration-services/index.html",
+    "h1Count": 1,
+    "title": "Payment Integration Services | SynoIT Industries",
+    "description": "SynoIT connects payment providers, checkout flows, subscriptions, invoices, and reporting into websites, apps, and internal systems.",
+    "canonical": "https://www.synoit.com/industries/payment-integration-services/"
+  },
+  {
+    "file": "dist/industries/chatgpt-integration/index.html",
+    "h1Count": 1,
+    "title": "ChatGPT Integration | SynoIT Industries",
+    "description": "SynoIT integrates ChatGPT-powered experiences into support flows, internal tools, knowledge bases, onboarding, and product workflows.",
+    "canonical": "https://www.synoit.com/industries/chatgpt-integration/"
+  },
+  {
+    "file": "dist/industries/supply-chain-software-development/index.html",
+    "h1Count": 1,
+    "title": "Supply Chain Software Development | SynoIT Industries",
+    "description": "We help teams build supply-chain dashboards, vendor portals, inventory systems, and integration layers that improve operational visibility.",
+    "canonical": "https://www.synoit.com/industries/supply-chain-software-development/"
+  },
+  {
+    "file": "dist/industries/banking-app-development/index.html",
+    "h1Count": 1,
+    "title": "Banking App Development | SynoIT Industries",
+    "description": "We build digital banking interfaces, account flows, support journeys, and backend-connected mobile or web experiences.",
+    "canonical": "https://www.synoit.com/industries/banking-app-development/"
+  },
+  {
+    "file": "dist/industries/telemedicine-app-development/index.html",
+    "h1Count": 1,
+    "title": "Telemedicine App Development | SynoIT Industries",
+    "description": "SynoIT builds telemedicine experiences for patient intake, appointment booking, video workflows, provider dashboards, and follow-up communication.",
+    "canonical": "https://www.synoit.com/industries/telemedicine-app-development/"
+  },
+  {
+    "file": "dist/industries/healthcare-it-consulting/index.html",
+    "h1Count": 1,
+    "title": "Healthcare IT Consulting | SynoIT Industries",
+    "description": "We help healthcare organizations scope platforms, modernize workflows, evaluate technical risk, and plan digital delivery with practical guardrails.",
+    "canonical": "https://www.synoit.com/industries/healthcare-it-consulting/"
+  },
+  {
+    "file": "dist/industries/logistics-app-development/index.html",
+    "h1Count": 1,
+    "title": "Logistics App Development | SynoIT Industries",
+    "description": "SynoIT creates mobile and web apps for route planning, delivery updates, fleet workflows, inventory visibility, and customer communication.",
+    "canonical": "https://www.synoit.com/industries/logistics-app-development/"
+  },
+  {
+    "file": "dist/industries/financial-software-development/index.html",
+    "h1Count": 1,
+    "title": "Financial Software Development | SynoIT Industries",
+    "description": "SynoIT helps finance teams design and build customer portals, fintech products, dashboards, payment workflows, and internal tools.",
+    "canonical": "https://www.synoit.com/industries/financial-software-development/"
+  },
+  {
+    "file": "dist/industries/education-software-development/index.html",
+    "h1Count": 1,
+    "title": "Education Software Development | SynoIT Industries",
+    "description": "We design and build learning platforms, portals, content systems, and management tools for education providers and training teams.",
+    "canonical": "https://www.synoit.com/industries/education-software-development/"
+  },
+  {
+    "file": "dist/industries/transportation-software-development/index.html",
+    "h1Count": 1,
+    "title": "Transportation Software Development | SynoIT Industries",
+    "description": "We build dispatch tools, logistics portals, delivery dashboards, booking flows, and operational systems for transportation teams.",
+    "canonical": "https://www.synoit.com/industries/transportation-software-development/"
+  },
+  {
+    "file": "dist/industries/healthcare-software-development/index.html",
+    "h1Count": 1,
+    "title": "Healthcare Software Development | SynoIT Industries",
+    "description": "SynoIT helps healthcare teams design and build patient portals, clinical workflows, scheduling systems, telehealth experiences, and secure operational tools.",
+    "canonical": "https://www.synoit.com/industries/healthcare-software-development/"
+  },
+  {
+    "file": "dist/industries/ai-consulting-services/index.html",
+    "h1Count": 1,
+    "title": "AI Consulting Services | SynoIT Industries",
+    "description": "SynoIT helps teams find AI opportunities, evaluate feasibility, define guardrails, and plan automation that fits real business workflows.",
+    "canonical": "https://www.synoit.com/industries/ai-consulting-services/"
+  }
+]

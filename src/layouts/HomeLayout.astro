@@ -52,7 +52,7 @@ const {
   effects = 'full'
 } = Astro.props;
 
-const site = 'https://synoit.com';
+const site = 'https://www.synoit.com';
 const canonicalUrl = new URL(canonical, site).toString();
 const imageUrl = new URL(image, site).toString();
 const byCategory = categories.map((category) => ({
@@ -61,6 +61,7 @@ const byCategory = categories.map((category) => ({
 }));
 const serviceIcons: Record<string, typeof Monitor> = {
   'web-design': Monitor,
+  'portfolio-website-development': PanelsTopLeft,
   'web-development': Globe2,
   'ui-ux-design': Palette,
   'product-audit': ClipboardCheck,
@@ -135,11 +136,7 @@ const serviceIcons: Record<string, typeof Monitor> = {
       }
       .hero-device-screen::before,.device-screen::before { content:'SynoIT'; display:block; color:var(--violet); font-size:17px; font-weight:600; letter-spacing:.08em; }
       .hero-device-screen::after,.device-screen::after { content:''; display:block; height:58%; margin-top:24px; border-radius:24px; background:radial-gradient(circle at 50% 38%,rgba(154,138,251,.55),rgba(154,138,251,.08) 38%,transparent 66%),linear-gradient(160deg,rgba(255,255,255,.08),transparent); border:1px solid var(--line); }
-      .step-video { width:100%; height:100%; left:0; top:0; padding:34px 24px; background:linear-gradient(160deg,#221c3d,#0b0a0e); }
-      .step-video strong { display:block; color:var(--violet); font-size:14px; letter-spacing:.12em; }
-      .step-video b { display:block; margin:28px 0 12px; font-size:28px; }
-      .step-video span { display:block; height:10px; margin-top:14px; border-radius:100px; background:linear-gradient(90deg,rgba(154,138,251,.75),rgba(234,234,240,.07)); }
-      .step-video span:nth-of-type(2) { width:72%; }.step-video span:nth-of-type(3) { width:48%; }
+      .step-video { width:100%; height:100%; left:0; top:0; }
       .store-btn > .service-icon,.imagine-points .point-icon {
         width:44px; height:44px; flex:0 0 44px; display:grid; place-items:center;
         border-radius:13px; color:var(--violet); background:var(--violet-dim);

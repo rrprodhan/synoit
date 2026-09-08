@@ -6,6 +6,7 @@ export interface Service {
   shortTitle: string;
   category: ServiceCategory;
   description: string;
+  details?: { title: string; text: string }[];
   proof: string;
   deliverables: string[];
   processTitle: string;
@@ -15,6 +16,79 @@ export interface Service {
 }
 
 export const services: Service[] = [
+  {
+  "slug": "portfolio-website-development",
+  "title": "Portfolio Website Development for Independent Professionals.",
+  "shortTitle": "Portfolio Website Development",
+  "category": "Development",
+  "description": "Custom portfolio websites for freelancers, consultants and creatives. Showcase your work with responsive design, case studies, enquiry links and SEO foundations.",
+  "proof": "SynoIT builds portfolio websites around your work, the clients you want to attract and a clear way to enquire.",
+  "deliverables": [
+    "Portfolio structure",
+    "Case study layouts",
+    "Responsive development",
+    "Contact and booking links",
+    "SEO foundations",
+    "Launch and handover"
+  ],
+  "details": [
+    {
+      "title": "Present work with context",
+      "text": "Show the brief, your contribution, deliverables and outcomes you can substantiate. We help arrange selected projects into readable case studies."
+    },
+    {
+      "title": "Make enquiries straightforward",
+      "text": "Give prospective clients a clear service summary, contact details and a booking or enquiry path that works on mobile."
+    },
+    {
+      "title": "Choose how you update work",
+      "text": "A simple static portfolio suits occasional edits. A CMS can help if you add projects regularly; the editing workflow is agreed before development."
+    }
+  ],
+  "processTitle": "Our Portfolio Website Process",
+  "process": [
+    {
+      "title": "Plan the portfolio",
+      "text": "Define your audience, services, selected projects and contact goal."
+    },
+    {
+      "title": "Shape the content",
+      "text": "Arrange case studies, biography, images and supported results."
+    },
+    {
+      "title": "Design and develop",
+      "text": "Build responsive layouts and connect agreed contact or editing tools."
+    },
+    {
+      "title": "Review and launch",
+      "text": "Check links, mobile layouts and metadata, then document how to update your work."
+    }
+  ],
+  "outcomes": [
+    "Work explained clearly",
+    "A professional web presence",
+    "Direct enquiry paths",
+    "An agreed editing workflow"
+  ],
+  "faqs": [
+    {
+      "q": "Who is a portfolio website for?",
+      "a": "Freelancers, designers, photographers, consultants and other independent professionals who need a place to show their work and receive enquiries."
+    },
+    {
+      "q": "Can I update my portfolio myself?",
+      "a": "Yes, if your scope includes a CMS. We can also build a simpler static site and agree how future updates will be handled."
+    },
+    {
+      "q": "What do I need before we start?",
+      "a": "Your name or brand, services, selected projects, images you have permission to use, and a contact method. Any client results or testimonials should be approved and verifiable."
+    },
+    {
+      "q": "How much does a portfolio website cost?",
+      "a": "The number of projects, page layouts, CMS needs and integrations determine the scope. Share your examples and requirements for a quote that separates development from recurring hosting or software costs."
+    }
+  ]
+},
   {
     slug: 'web-design',
     title: 'Websites That Look Premium and Convert Better.',
@@ -101,12 +175,18 @@ export const services: Service[] = [
   },
   {
     slug: 'landing-page-design',
-    title: 'High-Converting Landing Pages for Campaign Growth.',
-    shortTitle: 'Landing Page Design',
+    title: 'Landing Page Design & Development for Small Businesses.',
+    shortTitle: 'Landing Page Design & Development',
     category: 'Design',
-    description: 'SynoIT builds strategic landing pages that align offer, audience, and messaging. We focus on clarity, trust signals, and conversion flow to maximize ROI from your paid and organic traffic.',
+    description: 'Custom landing page design and development for small businesses: mobile-friendly pages, clear offers, enquiry forms, analytics and launch support.',
     proof: 'A complete landing-page design service built to support launch speed, message clarity, and conversion performance.',
     deliverables: ['Conversion-Focused Layouts', 'Fast Loading Experience', 'A/B Testing Ready', 'Copy + Visual Direction', 'CTA Optimization', 'Analytics Integration'],
+    details: [
+      { title: 'Offer and page copy', text: 'We structure your offer, audience, benefits, service area and next step around one primary action: an enquiry, booking or purchase.' },
+      { title: 'Responsive development', text: 'Your approved design becomes a working page with layouts reviewed on mobile and desktop, accessible form labels and optimized images.' },
+      { title: 'Enquiry and booking connections', text: 'We can connect a contact form, booking link or CRM after confirming your tools, account access and any third-party costs.' },
+      { title: 'Search and measurement setup', text: 'Page titles, descriptions, crawlable content and agreed analytics events provide a foundation for measuring visits and enquiries.' }
+    ],
     processTitle: 'Our Landing Page Workflow',
     process: [
       { title: 'Campaign Alignment', text: 'Clarify offer, audience, traffic source, and conversion objective.' },
@@ -114,10 +194,12 @@ export const services: Service[] = [
       { title: 'Visual Design', text: 'Create a polished responsive page that builds trust quickly.' },
       { title: 'Launch & Optimize', text: 'Prepare tracking, variants, and improvements based on campaign performance.' }
     ],
-    outcomes: ['Higher campaign clarity', 'Sharper CTAs', 'Testing-ready sections', 'Better paid traffic ROI'],
+    outcomes: ['Higher campaign clarity', 'Sharper CTAs', 'Testing-ready sections', 'Measurable enquiry journeys'],
     faqs: [
       { q: 'Can you write the landing page copy?', a: 'Yes. We align copy and visual hierarchy so each section supports the offer.' },
-      { q: 'Can pages be built after design?', a: 'Yes. SynoIT can design, develop, launch, and optimize the page.' }
+      { q: 'Is development included?', a: 'SynoIT offers design and development together. Your proposal confirms the page scope, form integrations, hosting setup and launch support included.' },
+      { q: 'How much does a landing page cost?', a: 'Pricing depends on content, custom design, integrations and tracking. Send your offer, examples and target launch date for an itemized quote; hosting and paid tools are confirmed separately.' },
+      { q: 'Do I need a landing page or a full website?', a: 'A landing page suits one offer or campaign. A full website is usually a better fit when visitors need separate service pages, a portfolio, company information and ongoing resources.' }
     ]
   },
   {
@@ -311,12 +393,18 @@ export const services: Service[] = [
   },
   {
     slug: 'ai-automation',
-    title: 'Automate Repetitive Work With Practical AI.',
+    title: 'AI Automation Services for Repetitive Business Work.',
     shortTitle: 'AI Automation',
     category: 'AI Services',
-    description: 'We design and deploy AI automation workflows that reduce manual effort, improve speed, and increase operational consistency across your business.',
+    description: 'AI automation for small businesses: connect your tools, route enquiries, draft replies and reduce repetitive admin with approval steps and monitoring.',
     proof: 'End-to-end AI automation capabilities from workflow planning to deployment and optimization.',
     deliverables: ['Workflow Mapping', 'Tool Integration', 'AI Task Handling', 'Routing Logic', 'Approval Workflows', 'Monitoring & Tuning'],
+    details: [
+      { title: 'Lead intake and routing', text: 'Capture enquiries from agreed sources, check required fields and route them to the right person or CRM stage. Keep consent and contact preferences attached to the record.' },
+      { title: 'Support reply drafts', text: 'Use approved business information to draft replies and summarize conversations. Escalate uncertain questions to a person instead of inventing an answer.' },
+      { title: 'Document and admin workflows', text: 'Extract fields from documents, classify incoming requests and prepare summaries. Validate outputs before they update important business records.' },
+      { title: 'Reporting and follow-up reminders', text: 'Combine agreed data sources into routine reports and task reminders. Track failures, review logs and define who owns maintenance.' }
+    ],
     processTitle: 'Our Automation Process',
     process: [
       { title: 'Discovery', text: 'Audit current operations and identify repetitive work streams.' },
@@ -327,7 +415,10 @@ export const services: Service[] = [
     outcomes: ['Reduced manual effort', 'Consistent operations', 'Connected tools', 'Governed AI workflows'],
     faqs: [
       { q: 'What tasks can AI automate?', a: 'Classification, summarization, routing, response drafting, reporting, and structured workflow steps are common candidates.' },
-      { q: 'Can automations include approvals?', a: 'Yes. We add governance, permissions, and fallback paths where business risk requires control.' }
+      { q: 'Can automations include approvals?', a: 'Yes. We define permissions, approval steps, logs and fallback paths. Sensitive changes and uncertain AI output can be routed to a person for review.' },
+      { q: 'Which workflow should we automate first?', a: 'Start with a frequent, well-defined task with clear inputs and a measurable result. We compare volume, handling time, errors and integration constraints before proposing a pilot.' },
+      { q: 'Do all automations need AI?', a: 'No. Rules-based automation is often sufficient for predictable tasks. AI is useful for language-heavy work such as classification, summaries and reply drafts, with checks appropriate to the task.' },
+      { q: 'What does AI automation cost?', a: 'Scope depends on workflow steps, connected tools, data preparation, testing and ongoing support. Model usage and software subscriptions may add recurring costs; these are identified in the proposal.' }
     ]
   },
   {

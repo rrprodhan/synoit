@@ -10,7 +10,7 @@
   inset:0;
   z-index:195;
   pointer-events:none;
-  font-family:'Syno Inter','Nohemi','Segoe UI',system-ui,sans-serif;
+  font-family:'Segoe UI',system-ui,sans-serif;
   color:var(--synova-text);
 }
 

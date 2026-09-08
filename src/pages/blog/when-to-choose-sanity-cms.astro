@@ -20,7 +20,7 @@ const article = {
 };
 const articleSrcset = '/images/blog/sanity-cms-structured-content-hero-768.webp 768w, /images/blog/sanity-cms-structured-content-hero-1200.webp 1200w, /images/blog/sanity-cms-structured-content-hero.webp 1672w';
 
-const shareUrl = `https://synoit.com${article.href}`;
+const shareUrl = `https://www.synoit.com${article.href}`;
 const tocHeadings = getHeadings().filter(
   (heading) => heading.depth === 2 && heading.slug !== 'table-of-contents'
 );
@@ -32,19 +32,19 @@ const schema = {
       '@type': 'BlogPosting',
       headline: article.title,
       description: article.lead,
-      image: `https://synoit.com${article.image}`,
+      image: `https://www.synoit.com${article.image}`,
       datePublished: article.dateTime,
       dateModified: article.dateTime,
       mainEntityOfPage: shareUrl,
       author: {
         '@type': 'Organization',
         name: 'SynoIT',
-        url: 'https://synoit.com/'
+        url: 'https://www.synoit.com/'
       },
       publisher: {
         '@type': 'Organization',
         name: 'SynoIT',
-        url: 'https://synoit.com/'
+        url: 'https://www.synoit.com/'
       }
     },
     {

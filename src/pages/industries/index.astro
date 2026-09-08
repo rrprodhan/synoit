@@ -7,11 +7,11 @@ const schema = {
   '@context': 'https://schema.org',
   '@type': 'CollectionPage',
   name: 'SynoIT industries',
-  url: 'https://synoit.com/industries/',
+  url: 'https://www.synoit.com/industries/',
   hasPart: industries.map((item) => ({
     '@type': 'WebPage',
     name: item.shortTitle,
-    url: `https://synoit.com/industries/${item.slug}/`
+    url: `https://www.synoit.com/industries/${item.slug}/`
   }))
 };
 ---

@@ -1,4 +1,5 @@
 ---
+import StepsPhone from '@/components/StepsPhone.astro';
 import HomeLayout from '@/layouts/HomeLayout.astro';
 import HomeConnector from '@/components/HomeConnector.astro';
 import HeroNet from '@/components/HeroNet.astro';
@@ -25,13 +26,13 @@ const contactCards = [
 ];
 ---
 
-<HomeLayout title="Contact SynoIT | Start Your Digital Project" description="Contact SynoIT for web development, UI/UX design, mobile apps, AI automation, SEO, branding, dedicated teams, and digital growth projects." canonical="/contact/">
+<HomeLayout title="Contact SynoIT | Start Your Digital Project" description="Request a quote for landing page development, a portfolio website or AI business automation. Share your requirements with SynoIT by email or WhatsApp." canonical="/contact/">
   <main id="main" class="service-page">
     <section class="hero service-hero" id="hero">
       <div class="hero-content">
-        <p class="section-kicker service-kicker">CONNECT WITH OUR ARCHITECTS</p>
+        <p class="section-kicker service-kicker">TELL US WHAT YOU NEED</p>
         <h1 class="hero-title"><span class="line" data-split>Let’s build</span>{' '}<span class="line accent" data-split>something great.</span></h1>
-        <p class="hero-sub reveal-line"><span>From visionary blueprints to digital execution, we bridge the gap between technical complexity and business growth.</span></p>
+        <p class="hero-sub reveal-line"><span>Tell us about your business, the website you want or the task you repeat. Include your target launch date and budget range so we can recommend a practical scope.</span></p>
         <div class="hero-badges reveal-line"><span class="badges-wrap"><a href="mailto:support@synoit.com" class="store-btn"><span class="service-icon">↗</span><span><small>EMAIL THE TEAM</small><b>support@synoit.com</b></span></a><a href="https://wa.me/6582034346" target="_blank" rel="noopener" class="store-btn"><span class="service-icon">✦</span><span><small>QUICK CHAT</small><b>WhatsApp SynoIT</b></span></a></span></div>
       </div>
       <HeroNet />
@@ -52,11 +53,12 @@ const contactCards = [
       <div class="edge-glow left"></div><div class="edge-glow right"></div>
       <h2 class="features-title">Initiate project <span class="dim">with the SynoIT team</span></h2>
       <div class="contact-grid">
-        <form class="contact-form" action="mailto:support@synoit.com" method="post" enctype="text/plain">
+        <form id="project-enquiry" class="contact-form" action="mailto:support@synoit.com" method="post" enctype="text/plain">
           <div class="field-row"><div class="field"><label for="name">Name</label><input id="name" name="Name" autocomplete="name" required placeholder="John Doe" /></div><div class="field"><label for="email">Email</label><input id="email" name="Email" type="email" autocomplete="email" required placeholder="john@example.com" /></div></div>
-          <div class="field"><label for="service">Service Interest</label><select id="service" name="Service">{services.map((service) => <option>{service.shortTitle}</option>)}</select></div>
-          <div class="field"><label for="message">Message</label><textarea id="message" name="Message" rows="5" required placeholder="Tell us about your digital vision..."></textarea></div>
-          <button class="btn-primary" type="submit">Send message</button>
+          <div class="field"><label for="service">Service Interest</label><select id="service" name="Service"><option value="Not sure yet">Not sure yet — help me choose</option>{services.map((service) => <option>{service.shortTitle}</option>)}</select></div>
+          <div class="field"><label for="message">Message</label><textarea id="message" name="Message" rows="5" required placeholder="What does your business do? What website or workflow do you need? Include your timeline, budget range and current tools."></textarea></div>
+          <p id="email-help">This prepares a message in your email app. Review it and press send there. You can also email support@synoit.com or use WhatsApp.</p>
+          <button class="btn-primary" type="submit" aria-describedby="email-help">Prepare email enquiry</button>
         </form>
         <aside class="contact-aside">
           <div class="service-grid contact-cards">{contactCards.map(([label, value, href], index) => <a class="review-card" href={href}><span class="review-stars">{String(index + 1).padStart(2, '0')}</span><blockquote>{label}</blockquote><figcaption>{value}</figcaption></a>)}</div>
@@ -69,7 +71,7 @@ const contactCards = [
     <section class="steps service-steps" id="steps">
       <div class="steps-pin" id="stepsPin">
         <div class="steps-head"><p class="section-kicker">WHAT HAPPENS NEXT</p><h2>From first message to<br />a practical project path</h2></div>
-        <div class="steps-body"><div class="steps-text"><div class="steps-rail"><div class="steps-rail-fill" id="stepsRailFill"></div><div class="steps-rail-dot" id="stepsRailDot"></div></div><div class="steps-counter"><span id="stepsCounterNum">01</span><span class="steps-counter-total"> / 04</span></div><div class="steps-dots" role="tablist" aria-label="Contact process">{process.map((_, index) => <button type="button" role="tab" class:list={{ 'is-active': index === 0 }} aria-label={`Step ${index + 1}`} aria-selected={index === 0 ? 'true' : 'false'}>{String(index + 1).padStart(2, '0')}</button>)}</div>{process.map(([title, text], index) => <div class:list={['step-item', { 'is-active': index === 0 }]}><div class="step-num">{String(index + 1).padStart(2, '0')}</div><h3>{title}</h3><p>{text}</p><div class="step-line"><div class="step-line-fill"></div></div></div>)}</div><div class="steps-phone"><div class="phone-glow"></div><div class="phone-frame">{process.map(([title], index) => <div class:list={['step-video', { 'is-active': index === 0 }]}><strong>CONTACT FLOW</strong><b>{title}</b><span></span><span></span><span></span></div>)}</div></div></div>
+        <div class="steps-body"><div class="steps-text"><div class="steps-rail"><div class="steps-rail-fill" id="stepsRailFill"></div><div class="steps-rail-dot" id="stepsRailDot"></div></div><div class="steps-counter"><span id="stepsCounterNum">01</span><span class="steps-counter-total"> / 04</span></div><div class="steps-dots" role="tablist" aria-label="Contact process">{process.map((_, index) => <button type="button" role="tab" class:list={{ 'is-active': index === 0 }} aria-label={`${String(index + 1).padStart(2, '0')} — Step ${index + 1}`} aria-selected={index === 0 ? 'true' : 'false'}>{String(index + 1).padStart(2, '0')}</button>)}</div>{process.map(([title, text], index) => <div class:list={['step-item', { 'is-active': index === 0 }]}><div class="step-num">{String(index + 1).padStart(2, '0')}</div><h3>{title}</h3><p>{text}</p><div class="step-line"><div class="step-line-fill"></div></div></div>)}</div><StepsPhone steps={process.map(([title, text]) => ({ title, text }))} label="CONTACT FLOW" /></div>
       </div>
     </section>
 
@@ -89,3 +91,16 @@ const contactCards = [
     </section>
   </main>
 </HomeLayout>
+
+<script>
+  const enquiry = document.querySelector<HTMLFormElement>('#project-enquiry');
+  const serviceSelect = document.querySelector<HTMLSelectElement>('#service');
+  const selectedService = new URLSearchParams(window.location.search).get('service');
+  if (serviceSelect && selectedService && [...serviceSelect.options].some(option => option.value === selectedService)) serviceSelect.value = selectedService;
+  enquiry?.addEventListener('submit', event => {
+    event.preventDefault();
+    const values = new FormData(enquiry);
+    const body = ['Name', 'Email', 'Service', 'Message'].map(key => `${key}: ${values.get(key) || ''}`).join('\n\n');
+    window.location.href = `mailto:support@synoit.com?subject=${encodeURIComponent('Project enquiry: ' + values.get('Service'))}&body=${encodeURIComponent(body)}`;
+  });
+</script>

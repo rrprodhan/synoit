@@ -1,4 +1,5 @@
 ---
+import StepsPhone from '@/components/StepsPhone.astro';
 import HomeConnector from '@/components/HomeConnector.astro';
 import HeroNet from '@/components/HeroNet.astro';
 import type { DirectoryItem } from '@/data/directories';
@@ -65,7 +66,7 @@ const steps = [
   <section class="steps service-steps" id="steps">
     <div class="steps-pin" id="stepsPin">
       <div class="steps-head"><p class="section-kicker">DELIVERY MODEL</p><h2>One connected process<br />from idea to launch</h2></div>
-      <div class="steps-body"><div class="steps-text"><div class="steps-rail"><div class="steps-rail-fill" id="stepsRailFill"></div><div class="steps-rail-dot" id="stepsRailDot"></div></div><div class="steps-counter"><span id="stepsCounterNum">01</span><span class="steps-counter-total"> / 04</span></div><div class="steps-dots" role="tablist" aria-label={`${item.shortTitle} delivery steps`}>{steps.map((_, index) => <button type="button" role="tab" class:list={{ 'is-active': index === 0 }} aria-label={`Step ${index + 1}`} aria-selected={index === 0 ? 'true' : 'false'}>{String(index + 1).padStart(2, '0')}</button>)}</div>{steps.map(([title, text], index) => <div class:list={['step-item', { 'is-active': index === 0 }]}><div class="step-num">{String(index + 1).padStart(2, '0')}</div><h3>{title}</h3><p>{text}</p><div class="step-line"><div class="step-line-fill"></div></div></div>)}</div><div class="steps-phone"><div class="phone-glow"></div><div class="phone-frame">{steps.map(([title], index) => <div class:list={['step-video', { 'is-active': index === 0 }]}><strong>{item.category}</strong><b>{title}</b><span></span><span></span><span></span></div>)}</div></div></div>
+      <div class="steps-body"><div class="steps-text"><div class="steps-rail"><div class="steps-rail-fill" id="stepsRailFill"></div><div class="steps-rail-dot" id="stepsRailDot"></div></div><div class="steps-counter"><span id="stepsCounterNum">01</span><span class="steps-counter-total"> / 04</span></div><div class="steps-dots" role="tablist" aria-label={`${item.shortTitle} delivery steps`}>{steps.map((_, index) => <button type="button" role="tab" class:list={{ 'is-active': index === 0 }} aria-label={`${String(index + 1).padStart(2, '0')} — Step ${index + 1}`} aria-selected={index === 0 ? 'true' : 'false'}>{String(index + 1).padStart(2, '0')}</button>)}</div>{steps.map(([title, text], index) => <div class:list={['step-item', { 'is-active': index === 0 }]}><div class="step-num">{String(index + 1).padStart(2, '0')}</div><h3>{title}</h3><p>{text}</p><div class="step-line"><div class="step-line-fill"></div></div></div>)}</div><StepsPhone steps={steps.map(([title, text]) => ({ title, text }))} label={item.category} /></div>
     </div>
   </section>
 

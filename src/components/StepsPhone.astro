@@ -1,0 +1,65 @@
+---
+interface Props {
+  steps: { title: string; text: string }[];
+  label: string;
+  visuals?: string[];
+}
+const { steps, label, visuals } = Astro.props;
+const icons = [
+  'M12 3a7 7 0 1 0 0 14 7 7 0 0 0 0-14ZM17 17l5 5',
+  'M4 5h16M4 12h16M4 19h16M8 3v4M16 10v4M10 17v4',
+  'm8 5-6 7 6 7m8-14 6 7-6 7m-3-16-2 18',
+  'M4 20V10m8 10V5m8 15V2M2 22h20'
+];
+---
+<div class="steps-phone">
+  <div class="phone-glow" aria-hidden="true"></div>
+  <div class="phone-frame" aria-hidden="true">
+    {steps.map((step, index) => visuals ? (
+      <img class:list={['step-video', { 'is-active': index === 0 }]} src={visuals[index]} width="490" height="1010" alt="" loading="lazy" decoding="async" />
+    ) : (
+      <div class:list={['step-video', 'process-screen', { 'is-active': index === 0 }]}>
+        <div class="screen-top"><span>SynoIT</span><span class="screen-lights">•••</span></div>
+        <p class="screen-label">{label}</p>
+        <h4>{step.title}</h4>
+        <div class="screen-orbit">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d={icons[index % icons.length]} /></svg>
+          <span class="orbit-dot"></span>
+        </div>
+        <p class="screen-description">{step.text}</p>
+        <div class="screen-roadmap">
+          {steps.map((entry, i) => <div class:list={['roadmap-row', { current: i === index, complete: i < index }]}><span class="roadmap-number">{i < index ? '✓' : String(i + 1).padStart(2, '0')}</span><span>{entry.title}</span><span class="roadmap-state">{i === index ? '●' : ''}</span></div>)}
+        </div>
+        <div class="screen-bottom"><span>DELIVERY ROADMAP</span><span>{String(index + 1).padStart(2, '0')} / {String(steps.length).padStart(2, '0')}</span></div>
+      </div>
+    ))}
+  </div>
+</div>
+<style>
+  .phone-frame { container-type:inline-size; }
+  @media (max-width:900px) { .phone-frame { width:min(260px, 70vw); } }
+  .step-video.process-screen {
+    inset:0; width:100%; height:100%; padding:10% 9%; transform:none;
+    display:flex; flex-direction:column; border:1px solid #8070b650;
+    border-radius:inherit;
+    background:radial-gradient(ellipse at 90% 40%,#23435055,transparent 55%),linear-gradient(155deg,#211930,#101420 55%,#1e1427);
+    color:#f4f1ff;
+  }
+  .screen-top { display:flex; justify-content:space-between; font-size:4.3cqw; font-weight:700; letter-spacing:.06em; }
+  .screen-lights { color:#8ee4dc; letter-spacing:.15em; }
+  .screen-label { margin:9% 0 3%; color:#c3b7e4; font-size:3cqw; letter-spacing:.12em; text-transform:uppercase; }
+  h4 { font-size:7cqw; line-height:1.15; letter-spacing:-.02em; font-weight:600; }
+  .screen-orbit { position:relative; margin:8% auto; width:40cqw; height:40cqw; flex-shrink:0; display:grid; place-items:center; border:2px solid #b0a1f0; border-right-color:#68d9d0; border-bottom-color:#d878a9; border-radius:50%; box-shadow:0 0 25px #9984ef30,inset 0 0 25px #9984ef20; }
+  .screen-orbit::before { content:''; position:absolute; inset:12%; border:1px solid #ffffff15; border-radius:50%; background:#10131f; }
+  .screen-orbit svg { position:relative; width:17cqw; height:17cqw; color:#d7cbff; }
+  .orbit-dot { position:absolute; top:10%; right:10%; width:3cqw; height:3cqw; border-radius:50%; background:#8ee4dc; box-shadow:0 0 14px #8ee4dc; }
+  .screen-description { font-size:3.8cqw; line-height:1.5; color:#d1c9df; margin:0 0 7%; }
+  .screen-roadmap { display:grid; gap:2cqw; margin-top:auto; }
+  .roadmap-row { display:flex; align-items:center; gap:3cqw; border:1px solid #ffffff12; border-radius:3cqw; padding:3cqw; color:#b9afca; font-size:3.4cqw; line-height:1.3; background:#14131e80; }
+  .roadmap-row.current { background:#9a8afb1c; border-color:#9a8afb80; color:#f4f1ff; }
+  .roadmap-number { color:#c5b5ff; font-size:3cqw; }
+  .complete .roadmap-number { color:#8ee4dc; }
+  .roadmap-state { margin-left:auto; color:#8ee4dc; font-size:2cqw; }
+  .screen-bottom { display:flex; justify-content:space-between; margin-top:7%; color:#baafce; font-size:2.5cqw; letter-spacing:.08em; }
+  @media (prefers-reduced-motion:reduce) { .step-video { transition:none; } }
+</style>
