@@ -110,8 +110,10 @@ const serviceIcons: Record<string, typeof Monitor> = {
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={imageUrl} />
     <link rel="icon" href="/favicon.ico" sizes="any" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
     {schema && <script type="application/ld+json" set:html={JSON.stringify(schema)} />}
     <style is:global>
       /* Only image-dependent pieces are replaced. The design rules above are
@@ -119,9 +121,15 @@ const serviceIcons: Record<string, typeof Monitor> = {
       .brand-mark,
       .visual-mark {
         display:block;
-        object-fit:cover;
+        object-fit:contain;
+        box-sizing:border-box;
+        background:
+          radial-gradient(circle at 32% 24%, rgba(255,255,255,.2), transparent 34%),
+          linear-gradient(145deg,#2b2540 0%,#121018 48%,#211a34 100%);
+        border:1px solid rgba(255,255,255,.18);
       }
-      .nav-logo .brand-mark { width:30px; height:30px; border-radius:9px; box-shadow:0 0 22px rgba(154,138,251,.45); }
+      .visual-mark { padding:10%; }
+      .nav-logo .brand-mark { width:30px; height:30px; border-radius:9px; background:transparent; border:0; box-shadow:0 0 22px rgba(154,138,251,.45); }
       .brand-mark { animation:markBreath 3.6s ease-in-out infinite; }
       .hero-phone { width:clamp(175px,24vh,240px); aspect-ratio:.72; margin:-28px auto -30px; }
       .hero-device {
@@ -189,7 +197,7 @@ const serviceIcons: Record<string, typeof Monitor> = {
     <div class="cursor" id="cursor" aria-hidden="true"><span class="cursor-ring"></span><span class="cursor-dot"></span></div>
 
     <nav class="nav" id="nav" aria-label="Primary navigation">
-      <a href="/" class="nav-logo" aria-label="SynoIT home"><img class="brand-mark" src="/media/brand/synoit-logo-64.webp" width="30" height="30" alt="" aria-hidden="true" decoding="async" /><span>SynoIT</span></a>
+      <a href="/" class="nav-logo" aria-label="SynoIT home"><img class="brand-mark" src="/media/brand/synoit-logo-64.png" width="30" height="30" alt="" aria-hidden="true" decoding="async" /><span>SynoIT</span></a>
       {effects === 'lean' ? (
         <div class="nav-right">
           <a href="/" class="nav-link">Home</a>

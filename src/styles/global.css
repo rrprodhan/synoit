@@ -76,7 +76,9 @@ section { position: relative; z-index: 2; }
 .nav-logo { display: flex; align-items: center; gap: 10px; font-weight: 760; font-size: 18px; letter-spacing: .02em; }
 .mark {
   width: 32px; aspect-ratio: 1; border-radius: 27%;
-  display: block; object-fit: cover;
+  display: block; object-fit: contain;
+  background: transparent;
+  border: 0;
   box-shadow: 0 0 36px rgba(154, 138, 251, .45);
   animation: chipBreath 3.8s ease-in-out infinite;
 }
@@ -953,7 +955,12 @@ section { position: relative; z-index: 2; }
   height: 100%;
   border: 1px solid rgba(255,255,255,.26);
   border-radius: 28%;
-  object-fit: cover;
+  object-fit: contain;
+  box-sizing: border-box;
+  padding: 10%;
+  background:
+    radial-gradient(circle at 32% 24%, rgba(255,255,255,.2), transparent 34%),
+    linear-gradient(145deg, #2b2540 0%, #121018 48%, #211a34 100%);
   box-shadow: 0 0 86px rgba(154,138,251,.58), 0 28px 80px rgba(0,0,0,.46);
   transition: box-shadow .35s;
 }

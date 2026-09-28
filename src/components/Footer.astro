@@ -22,7 +22,7 @@ const byCategory = categories.map((category) => ({
     <div class="site-footer__main">
       <div class="site-footer__brand">
         <a class="site-footer__logo" href="/" aria-label="SynoIT home">
-          <img class="site-footer__mark" src="/media/brand/synoit-logo-64.webp" width="44" height="44" alt="" aria-hidden="true" loading="lazy" decoding="async" /><strong>SynoIT</strong>
+          <img class="site-footer__mark" src="/media/brand/synoit-logo-64.png" width="44" height="44" alt="" aria-hidden="true" loading="lazy" decoding="async" /><strong>SynoIT</strong>
         </a>
         <p>Landing page development, portfolio websites and practical AI automation for small businesses and independent professionals.</p>
         <div class="site-footer__contact">
@@ -197,7 +197,13 @@ const byCategory = categories.map((category) => ({
     width:44px;
     height:44px;
     border-radius:13px;
-    object-fit:cover;
+    object-fit:contain;
+    box-sizing:border-box;
+    padding:9%;
+    background:
+      radial-gradient(circle at 32% 24%, rgba(255,255,255,.2), transparent 34%),
+      linear-gradient(145deg,#2b2540 0%,#121018 48%,#211a34 100%);
+    border:1px solid rgba(255,255,255,.18);
     box-shadow:0 0 28px rgba(154,138,251,.4);
   }
   .site-footer__brand > p { max-width:440px; margin:22px 0 28px; color:#bdb7cb; font-size:15px; line-height:1.7; }

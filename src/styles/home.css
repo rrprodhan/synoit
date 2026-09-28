@@ -107,7 +107,12 @@ section { position:relative; z-index:2; }
   aspect-ratio:1;
   border:1px solid rgba(255,255,255,.26);
   border-radius:26%;
-  object-fit:cover;
+  object-fit:contain;
+  box-sizing:border-box;
+  padding:10%;
+  background:
+    radial-gradient(circle at 32% 24%, rgba(255,255,255,.2), transparent 34%),
+    linear-gradient(145deg, #2b2540 0%, #121018 48%, #211a34 100%);
   filter:none;
   box-shadow:0 0 44px rgba(154,138,251,.45), 0 18px 50px rgba(0,0,0,.5);
 }
