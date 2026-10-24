@@ -7,10 +7,10 @@ import TechnologyShowcase from '@/components/TechnologyShowcase.astro';
 import { categories, services } from '@/data/services';
 
 const process = [
-  ['Discovery', 'We define business goals, user needs, constraints, and measurable success criteria.'],
-  ['Strategy & Scope', 'We shape the roadmap, architecture, content, and delivery priorities before execution.'],
-  ['Execution', 'Our specialists design, build, test, and iterate through focused, transparent sprints.'],
-  ['Launch & Growth', 'We launch carefully, monitor performance, optimize, and support continuous improvement.']
+  ['Discovery', 'We map your business goals, user needs, existing tools, and repetitive tasks to find the right starting point.'],
+  ['Strategy & Scope', 'We agree the website features, integrations, automation workflows, and delivery milestones before building.'],
+  ['Execution', 'We design and develop your web solution, connect your tools, and test workflows with real business scenarios.'],
+  ['Launch & Growth', 'We launch, hand over your website and workflows, and support ongoing improvements as your business grows.']
 ];
 
 const processVisuals = [
@@ -20,7 +20,7 @@ const processVisuals = [
   '/media/home/process-growth.svg'
 ];
 
-const homeServices = ['landing-page-design', 'portfolio-website-development', 'web-development', 'ai-automation', 'chatbot-development', 'ai-integration']
+const homeServices = ['web-development', 'software-development', 'cms-development', 'ai-automation', 'chatbot-development', 'ai-integration']
   .map((slug) => services.find((service) => service.slug === slug))
   .filter((service) => service !== undefined);
 
@@ -36,14 +36,14 @@ const capabilityCopy = {
     badge: '02 · DEVELOPMENT',
     titleLead: 'Development engineered for',
     titleAccent: 'speed, scale, and resilience.',
-    description: 'From focused MVPs to cloud platforms, we build maintainable digital products around performance, security, clean integration, and long-term ownership.',
+    description: 'We build custom websites, web applications, and business tools with responsive interfaces, maintainable code, and integrations that fit how you work.',
     visual: 'development' as const
   },
   'AI Services': {
     badge: '03 · AI SERVICES',
-    titleLead: 'AI services built for',
-    titleAccent: 'useful, governed automation.',
-    description: 'We connect practical AI to real operations with defined use cases, secure data access, measurable quality, and human oversight where it matters.',
+    titleLead: 'AI automation built for',
+    titleAccent: 'everyday business workflows.',
+    description: 'Connect your everyday tools, automate follow-ups and data entry, and add AI assistants with clear permissions and human review where needed.',
     visual: 'ai' as const
   },
   'Digital Marketing': {
@@ -63,15 +63,16 @@ const signatures = categories.map((category) => ({
 
 const reasons = [
   ['01', 'Scope agreed before development'],
-  ['02', 'Responsive website layouts'],
-  ['03', 'Clear enquiry and booking paths'],
+  ['02', 'Custom websites and web applications'],
+  ['03', 'Responsive, accessible interfaces'],
   ['04', 'Practical workflow integrations'],
   ['05', 'Human review for uncertain AI output'],
   ['06', 'Launch and handover planning']
 ];
 
 const faqs = [
-  ['What does SynoIT do?', 'SynoIT develops landing pages, portfolio websites and AI automations for small businesses and independent professionals. We help businesses present their services online and simplify repetitive work.'],
+  ['What does SynoIT do?', 'SynoIT builds custom websites, web applications, and AI automations for businesses. We help you serve customers online, connect your tools, and reduce repetitive work.'],
+  ['What can you automate with AI?', 'We can help automate enquiries, follow-ups, document processing, and data entry between your business tools. We review each workflow first and agree where AI, rules, and human approval are appropriate.'],
   ['Can SynoIT take a project from idea to launch?', 'Yes. We can lead discovery, define the roadmap, design the experience, build and test the product, support launch, and continue with optimization and growth.'],
   ['Can your specialists work with our existing team?', 'Yes. SynoIT can own an outcome end to end or integrate with your internal product, design, engineering, and marketing teams for focused support.'],
   ['What types of companies do you work with?', 'We work with startups, SMEs, growing digital businesses, and enterprise teams that need reliable delivery across design, engineering, AI, and growth.'],
@@ -83,7 +84,7 @@ const faqs = [
 const schema = {
   '@context': 'https://schema.org',
   '@graph': [
-    { '@type': 'Organization', '@id': 'https://www.synoit.com/#org', name: 'SynoIT', url: 'https://www.synoit.com/', logo: 'https://www.synoit.com/media/brand/synoit-logo-192.png', email: 'support@synoit.com', telephone: '+65 8203 4346', address: { '@type': 'PostalAddress', streetAddress: '30 Roberts Lane, #02-01', addressLocality: 'Singapore', postalCode: '218309' }, description: 'SynoIT develops landing pages, portfolio websites and practical AI automations for small businesses and independent professionals.' },
+    { '@type': 'Organization', '@id': 'https://www.synoit.com/#org', name: 'SynoIT', url: 'https://www.synoit.com/', logo: 'https://www.synoit.com/media/brand/synoit-logo-192.png', email: 'support@synoit.com', telephone: '+65 8203 4346', address: { '@type': 'PostalAddress', streetAddress: '30 Roberts Lane, #02-01', addressLocality: 'Singapore', postalCode: '218309' }, description: 'SynoIT builds custom websites, web applications, and practical AI automations that connect business tools and simplify everyday operations.' },
     { '@type': 'WebSite', '@id': 'https://www.synoit.com/#website', url: 'https://www.synoit.com/', name: 'SynoIT', publisher: { '@id': 'https://www.synoit.com/#org' }, inLanguage: 'en' },
     { '@type': 'ItemList', name: 'SynoIT services', itemListElement: services.map((service, index) => ({ '@type': 'ListItem', position: index + 1, url: `https://www.synoit.com/services/${service.slug}/`, name: service.shortTitle })) },
     { '@type': 'FAQPage', mainEntity: faqs.map(([name, text]) => ({ '@type': 'Question', name, acceptedAnswer: { '@type': 'Answer', text } })) }
@@ -91,12 +92,12 @@ const schema = {
 };
 ---
 
-<HomeLayout title="Landing Pages, Portfolio Websites & AI Automation | SynoIT" description="SynoIT builds landing pages, portfolio websites and AI automations for small businesses. Launch your website or simplify repetitive work. Request a quote." schema={schema}>
+<HomeLayout title="Custom web development & AI automation | SynoIT" description="Custom websites, web applications and AI automation for your business. SynoIT connects your tools and simplifies repetitive work. Request a quote." schema={schema}>
   <main id="main">
     <section class="hero" id="hero">
       <div class="hero-content">
-        <h1 class="hero-title"><span class="line" data-split>Landing pages, portfolios</span>{' '}<span class="line accent" data-split>&amp; AI automation.</span></h1>
-        <p class="hero-sub reveal-line"><span>Get a website that explains your business and makes enquiries easy. Connect your everyday tools to reduce repetitive admin, follow-ups and manual data entry.</span></p>
+        <h1 class="hero-title"><span class="line" data-split>Custom web development</span>{' '}<span class="line accent" data-split>&amp; AI automation</span></h1>
+        <p class="hero-sub reveal-line"><span>Build a custom website or web application around your business. Connect your tools with practical AI automation to simplify admin, follow-ups, and data entry.</span></p>
         <div class="hero-badges reveal-line"><span class="badges-wrap"><a href="/contact/" class="store-btn"><span class="service-icon">↗</span><span><small>START A CONVERSATION</small><b>Get a free quote</b></span></a><a href="https://wa.me/6582034346" target="_blank" rel="noopener" class="store-btn"><span class="service-icon">✦</span><span><small>TALK THROUGH YOUR IDEA</small><b>Chat with our team</b></span></a></span></div>
       </div>
       <div class="hero-visual" id="heroVisual"><div class="edge-glow left"></div><div class="edge-glow right"></div><svg class="net hero-net" viewBox="0 0 1200 340" fill="none" preserveAspectRatio="none"><defs><filter id="homeGlow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="3.2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><g class="traces"><path data-hero-draw d="M590,146 H320 Q312,146 312,138 V96 Q312,88 304,88 H32 Q24,88 24,96 V300"/><path data-hero-draw d="M590,170 H80"/><path data-hero-draw d="M590,194 H430 Q422,194 422,202 V252 Q422,260 414,260 H60 Q52,260 52,268 V340"/><path data-hero-draw class="faint" d="M590,158 H300"/><path data-hero-draw class="faint" d="M590,182 H340"/></g><g class="traces" transform="translate(1200 0) scale(-1 1)"><path data-hero-draw d="M590,146 H320 Q312,146 312,138 V96 Q312,88 304,88 H32 Q24,88 24,96 V300"/><path data-hero-draw d="M590,170 H80"/><path data-hero-draw d="M590,194 H430 Q422,194 422,202 V252 Q422,260 414,260 H60 Q52,260 52,268 V340"/><path data-hero-draw class="faint" d="M590,158 H300"/><path data-hero-draw class="faint" d="M590,182 H340"/></g><path data-hero-draw class="spine" d="M600,216 V340"/><g class="pulses" filter="url(#homeGlow)"><path data-pulse d="M590,146 H320 Q312,146 312,138 V96 Q312,88 304,88 H32 Q24,88 24,96 V300"/><path data-pulse d="M590,170 H80"/><path data-pulse transform="translate(1200 0) scale(-1 1)" d="M590,170 H80"/><path data-pulse transform="translate(1200 0) scale(-1 1)" d="M590,194 H430 Q422,194 422,202 V252 Q422,260 414,260 H60 Q52,260 52,268 V340"/><path data-pulse d="M600,216 V340"/></g></svg><div class="chip3d hero-chip" id="heroChip"><div class="chip-face front app-chip"><img class="visual-mark" src="/media/brand/synoit-logo-96.png" width="96" height="96" alt="" aria-hidden="true" decoding="async" /></div><div class="chip-face back app-chip"><img class="visual-mark" src="/media/brand/synoit-logo-96.png" width="96" height="96" alt="" aria-hidden="true" decoding="async" /></div></div></div>
@@ -104,7 +105,7 @@ const schema = {
 
     <HomeConnector />
 
-    <section class="statement" id="statement"><div class="statement-pin" id="statementPin"><svg class="net statement-net" viewBox="0 0 100 100" preserveAspectRatio="none" fill="none"><path class="spine" data-sdraw d="M50,0 V16"/><path data-sdraw d="M50,16 H84 Q90,16 90,22 V78 Q90,84 84,84 H16 Q10,84 10,78 V22 Q10,16 16,16 H50"/><path class="spine" data-sdraw d="M50,84 V100"/><path class="s-pulse" d="M50,16 H84 Q90,16 90,22 V78 Q90,84 84,84 H16 Q10,84 10,78 V22 Q10,16 16,16 H50"/><path class="s-pulse" d="M50,16 H84 Q90,16 90,22 V78 Q90,84 84,84 H16 Q10,84 10,78 V22 Q10,16 16,16 H50"/></svg><p class="statement-text" id="statementText">Strategy-led design. Reliable engineering. AI systems that work inside real operations. Growth foundations built for search, speed, and conversion.</p></div></section>
+    <section class="statement" id="statement"><div class="statement-pin" id="statementPin"><svg class="net statement-net" viewBox="0 0 100 100" preserveAspectRatio="none" fill="none"><path class="spine" data-sdraw d="M50,0 V16"/><path data-sdraw d="M50,16 H84 Q90,16 90,22 V78 Q90,84 84,84 H16 Q10,84 10,78 V22 Q10,16 16,16 H50"/><path class="spine" data-sdraw d="M50,84 V100"/><path class="s-pulse" d="M50,16 H84 Q90,16 90,22 V78 Q90,84 84,84 H16 Q10,84 10,78 V22 Q10,16 16,16 H50"/><path class="s-pulse" d="M50,16 H84 Q90,16 90,22 V78 Q90,84 84,84 H16 Q10,84 10,78 V22 Q10,16 16,16 H50"/></svg><p class="statement-text" id="statementText">Custom websites built around your customers. Web applications that support your team. AI automation that connects your tools and simplifies everyday work.</p></div></section>
 
     <HomeConnector flip />
 
@@ -116,9 +117,9 @@ const schema = {
 
     <HomeConnector flip />
 
-    <section class="features" id="features"><div class="edge-glow left"></div><div class="edge-glow right"></div><h2 class="features-title">Everything you need <span class="dim">to move from idea</span><br /><span class="dim">to execution</span></h2><div class="features-wrap"><div class="f-col f-left">{homeServices.slice(0, 3).map((service, index) => <a class="f-card" href={`/services/${service.slug}/`}><span class="service-icon">{String(index + 1).padStart(2, '0')}</span><div><h3>{service.shortTitle}</h3><p>{service.description}</p></div></a>)}</div><div class="f-center"><svg class="net f-net" viewBox="0 0 100 100" preserveAspectRatio="none" fill="none"><path data-draw class="spine" d="M50,0 V36"/><path data-draw class="spine" d="M50,64 V100"/><path data-draw d="M0,17 H28 Q32,17 32,21 V44 Q32,48 36,48 H43"/><path data-draw d="M0,50 H43"/><path data-draw d="M0,83 H28 Q32,83 32,79 V56 Q32,52 36,52 H43"/><path data-draw d="M100,17 H72 Q68,17 68,21 V44 Q68,48 64,48 H57"/><path data-draw d="M100,50 H57"/><path data-draw d="M100,83 H72 Q68,83 68,79 V56 Q68,52 64,52 H57"/><path data-pulse d="M0,17 H28 Q32,17 32,21 V44 Q32,48 36,48 H43"/><path data-pulse d="M100,50 H57"/><path data-pulse d="M0,83 H28 Q32,83 32,79 V56 Q32,52 36,52 H43"/><path data-pulse d="M50,64 V100"/></svg><div class="app-chip f-chip"><img class="visual-mark" src="/media/brand/synoit-logo-96.png" width="96" height="96" alt="" aria-hidden="true" loading="lazy" decoding="async" /></div></div><div class="f-col f-right">{homeServices.slice(3, 6).map((service, index) => <a class="f-card" href={`/services/${service.slug}/`}><span class="service-icon">{String(index + 4).padStart(2, '0')}</span><div><h3>{service.shortTitle}</h3><p>{service.description}</p></div></a>)}</div></div></section>
+    <section class="features" id="features"><div class="edge-glow left"></div><div class="edge-glow right"></div><h2 class="features-title">Custom web solutions <span class="dim">and AI automation</span><br /><span class="dim">built around your business</span></h2><div class="features-wrap"><div class="f-col f-left">{homeServices.slice(0, 3).map((service, index) => <a class="f-card" href={`/services/${service.slug}/`}><span class="service-icon">{String(index + 1).padStart(2, '0')}</span><div><h3>{service.shortTitle}</h3><p>{service.description}</p></div></a>)}</div><div class="f-center"><svg class="net f-net" viewBox="0 0 100 100" preserveAspectRatio="none" fill="none"><path data-draw class="spine" d="M50,0 V36"/><path data-draw class="spine" d="M50,64 V100"/><path data-draw d="M0,17 H28 Q32,17 32,21 V44 Q32,48 36,48 H43"/><path data-draw d="M0,50 H43"/><path data-draw d="M0,83 H28 Q32,83 32,79 V56 Q32,52 36,52 H43"/><path data-draw d="M100,17 H72 Q68,17 68,21 V44 Q68,48 64,48 H57"/><path data-draw d="M100,50 H57"/><path data-draw d="M100,83 H72 Q68,83 68,79 V56 Q68,52 64,52 H57"/><path data-pulse d="M0,17 H28 Q32,17 32,21 V44 Q32,48 36,48 H43"/><path data-pulse d="M100,50 H57"/><path data-pulse d="M0,83 H28 Q32,83 32,79 V56 Q32,52 36,52 H43"/><path data-pulse d="M50,64 V100"/></svg><div class="app-chip f-chip"><img class="visual-mark" src="/media/brand/synoit-logo-96.png" width="96" height="96" alt="" aria-hidden="true" loading="lazy" decoding="async" /></div></div><div class="f-col f-right">{homeServices.slice(3, 6).map((service, index) => <a class="f-card" href={`/services/${service.slug}/`}><span class="service-icon">{String(index + 4).padStart(2, '0')}</span><div><h3>{service.shortTitle}</h3><p>{service.description}</p></div></a>)}</div></div></section>
 
-    <section class="languages" aria-label="SynoIT service universe"><p class="section-kicker">WEBSITES AND AUTOMATION · ONE DELIVERY PARTNER</p><div class="marquee"><div class="service-marquee-track">{services.map((service) => <a class="lang-chip" href={`/services/${service.slug}/`}>{service.shortTitle}</a>)}{services.map((service) => <a class="lang-chip" href={`/services/${service.slug}/`} aria-hidden="true" tabindex="-1">{service.shortTitle}</a>)}</div></div></section>
+    <section class="languages" aria-label="SynoIT service universe"><p class="section-kicker">WEB DEVELOPMENT AND AI AUTOMATION · ONE DELIVERY PARTNER</p><div class="marquee"><div class="service-marquee-track">{services.map((service) => <a class="lang-chip" href={`/services/${service.slug}/`}>{service.shortTitle}</a>)}{services.map((service) => <a class="lang-chip" href={`/services/${service.slug}/`} aria-hidden="true" tabindex="-1">{service.shortTitle}</a>)}</div></div></section>
 
     <HomeConnector />
 
@@ -130,7 +131,7 @@ const schema = {
 
     <HomeConnector />
 
-    <section class="imagine" id="imagine"><div class="imagine-grid"><div class="imagine-copy"><h2 class="imagine-title">Imagine one team <span class="accent">moving the whole product forward</span></h2><ul class="imagine-points"><li><span class="point-icon">01</span><span>Strategy and execution stay connected.</span></li><li><span class="point-icon">02</span><span>Design, engineering, AI, and growth share one roadmap.</span></li><li><span class="point-icon">03</span><span>Every sprint produces visible, measurable progress.</span></li></ul><div class="imagine-stat"><span class="stat-num stat-copy">Your next step</span><p>Start with one website or one repeatable workflow, then agree the scope before building.</p></div><div class="badges-wrap imagine-badges"><a href="/projects/" class="store-btn"><span class="service-icon">↗</span><span><small>EXPLORE THE WORK</small><b>View our projects</b></span></a><a href="/dedicated-team/" class="store-btn"><span class="service-icon">✦</span><span><small>EXTEND YOUR TEAM</small><b>Dedicated specialists</b></span></a></div></div><div class="imagine-phones"><img class="imagine-team-visual" src="/media/home/connected-delivery-team.svg" width="760" height="680" loading="lazy" decoding="async" alt="A connected SynoIT delivery system linking design, development, AI, and growth around one shared product roadmap" /></div></div></section>
+    <section class="imagine" id="imagine"><div class="imagine-grid"><div class="imagine-copy"><h2 class="imagine-title">Imagine one team <span class="accent">moving the whole product forward</span></h2><ul class="imagine-points"><li><span class="point-icon">01</span><span>Strategy and execution stay connected.</span></li><li><span class="point-icon">02</span><span>Design, engineering, AI, and growth share one roadmap.</span></li><li><span class="point-icon">03</span><span>Every sprint produces visible, measurable progress.</span></li></ul><div class="imagine-stat"><span class="stat-num stat-copy">Your next step</span><p>Start with a custom website, web application, or repeatable workflow. We will agree the features, integrations, and scope before building.</p></div><div class="badges-wrap imagine-badges"><a href="/projects/" class="store-btn"><span class="service-icon">↗</span><span><small>EXPLORE THE WORK</small><b>View our projects</b></span></a><a href="/dedicated-team/" class="store-btn"><span class="service-icon">✦</span><span><small>EXTEND YOUR TEAM</small><b>Dedicated specialists</b></span></a></div></div><div class="imagine-phones"><img class="imagine-team-visual" src="/media/home/connected-delivery-team.svg" width="760" height="680" loading="lazy" decoding="async" alt="A connected SynoIT delivery system linking design, development, AI, and growth around one shared product roadmap" /></div></div></section>
 
     <HomeConnector />
 
@@ -142,7 +143,7 @@ const schema = {
 
     <HomeConnector />
 
-    <section class="cta" id="cta"><h2 class="cta-title"><span class="line" data-split>Ready for your next website?</span>{' '}<span class="line accent" data-split>Or less repetitive business work?</span></h2><div class="hero-badges"><span class="badges-wrap"><a href="/contact/" class="store-btn"><span class="service-icon">↗</span><span><small>START A PROJECT</small><b>Get a free quote</b></span></a><a href="https://wa.me/6582034346" target="_blank" rel="noopener" class="store-btn"><span class="service-icon">✦</span><span><small>TALK THROUGH YOUR IDEA</small><b>Chat with our team</b></span></a></span></div><div class="qr-box"><div class="qr-pair"><div class="qr-tile qr-service"><strong>Website</strong><span>Tell us about your business and offer</span></div><div class="qr-tile qr-service"><strong>Automation</strong><span>Show us a repetitive task</span></div></div><span>Singapore HQ · Bangladesh Hub · Global delivery</span></div></section>
+    <section class="cta" id="cta"><h2 class="cta-title"><span class="line" data-split>Ready to build around your business?</span>{' '}<span class="line accent" data-split>Let’s talk web development &amp; AI.</span></h2><div class="hero-badges"><span class="badges-wrap"><a href="/contact/" class="store-btn"><span class="service-icon">↗</span><span><small>START A PROJECT</small><b>Get a free quote</b></span></a><a href="https://wa.me/6582034346" target="_blank" rel="noopener" class="store-btn"><span class="service-icon">✦</span><span><small>TALK THROUGH YOUR IDEA</small><b>Chat with our team</b></span></a></span></div><div class="qr-box"><div class="qr-pair"><div class="qr-tile qr-service"><strong>Development</strong><span>Tell us what your website or app needs to do</span></div><div class="qr-tile qr-service"><strong>Automation</strong><span>Show us a repetitive task</span></div></div><span>Singapore HQ · Bangladesh Hub · Global delivery</span></div></section>
   </main>
 </HomeLayout>
 
